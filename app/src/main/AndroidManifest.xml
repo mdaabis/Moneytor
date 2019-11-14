@@ -9,9 +9,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".RegisterPage"></activity>
+
         <meta-data
             android:name="com.google.android.actions"
-            android:resource="@xml/rectangle" />
+            android:resource="@drawable/rectangle" />
 
         <activity android:name=".MainActivity">
             <intent-filter>
