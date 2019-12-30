@@ -1,4 +1,16 @@
 <resources>
     <string name="app_name">Moneytor</string>
     <string name="logo">Logo</string>
+    <string name="rectangle">White rectangle acting as intermediate layer between buttons and background</string>
+    <string name="login">Login</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="forgot_password">Forgot password? Click here.</string>
+    <string name="have_account">Already have an account?</string>
+    <string name="no_account">Don\'t have an account?</string>
+    <string name="login_button">Login</string>
+    <string name="create_account">Create an account</string>
+    <string name="register_txt">Register</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="title_activity_settings">Settings</string>
 </resources>
