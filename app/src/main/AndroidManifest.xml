@@ -11,7 +11,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".HomePage"></activity>
+        <activity android:name=".Pots"></activity>
+        <activity android:name=".HomePage" />
 
         <meta-data
             android:name="com.google.android.actions"
@@ -20,12 +21,11 @@
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity android:name=".RegisterPage" />
-
     </application>
 
 </manifest>
