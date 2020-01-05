@@ -14,19 +14,19 @@ import android.view.MenuItem;
 
 import com.google.android.material.navigation.NavigationView;
 
-public class Pots extends AppCompatActivity  implements NavigationView.OnNavigationItemSelectedListener {
+public class Leaderboard extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private DrawerLayout drawer;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_pots);
+        setContentView(R.layout.activity_leaderboard);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("Pots");
+        toolbar.setTitle("Leaderboard");
         int myColor = getResources().getColor(R.color.title);
         toolbar.setTitleTextColor(myColor);
         setSupportActionBar(toolbar);
-
 
         drawer = findViewById(R.id.drawer_layout);
 
@@ -40,7 +40,7 @@ public class Pots extends AppCompatActivity  implements NavigationView.OnNavigat
     }
 
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-        switch (menuItem.getItemId()){
+        switch (menuItem.getItemId()) {
             case R.id.nav_pots:
                 changeActivity(this, Pots.class);
                 break;
@@ -69,7 +69,7 @@ public class Pots extends AppCompatActivity  implements NavigationView.OnNavigat
         }
     }
 
-    public void changeActivity(Activity Current, Class Target){
+    public void changeActivity(Activity Current, Class Target) {
         Intent intent = new Intent(Current, Target);
         startActivity(intent);
     }

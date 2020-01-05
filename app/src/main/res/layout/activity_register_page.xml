@@ -51,13 +51,13 @@
         android:layout_height="40dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="35dp"
+        android:contentDescription="@string/username"
         android:ems="30"
+        android:hint="@string/username"
         android:inputType="textPersonName"
         android:singleLine="true"
-        android:text="@string/username"
         android:textAlignment="center"
-        android:textColor="#48000000"
-        android:contentDescription="@string/username"/>
+        android:textColor="#48000000" />
 
     <EditText
         android:id="@+id/password"
@@ -66,12 +66,12 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="30dp"
         android:alpha="0.6"
+        android:contentDescription="@string/password"
         android:ems="30"
+        android:hint="@string/password"
         android:inputType="textVisiblePassword|textPassword"
-        android:text="@string/password"
         android:textAlignment="center"
         android:visibility="visible"
-        android:contentDescription="@string/password"
         tools:visibility="visible" />
 
     <EditText
@@ -81,12 +81,12 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="30dp"
         android:alpha="0.6"
+        android:contentDescription="@string/confirm_password"
         android:ems="30"
+        android:hint="@string/confirm_password"
         android:inputType="textVisiblePassword|textPassword"
-        android:text="@string/confirm_password"
         android:textAlignment="center"
         android:visibility="visible"
-        android:contentDescription="@string/confirm_password"
         tools:visibility="visible" />
 
     <TextView

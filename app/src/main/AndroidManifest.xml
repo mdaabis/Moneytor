@@ -11,7 +11,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".Pots"></activity>
+        <activity android:name=".Notifications"></activity>
+        <activity android:name=".Leaderboard" />
+        <activity android:name=".Settings" />
+        <activity android:name=".Pots" />
         <activity android:name=".HomePage" />
 
         <meta-data
