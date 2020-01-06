@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,6 +15,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class RegisterPage extends AppCompatActivity {
     Button btnSignIn,btnSignUp;
@@ -71,7 +73,17 @@ public class RegisterPage extends AppCompatActivity {
                                 Toast.makeText(RegisterPage.this,"Sign up unsuccessful, please try again.",Toast.LENGTH_SHORT).show();
                             }
                             else {
-                                startActivity(new Intent(RegisterPage.this,HomePage.class));
+                                FirebaseUser user = mFirebaseAuth.getCurrentUser();
+                                user.sendEmailVerification()
+                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                if (task.isSuccessful()) {
+                                                    startActivity(new Intent(RegisterPage.this,MainActivity.class));
+                                                    Toast.makeText(RegisterPage.this,"Registration successful, please verify your email address.",Toast.LENGTH_SHORT).show();
+                                                }
+                                            }
+                                        });
                             }
                         }
                     });
