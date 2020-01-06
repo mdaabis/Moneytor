@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -18,6 +19,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity {
+    TextView forgotPassword;
     Button btnSignUp, btnSignIn;
     EditText emailId, password;
     FirebaseAuth mFirebaseAuth;
@@ -29,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        forgotPassword = (TextView) findViewById(R.id.forgot_password);
         btnSignUp = (Button)findViewById(R.id.register);
         btnSignIn = (Button) findViewById(R.id.login_button);
         emailId = (EditText) findViewById(R.id.username);
@@ -39,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser mFirebaseUser = mFirebaseAuth.getCurrentUser();
                 if (mFirebaseUser != null && mFirebaseUser.isEmailVerified()) {
-                    Toast.makeText(MainActivity.this,"You are logged in", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(MainActivity.this,"You are logged in", Toast.LENGTH_SHORT).show();
                     changeActivity(MainActivity.this, HomePage.class);
                 } else {
                     Toast.makeText(MainActivity.this,"Please Login",Toast.LENGTH_SHORT).show();
@@ -87,6 +90,14 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     Toast.makeText(MainActivity.this,"Error Occurred!",Toast.LENGTH_SHORT).show();
                 }
+            }
+        });
+        forgotPassword.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                Toast.makeText(MainActivity.this,"Forgot password - To be completed",Toast.LENGTH_SHORT).show();
+                changeActivity(MainActivity.this, ForgotPassword.class);
+                //To be completed
             }
         });
     }

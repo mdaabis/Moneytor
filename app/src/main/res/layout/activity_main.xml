@@ -83,6 +83,8 @@
         android:text="@string/forgot_password"
         android:textAllCaps="false"
         android:textColor="@color/link_blue"
+        android:onClick="onClick"
+        android:clickable="true"
         android:contentDescription="@string/forgot_password"/>
 
     <Button
