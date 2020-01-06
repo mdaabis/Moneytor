@@ -47,22 +47,28 @@ public class RegisterPage extends AppCompatActivity {
                 String email = emailId.getText().toString().trim();
                 String pwd = password.getText().toString();
                 String cnfrmPwd = cnfrmpassword.getText().toString();
+                String regex = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
                 if (email.isEmpty() && pwd.isEmpty()) {
-                    Toast.makeText(RegisterPage.this,"Fields Are Empty!",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RegisterPage.this, "Fields Are Empty.", Toast.LENGTH_SHORT).show();
                 } else if (pwd.isEmpty()) {
-                    password.setError("Please enter your password");
+                    password.setError("Please enter your password.");
                     password.requestFocus();
-                } else if(email.isEmpty()){
-                    emailId.setError("Please enter email id");
+                } else if (email.isEmpty()) {
+                    emailId.setError("Please enter email.");
                     emailId.requestFocus();
-                } else if (!pwd.equals(cnfrmPwd)){
-                    Toast.makeText(RegisterPage.this, "Passwords do not match",Toast.LENGTH_SHORT).show();
+                } else if (!pwd.equals(cnfrmPwd)) {
+                    Toast.makeText(RegisterPage.this, "Passwords do not match.", Toast.LENGTH_SHORT).show();
+                } else if (!email.matches(regex)) {
+                    Toast.makeText(RegisterPage.this, "Invalid email address.", Toast.LENGTH_SHORT).show();
+                } else if(pwd.length()<8){
+                    password.setError("Password must be at least 8 characters long.");
+                    password.requestFocus();
                 } else  if(!(email.isEmpty() && pwd.isEmpty())){
                     mFirebaseAuth.createUserWithEmailAndPassword(email, pwd).addOnCompleteListener(RegisterPage.this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if(!task.isSuccessful()){
-                                Toast.makeText(RegisterPage.this,"Sign Up Unsuccessful, Please Try Again",Toast.LENGTH_SHORT).show();
+                                Toast.makeText(RegisterPage.this,"Sign up unsuccessful, please try again.",Toast.LENGTH_SHORT).show();
                             }
                             else {
                                 startActivity(new Intent(RegisterPage.this,HomePage.class));
@@ -70,7 +76,7 @@ public class RegisterPage extends AppCompatActivity {
                         }
                     });
                 } else {
-                    Toast.makeText(RegisterPage.this,"Error Occurred!",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RegisterPage.this,"Error occurred.",Toast.LENGTH_SHORT).show();
                 }
 
             }
