@@ -16,10 +16,15 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class RegisterPage extends AppCompatActivity {
     Button btnSignIn,btnSignUp;
-    EditText emailId, password, cnfrmpassword;
+    EditText emailId, password, cnfrmpassword,first_name, surname;
     FirebaseAuth mFirebaseAuth;
 
 
@@ -34,6 +39,8 @@ public class RegisterPage extends AppCompatActivity {
         emailId = (EditText) findViewById(R.id.ETusername);
         password = (EditText) findViewById(R.id.ETpassword);
         cnfrmpassword = (EditText) findViewById(R.id.ETconfirm);
+        first_name = (EditText) findViewById(R.id.ETname);
+        surname = (EditText) findViewById(R.id.ETsurname);
 
         btnSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,6 +80,17 @@ public class RegisterPage extends AppCompatActivity {
                                 Toast.makeText(RegisterPage.this,"Sign up unsuccessful, please try again.",Toast.LENGTH_SHORT).show();
                             }
                             else {
+                                String user_id = mFirebaseAuth.getCurrentUser().getUid();
+                                String firstName = first_name.getText().toString();
+                                String surName = surname.getText().toString();
+
+                                DatabaseReference current_user_db = FirebaseDatabase.getInstance().getReference().child("Users").child(user_id);
+                                Map newPost = new HashMap();
+                                newPost.put("First name", firstName);
+                                newPost.put("Surname", surName);
+                                current_user_db.setValue(newPost);
+
+
                                 FirebaseUser user = mFirebaseAuth.getCurrentUser();
                                 user.sendEmailVerification()
                                         .addOnCompleteListener(new OnCompleteListener<Void>() {

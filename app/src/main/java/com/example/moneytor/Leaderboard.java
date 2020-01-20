@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class Leaderboard extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private DrawerLayout drawer;
@@ -55,6 +56,11 @@ public class Leaderboard extends AppCompatActivity implements NavigationView.OnN
                 break;
             case R.id.nav_notifications:
                 changeActivity(this, Notifications.class);
+                break;
+            case R.id.nav_logout:
+                FirebaseAuth.getInstance().signOut();
+                Intent intent = new Intent(Leaderboard.this, MainActivity.class);
+                startActivity(intent);
                 break;
         }
         return true;

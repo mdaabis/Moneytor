@@ -17,6 +17,9 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+
 import java.lang.Object;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -37,7 +40,6 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         int myColor = getResources().getColor(R.color.title);
         toolbar.setTitleTextColor(myColor);
         setSupportActionBar(toolbar);
-
         drawer = findViewById(R.id.drawer_layout);
         btnLogOut = findViewById(R.id.buttonLO);
         btnLogOut.setOnClickListener(new View.OnClickListener() {
@@ -76,6 +78,12 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
             case R.id.nav_notifications:
                 changeActivity(this, Notifications.class);
                 break;
+            case R.id.nav_logout:
+                FirebaseAuth.getInstance().signOut();
+                Intent intent = new Intent(HomePage.this, MainActivity.class);
+                startActivity(intent);
+                break;
+
         }
         return true;
     }
