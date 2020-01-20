@@ -26,7 +26,6 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class HomePage extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
     private DrawerLayout drawer;
-    Button btnLogOut;
     FirebaseAuth mFirebaseAuth;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
 
@@ -41,15 +40,6 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         toolbar.setTitleTextColor(myColor);
         setSupportActionBar(toolbar);
         drawer = findViewById(R.id.drawer_layout);
-        btnLogOut = findViewById(R.id.buttonLO);
-        btnLogOut.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FirebaseAuth.getInstance().signOut();
-                Intent intent = new Intent(HomePage.this, MainActivity.class);
-                startActivity(intent);
-            }
-        });
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
