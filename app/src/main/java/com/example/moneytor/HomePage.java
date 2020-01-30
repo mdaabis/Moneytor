@@ -28,21 +28,20 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
     private DrawerLayout drawer;
     FirebaseAuth mFirebaseAuth;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
-    Button BTNfetchData;
+    TextView tv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
 
-        BTNfetchData = (Button) findViewById(R.id.BTNFetchData);
-        BTNfetchData.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FetchData process = new FetchData();
-                process.execute();
-            }
-        });
+
+        FetchData process = new FetchData();
+        process.execute();
+
+        tv=(TextView) findViewById(R.id.textView);
+//        tv.setText(process.whoAmI);
+        System.out.println("Whoami from HomePage getter: " + process.whoAmI);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("Home");
@@ -103,4 +102,9 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         Intent intent = new Intent(Current, Target);
         startActivity(intent);
     }
+
+//    public void callFetchData(){
+//        FetchData process = new FetchData();
+//        process.execute();
+//    }
 }

@@ -29,17 +29,10 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" >
 
-            <Button
-                android:id="@+id/BTNFetchData"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Button" />
-
             <TextView
                 android:id="@+id/textView"
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="50dp"
                 android:text="TextView" />
         </FrameLayout>
     </LinearLayout>
