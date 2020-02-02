@@ -40,7 +40,7 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
         String accessToken = "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJlYiI6InIxQVZXdjB6a1Vhc3NDVTRtQ1B5IiwianRpIjoiYWNjdG9rXzAwMDA5cldiY0xpNXV3QWJGcmVrekoiLCJ0eXAiOiJhdCIsInYiOiI2In0.LPbgi59KycMcERQ17e7YyPQYNNDfee0U1bXz1Fdl2pgPDgmzR6ATnpHGh1x8SBr91oRJJcesNi7pHRhhhE8XAg";
         Map<String, String> headers = new HashMap<>();
         headers.put("Authorization", ("Bearer "+ accessToken));
-        this.whoAmI = getJSON("https://api.monzo.com/ping/whoami", headers);
+        whoAmI = getJSON("https://api.monzo.com/ping/whoami", headers);
 //        Pattern pattern = Pattern.compile("\"user_id\":\"(.*?)\"}", Pattern.DOTALL);
 //        Matcher matcher = pattern.matcher(whoAmI);
 //        while (matcher.find()) {
