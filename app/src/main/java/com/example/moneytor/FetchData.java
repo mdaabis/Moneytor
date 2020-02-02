@@ -37,31 +37,21 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
     public  String whoAmI;
     @Override
     protected Void doInBackground(Void... voids) {
-        String accessToken = "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJlYiI6InIxQVZXdjB6a1Vhc3NDVTRtQ1B5IiwianRpIjoiYWNjdG9rXzAwMDA5cldiY0xpNXV3QWJGcmVrekoiLCJ0eXAiOiJhdCIsInYiOiI2In0.LPbgi59KycMcERQ17e7YyPQYNNDfee0U1bXz1Fdl2pgPDgmzR6ATnpHGh1x8SBr91oRJJcesNi7pHRhhhE8XAg";
+        String accessToken = "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJlYiI6ImVXd0xhWHpZOHZ0S255K0J6NThqIiwianRpIjoiYWNjdG9rXzAwMDA5cmQ5M1RzSzhCNXZ0MndRNXAiLCJ0eXAiOiJhdCIsInYiOiI2In0.NSv4TxZgfr37cbPsqFOiqsEEhYwmz3HAxPQGoe-3SQGYjMaORrbWBjutjtJm8Bw7nGhYuyb2wBFzGjR_Cw0lEg";
         Map<String, String> headers = new HashMap<>();
         headers.put("Authorization", ("Bearer "+ accessToken));
+        String account_id="https://api.monzo.com/balance?account_id=acc_00009np8oRwjAPAYEP0mCA";
         whoAmI = getJSON("https://api.monzo.com/ping/whoami", headers);
+        System.out.println("This is Whomai from FetchData: " + whoAmI);
+        System.out.println("Account ID output: "+ getJSON(account_id, headers));
+
 //        Pattern pattern = Pattern.compile("\"user_id\":\"(.*?)\"}", Pattern.DOTALL);
 //        Matcher matcher = pattern.matcher(whoAmI);
 //        while (matcher.find()) {
 //            System.out.println("This is the account_id: " + matcher.group(1));
 //        }
-
-        System.out.println("This is Whomai from FetchData: " +whoAmI);
-//        System.out.println(getJSON("https://api.monzo.com/ping/whoami", headers));
-//        System.out.println(getJSON("https://api.monzo.com/accounts", headers));
-//        headers.put("account_id", "${acc_00009np8oRwjAPAYEP0mCA}");
-//        System.out.println(headers);
-//        System.out.println(getJSON("https://api.monzo.com/balance", headers));
-//        System.out.println(getJSON("https://api.monzo.com/balance?account_id==$acc_00009np8oRwjAPAYEP0mCA", headers));
-//        System.out.println(getJSON("https://api.monzo.com/pots", headers));
-
         return null;
     }
-//
-//    public String getWhoAmI(){
-//        return this.whoAmI;
-//    }
 
     public static String getJSON(String address, Map<String, String> headers) {
         StringBuilder builder = new StringBuilder();
@@ -73,8 +63,6 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
                 httpGet.addHeader(header.getKey(), header.getValue());
             }
         }
-//        System.out.println(httpGet.toString());
-
         try {
             HttpResponse response = client.execute(httpGet);
             StatusLine statusLine = response.getStatusLine();
@@ -87,11 +75,9 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
                 while ((line = reader.readLine()) != null) {
                     builder.append(line);
                 }
-
 //                JSONArray JA = new JSONArray(builder);
 //                for(int i=0;i<JA.length();i++){
 //                    JSONObject JO = (JSONObject) JA.get(i);
-//
 //                }
 
             } else {
@@ -107,11 +93,15 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
 //        } catch (JSONException e){
 //            e.printStackTrace();
         }
-
-        //
-
-
         return builder.toString();
+    }
+
+
+    protected void onPostExecute(Void aVoid) {
+        super.onPostExecute(aVoid);
+
+        HomePage.tv.setText(this.whoAmI);
+
     }
 
 }

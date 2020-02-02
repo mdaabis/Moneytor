@@ -28,7 +28,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
     private DrawerLayout drawer;
     FirebaseAuth mFirebaseAuth;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
-    TextView tv;
+    public static TextView tv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +41,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
 
         tv=(TextView) findViewById(R.id.textView);
 //        tv.setText(process.whoAmI);
-        System.out.println("Whoami from HomePage getter: " + process.whoAmI);
+//        System.out.println("Whoami from HomePage getter: " + process.whoAmI);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("Home");
