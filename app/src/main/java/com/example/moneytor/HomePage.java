@@ -38,10 +38,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
 
         FetchData process = new FetchData();
         process.execute();
-
         tv=(TextView) findViewById(R.id.textView);
-//        tv.setText(process.whoAmI);
-//        System.out.println("Whoami from HomePage getter: " + process.whoAmI);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("Home");
@@ -57,8 +54,6 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-
-
     }
 
     @Override
@@ -102,9 +97,4 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         Intent intent = new Intent(Current, Target);
         startActivity(intent);
     }
-
-//    public void callFetchData(){
-//        FetchData process = new FetchData();
-//        process.execute();
-//    }
 }

@@ -1,5 +1,7 @@
 package com.example.moneytor;
 import android.os.AsyncTask;
+import android.provider.Settings;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
@@ -15,9 +17,13 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,22 +40,29 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class FetchData extends AsyncTask<Void, Void, Void> {
-    public  String whoAmI;
+    DecimalFormat df = new DecimalFormat("#.00");
+    String balance;
+    String spendToday;
+    String currency;
+    String pots;
+    String whoAmI;
+
     @Override
     protected Void doInBackground(Void... voids) {
         String accessToken = "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJlYiI6ImVXd0xhWHpZOHZ0S255K0J6NThqIiwianRpIjoiYWNjdG9rXzAwMDA5cmQ5M1RzSzhCNXZ0MndRNXAiLCJ0eXAiOiJhdCIsInYiOiI2In0.NSv4TxZgfr37cbPsqFOiqsEEhYwmz3HAxPQGoe-3SQGYjMaORrbWBjutjtJm8Bw7nGhYuyb2wBFzGjR_Cw0lEg";
         Map<String, String> headers = new HashMap<>();
         headers.put("Authorization", ("Bearer "+ accessToken));
-        String account_id="https://api.monzo.com/balance?account_id=acc_00009np8oRwjAPAYEP0mCA";
-        whoAmI = getJSON("https://api.monzo.com/ping/whoami", headers);
-        System.out.println("This is Whomai from FetchData: " + whoAmI);
-        System.out.println("Account ID output: "+ getJSON(account_id, headers));
+        
+        String balanceURL = "https://api.monzo.com/balance?account_id=acc_00009np8oRwjAPAYEP0mCA";
+        String potsURL = "https://api.monzo.com/pots";
+        String whoAmIURL = "https://api.monzo.com/ping/whoami";
 
-//        Pattern pattern = Pattern.compile("\"user_id\":\"(.*?)\"}", Pattern.DOTALL);
-//        Matcher matcher = pattern.matcher(whoAmI);
-//        while (matcher.find()) {
-//            System.out.println("This is the account_id: " + matcher.group(1));
-//        }
+        balance = df.format(Double.parseDouble(parse(getJSON(balanceURL, headers), "balance")) / 100);
+        currency = parse(getJSON(balanceURL, headers), "currency");
+        spendToday = df.format(Double.parseDouble(parse(getJSON(balanceURL, headers), "spend_today")));
+        whoAmI = getJSON(whoAmIURL, headers);
+        pots = getJSON(potsURL, headers);
+        System.out.println(whoAmI + "\n" + pots + "\n" + spendToday);
         return null;
     }
 
@@ -75,11 +88,6 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
                 while ((line = reader.readLine()) != null) {
                     builder.append(line);
                 }
-//                JSONArray JA = new JSONArray(builder);
-//                for(int i=0;i<JA.length();i++){
-//                    JSONObject JO = (JSONObject) JA.get(i);
-//                }
-
             } else {
                 System.err.println("Error code " + statusCode);
             }
@@ -90,17 +98,30 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
         } catch (IOException e) {
             e.printStackTrace();
             e.getMessage();
-//        } catch (JSONException e){
-//            e.printStackTrace();
         }
         return builder.toString();
     }
 
-
+    public String parse(String data, String type){
+        try {
+            JSONObject JO = new JSONObject(data);
+            if (type.equals("balance")) {
+                return JO.getString("total_balance");
+            } else if (type.equals("spend_today")) {
+                return JO.getString("spend_today");
+            } else if (type.equals("currency")) {
+                return JO.getString("currency");
+            }
+        } catch (JSONException e){
+            e.printStackTrace();
+        }
+        return "-1";
+    }
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
 
-        HomePage.tv.setText(this.whoAmI);
+        String b = "£"+this.balance;
+        HomePage.tv.setText(b);
 
     }
 
