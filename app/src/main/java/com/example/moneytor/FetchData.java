@@ -2,6 +2,10 @@ package com.example.moneytor;
 import android.os.AsyncTask;
 import android.provider.Settings;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
@@ -41,28 +45,37 @@ import okhttp3.Response;
 
 public class FetchData extends AsyncTask<Void, Void, Void> {
     DecimalFormat df = new DecimalFormat("#.00");
-    String balance;
-    String spendToday;
-    String currency;
-    String pots;
-    String whoAmI;
+    private String balance;
+    private String spendToday;
+    private String currency;
+    private String pots;
+    private String transactions;
+    FirebaseAuth mFirebaseAuth;
+
 
     @Override
     protected Void doInBackground(Void... voids) {
-        String accessToken = "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJlYiI6ImVXd0xhWHpZOHZ0S255K0J6NThqIiwianRpIjoiYWNjdG9rXzAwMDA5cmQ5M1RzSzhCNXZ0MndRNXAiLCJ0eXAiOiJhdCIsInYiOiI2In0.NSv4TxZgfr37cbPsqFOiqsEEhYwmz3HAxPQGoe-3SQGYjMaORrbWBjutjtJm8Bw7nGhYuyb2wBFzGjR_Cw0lEg";
+        String accessToken = "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJlYiI6Ik5kbStvU3VmdDVNa3BuUGx5anBtIiwianRpIjoiYWNjdG9rXzAwMDA5cmY1eHBPekdxQ3BNcGtoQWYiLCJ0eXAiOiJhdCIsInYiOiI2In0.V-3kSVGiL5N7il1TxOosP1Vn-ujJU2DcTSbAC9Af3YJjj_P0yNyPTLIoqdV17Pd5m25MQ6XJYufoVtpCXokFjA";
         Map<String, String> headers = new HashMap<>();
         headers.put("Authorization", ("Bearer "+ accessToken));
-        
+
         String balanceURL = "https://api.monzo.com/balance?account_id=acc_00009np8oRwjAPAYEP0mCA";
         String potsURL = "https://api.monzo.com/pots";
-        String whoAmIURL = "https://api.monzo.com/ping/whoami";
+        String transactionsURL = "https://api.monzo.com/transactions?account_id=acc_00009np8oRwjAPAYEP0mCA";
 
         balance = df.format(Double.parseDouble(parse(getJSON(balanceURL, headers), "balance")) / 100);
         currency = parse(getJSON(balanceURL, headers), "currency");
         spendToday = df.format(Double.parseDouble(parse(getJSON(balanceURL, headers), "spend_today")));
-        whoAmI = getJSON(whoAmIURL, headers);
         pots = getJSON(potsURL, headers);
-        System.out.println(whoAmI + "\n" + pots + "\n" + spendToday);
+        transactions = getJSON(transactionsURL, headers);
+        System.out.println(pots);
+        System.out.println(transactions);
+//        String user_id = RegisterPage.mFirebaseAuth.getCurrentUser().getUid();
+//        DatabaseReference current_user_db = FirebaseDatabase.getInstance().getReference().child("Users").child(user_id);
+//        Map newPost = new HashMap();
+//        newPost.put("test1", "test1.value");
+//        newPost.put("test2", "test2.value");
+//        current_user_db.setValue(newPost);
         return null;
     }
 
