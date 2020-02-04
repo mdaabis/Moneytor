@@ -24,6 +24,8 @@ public class MainActivity extends AppCompatActivity {
     EditText emailId, password;
     FirebaseAuth mFirebaseAuth;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
+    String user_id;
+
 
 
     @Override
@@ -37,6 +39,8 @@ public class MainActivity extends AppCompatActivity {
         emailId = (EditText) findViewById(R.id.username);
         password = (EditText) findViewById(R.id.password);
         mFirebaseAuth = FirebaseAuth.getInstance();
+
+
         mAuthStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -44,6 +48,8 @@ public class MainActivity extends AppCompatActivity {
                 if (mFirebaseUser != null && mFirebaseUser.isEmailVerified()) {
                     Toast.makeText(MainActivity.this,"You are logged in", Toast.LENGTH_SHORT).show();
                     changeActivity(MainActivity.this, HomePage.class);
+                    user_id = mFirebaseUser.getUid();
+                    System.out.println("This is the user ID from MainActivity: " + user_id);
                 } else {
                     Toast.makeText(MainActivity.this,"Please login",Toast.LENGTH_SHORT).show();
                 }

@@ -3,6 +3,7 @@ import android.os.AsyncTask;
 import android.provider.Settings;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -51,6 +52,7 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
     private String pots;
     private String transactions;
     FirebaseAuth mFirebaseAuth;
+    DatabaseReference current_user_db;
 
 
     @Override
@@ -68,14 +70,17 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
         spendToday = df.format(Double.parseDouble(parse(getJSON(balanceURL, headers), "spend_today")));
         pots = getJSON(potsURL, headers);
         transactions = getJSON(transactionsURL, headers);
-        System.out.println(pots);
-        System.out.println(transactions);
-//        String user_id = RegisterPage.mFirebaseAuth.getCurrentUser().getUid();
-//        DatabaseReference current_user_db = FirebaseDatabase.getInstance().getReference().child("Users").child(user_id);
-//        Map newPost = new HashMap();
-//        newPost.put("test1", "test1.value");
-//        newPost.put("test2", "test2.value");
-//        current_user_db.setValue(newPost);
+        mFirebaseAuth = FirebaseAuth.getInstance();
+        String userID = mFirebaseAuth.getCurrentUser().getUid();
+
+//        System.out.println(pots);
+//        System.out.println(transactions);
+        current_user_db = FirebaseDatabase.getInstance().getReference().child("Users").child(userID);
+        Map newPost = new HashMap();
+        newPost.put("test1", "test1.value");
+        newPost.put("test2", "test2.value");
+        current_user_db.setValue(newPost);
+        System.out.println("This is the user ID from FetchData: " + userID);
         return null;
     }
 

@@ -26,7 +26,7 @@ public class RegisterPage extends AppCompatActivity {
     Button btnSignIn,btnSignUp;
     EditText emailId, password, cnfrmpassword,first_name, surname;
     FirebaseAuth mFirebaseAuth;
-
+    DatabaseReference current_user_db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,7 +84,7 @@ public class RegisterPage extends AppCompatActivity {
                                 String firstName = first_name.getText().toString();
                                 String surName = surname.getText().toString();
 
-                                DatabaseReference current_user_db = FirebaseDatabase.getInstance().getReference().child("Users").child(user_id);
+                                current_user_db = FirebaseDatabase.getInstance().getReference().child("Users").child(user_id);
                                 Map newPost = new HashMap();
                                 newPost.put("First name", firstName);
                                 newPost.put("Surname", surName);

@@ -35,7 +35,6 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
 
-
         FetchData process = new FetchData();
         process.execute();
         tv=(TextView) findViewById(R.id.textView);
