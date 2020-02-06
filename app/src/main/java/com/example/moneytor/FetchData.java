@@ -62,7 +62,7 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected Void doInBackground(Void... voids) {
-        String accessToken = "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJlYiI6Ik5kbStvU3VmdDVNa3BuUGx5anBtIiwianRpIjoiYWNjdG9rXzAwMDA5cmY1eHBPekdxQ3BNcGtoQWYiLCJ0eXAiOiJhdCIsInYiOiI2In0.V-3kSVGiL5N7il1TxOosP1Vn-ujJU2DcTSbAC9Af3YJjj_P0yNyPTLIoqdV17Pd5m25MQ6XJYufoVtpCXokFjA";
+        String accessToken = "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJlYiI6ImpidlFvbjkxNTB0NGRhcXdCdjlDIiwianRpIjoiYWNjdG9rXzAwMDA5cmtEY1F5NmdveHpzZ01aTW8iLCJ0eXAiOiJhdCIsInYiOiI2In0.lF8V12HFVQ_3_vPM5N8gFO95cDl4jRy3fAfUFxQE8PdoI-uXhuqDpgnJovss6adg9-dnbhRlcNIsLb3gnVWY7Q";
         Map<String, String> headers = new HashMap<>();
         headers.put("Authorization", ("Bearer "+ accessToken));
 
@@ -78,27 +78,53 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
         mFirebaseAuth = FirebaseAuth.getInstance();
         String userID = mFirebaseAuth.getCurrentUser().getUid();
 
-//        System.out.println(pots);
-//        System.out.println(transactions);
-        current_user_db = FirebaseDatabase.getInstance().getReference().child("Users").child(userID);
-        Map newPost = new HashMap();
-        newPost.put("test1", "test1.value");
-        newPost.put("test2", "test2.value");
-        current_user_db.setValue(newPost);
+        System.out.println(pots);
+        System.out.println("This is transactions: "+ transactions);
 //        System.out.println("This is the user ID from FetchData: " + userID);
-        current_user_db.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                System.out.println(dataSnapshot.getValue());
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
+        try {
+            if (!transactions.equals("403")) {
+                String parsedTransactions = parseJSON(transactions);
+//                System.out.println("Transaction not equal to 403 and parsed transactions = " + parsedTransactions);
+                JSONArray JA = new JSONArray(parsedTransactions);
+                for (int i = 0; i < JA.length(); i++) {
+                    JSONObject JO = (JSONObject) JA.get(i);
+                    current_user_db = FirebaseDatabase.getInstance().getReference().child("Users").child(userID).child(JO.get("id").toString());
+                    Map newPost = new HashMap();
+                    newPost.put("amount", JO.get("amount"));
+                    newPost.put("description", JO.get("description"));
+                    newPost.put("created", JO.get("created"));
+                    newPost.put("currency", JO.get("currency"));
+                    current_user_db.setValue(newPost);
+//                    System.out.println("This is JO: " + JO.get("amount"));
+                }
+                System.out.println("Transactions not expired: " + transactions);
+            } else {
+                System.out.println("Transactions expired: " + transactions);
             }
-        });
+        } catch (JSONException e) {
+            e.printStackTrace();
+            System.out.println("error jsonE");
+        }
+
+        // This ValueEventListener reads
+//        current_user_db.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                System.out.println(dataSnapshot.getValue());
+//            }
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
 
         return null;
+    }
+
+    public static String parseJSON(String transactions){
+        String parsed=transactions.substring(transactions.indexOf("["));
+        return parsed.substring(0, parsed.length()-1);
     }
 
 //    public static void readData(){
@@ -131,7 +157,8 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
                     builder.append(line);
                 }
             } else {
-                System.err.println("Error code " + statusCode);
+//                System.err.println("Error code " + statusCode);
+                return "403";
             }
         } catch (ClientProtocolException e) {
             e.printStackTrace();
@@ -142,6 +169,34 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
             e.getMessage();
         }
         return builder.toString();
+    }
+
+    public static boolean getErrorCode(String address, Map<String, String> headers) {
+        StringBuilder builder = new StringBuilder();
+        HttpClient client = new DefaultHttpClient();
+        HttpGet httpGet = new HttpGet(address);
+
+        if (headers != null) {
+            for (Map.Entry<String, String> header : headers.entrySet()) {
+                httpGet.addHeader(header.getKey(), header.getValue());
+            }
+        }
+        try {
+            HttpResponse response = client.execute(httpGet);
+            StatusLine statusLine = response.getStatusLine();
+            int statusCode = statusLine.getStatusCode();
+            if (statusCode == 200) {
+                return true;
+            }
+        } catch (ClientProtocolException e) {
+            e.printStackTrace();
+            e.getMessage();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            e.getMessage();
+        }
+        return false;
     }
 
     public String parse(String data, String type){
@@ -159,6 +214,7 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
         }
         return "-1";
     }
+
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
 
