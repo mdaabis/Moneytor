@@ -62,7 +62,7 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected Void doInBackground(Void... voids) {
-        String accessToken = "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJlYiI6ImpidlFvbjkxNTB0NGRhcXdCdjlDIiwianRpIjoiYWNjdG9rXzAwMDA5cmtEY1F5NmdveHpzZ01aTW8iLCJ0eXAiOiJhdCIsInYiOiI2In0.lF8V12HFVQ_3_vPM5N8gFO95cDl4jRy3fAfUFxQE8PdoI-uXhuqDpgnJovss6adg9-dnbhRlcNIsLb3gnVWY7Q";
+        String accessToken = "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJlYiI6Im1UbTIvRFN5b0hrM2VQbER2eGY3IiwianRpIjoiYWNjdG9rXzAwMDA5cnU0dlZIOXdYb2FLaXZWbm0iLCJ0eXAiOiJhdCIsInYiOiI2In0.D1kefDHdDaxSqf5DJtokuIxYHdWkgs_C1WbC82yEQlaYPPU_9us-ezgcFtdJHu_s7BlufT2iRXL1OuG7Bbg6ag";
         Map<String, String> headers = new HashMap<>();
         headers.put("Authorization", ("Bearer "+ accessToken));
 
@@ -86,17 +86,20 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
             if (!transactions.equals("403")) {
                 String parsedTransactions = parseJSON(transactions);
 //                System.out.println("Transaction not equal to 403 and parsed transactions = " + parsedTransactions);
+
                 JSONArray JA = new JSONArray(parsedTransactions);
                 for (int i = 0; i < JA.length(); i++) {
-                    JSONObject JO = (JSONObject) JA.get(i);
-                    current_user_db = FirebaseDatabase.getInstance().getReference().child("Users").child(userID).child(JO.get("id").toString());
                     Map newPost = new HashMap();
-                    newPost.put("amount", JO.get("amount"));
-                    newPost.put("description", JO.get("description"));
-                    newPost.put("created", JO.get("created"));
-                    newPost.put("currency", JO.get("currency"));
-                    current_user_db.setValue(newPost);
-//                    System.out.println("This is JO: " + JO.get("amount"));
+                    JSONObject JO = (JSONObject) JA.get(i);
+                    current_user_db = FirebaseDatabase.getInstance().getReference().child("Users").child(userID).child("Transactions").child(JO.get("id").toString());
+//                    newPost.put("amount", JO.get("amount"));
+//                    newPost.put("description", JO.get("description"));
+//                    newPost.put("created", JO.get("created"));
+//                    newPost.put("currency", JO.get("currency"));
+//                    newPost.put("notes", JO.get("notes"));
+                    String date = JO.get("created").toString().substring(0,JO.get("created").toString().indexOf("T"));
+                    Transaction transaction = new Transaction(JO.get("id").toString(), Double.parseDouble(JO.get("amount").toString()), date, JO.get("currency").toString(), JO.get("merchant").toString(), JO.get("notes").toString(), JO.get("category").toString());
+                    current_user_db.setValue(transaction);
                 }
                 System.out.println("Transactions not expired: " + transactions);
             } else {
@@ -171,33 +174,33 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
         return builder.toString();
     }
 
-    public static boolean getErrorCode(String address, Map<String, String> headers) {
-        StringBuilder builder = new StringBuilder();
-        HttpClient client = new DefaultHttpClient();
-        HttpGet httpGet = new HttpGet(address);
-
-        if (headers != null) {
-            for (Map.Entry<String, String> header : headers.entrySet()) {
-                httpGet.addHeader(header.getKey(), header.getValue());
-            }
-        }
-        try {
-            HttpResponse response = client.execute(httpGet);
-            StatusLine statusLine = response.getStatusLine();
-            int statusCode = statusLine.getStatusCode();
-            if (statusCode == 200) {
-                return true;
-            }
-        } catch (ClientProtocolException e) {
-            e.printStackTrace();
-            e.getMessage();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            e.getMessage();
-        }
-        return false;
-    }
+//    public static boolean getErrorCode(String address, Map<String, String> headers) {
+//        StringBuilder builder = new StringBuilder();
+//        HttpClient client = new DefaultHttpClient();
+//        HttpGet httpGet = new HttpGet(address);
+//
+//        if (headers != null) {
+//            for (Map.Entry<String, String> header : headers.entrySet()) {
+//                httpGet.addHeader(header.getKey(), header.getValue());
+//            }
+//        }
+//        try {
+//            HttpResponse response = client.execute(httpGet);
+//            StatusLine statusLine = response.getStatusLine();
+//            int statusCode = statusLine.getStatusCode();
+//            if (statusCode == 200) {
+//                return true;
+//            }
+//        } catch (ClientProtocolException e) {
+//            e.printStackTrace();
+//            e.getMessage();
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            e.getMessage();
+//        }
+//        return false;
+//    }
 
     public String parse(String data, String type){
         try {

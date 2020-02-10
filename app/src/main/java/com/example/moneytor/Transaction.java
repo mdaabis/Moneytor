@@ -2,7 +2,7 @@ package com.example.moneytor;
 
 public class Transaction {
 
-    private double account_balance;
+    private String transaction_id;
     private double amount;
     private String date; //Needs to be formatted
     private String currency;
@@ -10,19 +10,15 @@ public class Transaction {
     private String notes;
     private String category;
 
-    public Transaction(double account_balance, double amount, String date, String currency,
+    public Transaction(String transaction_id, double amount, String date, String currency,
                        String merchant, String notes, String category){
-        this.account_balance=account_balance;
+        this.transaction_id=transaction_id;
         this.amount=amount;
         this.date=date;
         this.currency=currency;
         this.merchant=merchant;
         this.notes=notes;
         this.category=category;
-    }
-
-    public double getAccount_balance(){
-        return this.account_balance;
     }
 
     public double getAmount(){
@@ -47,5 +43,9 @@ public class Transaction {
 
     public String getCategory(){
         return this.category;
+    }
+
+    public String getTransaction_id() {
+        return this.transaction_id;
     }
 }
