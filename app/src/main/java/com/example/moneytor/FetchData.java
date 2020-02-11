@@ -3,9 +3,11 @@ import android.os.AsyncTask;
 import android.provider.Settings;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -33,7 +35,12 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,13 +63,13 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
     private String currency;
     private String pots;
     private String transactions;
-    FirebaseAuth mFirebaseAuth;
-    DatabaseReference current_user_db;
+    private FirebaseAuth mFirebaseAuth;
+    private DatabaseReference current_user_db;
 
 
     @Override
     protected Void doInBackground(Void... voids) {
-        String accessToken = "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJlYiI6Im1UbTIvRFN5b0hrM2VQbER2eGY3IiwianRpIjoiYWNjdG9rXzAwMDA5cnU0dlZIOXdYb2FLaXZWbm0iLCJ0eXAiOiJhdCIsInYiOiI2In0.D1kefDHdDaxSqf5DJtokuIxYHdWkgs_C1WbC82yEQlaYPPU_9us-ezgcFtdJHu_s7BlufT2iRXL1OuG7Bbg6ag";
+        String accessToken = "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJlYiI6IjVRNFo5MndzUnd2UzZ1SGthc2xVIiwianRpIjoiYWNjdG9rXzAwMDA5cnc1V050a2l4NG52ek5KWjMiLCJ0eXAiOiJhdCIsInYiOiI2In0.Z2kBTTgzyGvnGauAYS2S4oAJcHVjfR6VDPE7l3S0SeLdaJemiT9mBlIAcd84Mux3Q27uT9d35kMgRaNz4_xUig";
         Map<String, String> headers = new HashMap<>();
         headers.put("Authorization", ("Bearer "+ accessToken));
 
@@ -78,27 +85,27 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
         mFirebaseAuth = FirebaseAuth.getInstance();
         String userID = mFirebaseAuth.getCurrentUser().getUid();
 
-        System.out.println(pots);
-        System.out.println("This is transactions: "+ transactions);
-//        System.out.println("This is the user ID from FetchData: " + userID);
+//        System.out.println(pots);
+//        System.out.println("This is transactions: "+ transactions);
 
         try {
             if (!transactions.equals("403")) {
                 String parsedTransactions = parseJSON(transactions);
 //                System.out.println("Transaction not equal to 403 and parsed transactions = " + parsedTransactions);
-
                 JSONArray JA = new JSONArray(parsedTransactions);
                 for (int i = 0; i < JA.length(); i++) {
-                    Map newPost = new HashMap();
+//                    Map newPost = new HashMap();
                     JSONObject JO = (JSONObject) JA.get(i);
                     current_user_db = FirebaseDatabase.getInstance().getReference().child("Users").child(userID).child("Transactions").child(JO.get("id").toString());
-//                    newPost.put("amount", JO.get("amount"));
-//                    newPost.put("description", JO.get("description"));
-//                    newPost.put("created", JO.get("created"));
-//                    newPost.put("currency", JO.get("currency"));
-//                    newPost.put("notes", JO.get("notes"));
-                    String date = JO.get("created").toString().substring(0,JO.get("created").toString().indexOf("T"));
-                    Transaction transaction = new Transaction(JO.get("id").toString(), Double.parseDouble(JO.get("amount").toString()), date, JO.get("currency").toString(), JO.get("merchant").toString(), JO.get("notes").toString(), JO.get("category").toString());
+//                    String date = JO.get("created").toString().substring(0,JO.get("created").toString().indexOf("T")); //Formatting date to only get day and not time
+                    String dateAsString = JO.get("created").toString().substring(0, JO.get("created").toString().indexOf(".")) + "Z";
+                    Date date = parseDate(dateAsString);
+                    long epochDate = date.getTime();
+                    System.out.println("Date as epoch: " + epochDate);
+                    System.out.println("date: " + date);
+//                    System.out.println("date: " + JO.get("created").toString().substring(0, JO.get("created").toString().indexOf(":") + 5 ));
+
+                    Transaction transaction = new Transaction(JO.get("id").toString(), Double.parseDouble(JO.get("amount").toString()), epochDate, JO.get("currency").toString(), JO.get("merchant").toString(), JO.get("notes").toString(), JO.get("category").toString());
                     current_user_db.setValue(transaction);
                 }
                 System.out.println("Transactions not expired: " + transactions);
@@ -110,12 +117,44 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
             System.out.println("error jsonE");
         }
 
-        // This ValueEventListener reads
-//        current_user_db.addValueEventListener(new ValueEventListener() {
+//         This ValueEventListener reads
+//        DatabaseReference myRef = FirebaseDatabase.getInstance().getReference();
+//        myRef.addValueEventListener(new ValueEventListener() {
 //            @Override
 //            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                System.out.println(dataSnapshot.getValue());
+//                System.out.println("This is snapshot: " + dataSnapshot.getValue());
 //            }
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
+
+//        myRef.addChildEventListener(new ChildEventListener() {
+//            @Override
+//            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+//                Transaction newPost = dataSnapshot.getValue(Transaction.class);
+//                System.out.println("Amount from onChildAdded " + newPost.getAmount());
+//                System.out.println("Currency from onChildAdded: " + newPost.getCurrency());
+//            }
+//
+//            @Override
+//            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+//                Transaction newPost = dataSnapshot.getValue(Transaction.class);
+//                System.out.println("Amount from onChildChanged: " + newPost.getAmount());
+//                System.out.println("Currency from onChildChanged: " + newPost.getCurrency());
+//            }
+//
+//            @Override
+//            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+//
+//            }
+//
+//            @Override
+//            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+//
+//            }
+//
 //            @Override
 //            public void onCancelled(@NonNull DatabaseError databaseError) {
 //
@@ -125,19 +164,13 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
         return null;
     }
 
-    public static String parseJSON(String transactions){
+    // Method gets rid of extra characters around JSON array
+    private static String parseJSON(String transactions){
         String parsed=transactions.substring(transactions.indexOf("["));
         return parsed.substring(0, parsed.length()-1);
     }
 
-//    public static void readData(){
-//
-//    }
-//    public static void writeData(){
-//
-//    }
-
-    public static String getJSON(String address, Map<String, String> headers) {
+    private static String getJSON(String address, Map<String, String> headers) {
         StringBuilder builder = new StringBuilder();
         HttpClient client = new DefaultHttpClient();
         HttpGet httpGet = new HttpGet(address);
@@ -174,35 +207,7 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
         return builder.toString();
     }
 
-//    public static boolean getErrorCode(String address, Map<String, String> headers) {
-//        StringBuilder builder = new StringBuilder();
-//        HttpClient client = new DefaultHttpClient();
-//        HttpGet httpGet = new HttpGet(address);
-//
-//        if (headers != null) {
-//            for (Map.Entry<String, String> header : headers.entrySet()) {
-//                httpGet.addHeader(header.getKey(), header.getValue());
-//            }
-//        }
-//        try {
-//            HttpResponse response = client.execute(httpGet);
-//            StatusLine statusLine = response.getStatusLine();
-//            int statusCode = statusLine.getStatusCode();
-//            if (statusCode == 200) {
-//                return true;
-//            }
-//        } catch (ClientProtocolException e) {
-//            e.printStackTrace();
-//            e.getMessage();
-//
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            e.getMessage();
-//        }
-//        return false;
-//    }
-
-    public String parse(String data, String type){
+    private static String parse(String data, String type){
         try {
             JSONObject JO = new JSONObject(data);
             if (type.equals("balance")) {
@@ -225,6 +230,21 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
         HomePage.tv.setText(b);
 
     }
+
+    private static Date parseDate(String dateStr) {
+//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+        try {
+           return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").parse(dateStr);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return new Date();
+    }
+
+    // Removing unnecessary characters in middle of string
+//    public static String charRemoveAt(String str, int p) {
+//        return str.substring(0, p) + str.substring(p + 1);
+//    }
 
 }
 

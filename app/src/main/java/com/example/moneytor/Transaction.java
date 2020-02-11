@@ -1,16 +1,18 @@
 package com.example.moneytor;
 
+import java.util.Date;
+
 public class Transaction {
 
     private String transaction_id;
     private double amount;
-    private String date; //Needs to be formatted
+    private long date; //Needs to be formatted
     private String currency;
     private String merchant;
     private String notes;
     private String category;
 
-    public Transaction(String transaction_id, double amount, String date, String currency,
+    public Transaction(String transaction_id, double amount, long date, String currency,
                        String merchant, String notes, String category){
         this.transaction_id=transaction_id;
         this.amount=amount;
@@ -21,11 +23,21 @@ public class Transaction {
         this.category=category;
     }
 
+//    public Transaction() {
+//        this.transaction_id="-1";
+//        this.amount=-1.0;
+//        this.date="-1";
+//        this.currency="-1";
+//        this.merchant="-1";
+//        this.notes="-1";
+//        this.category="-1";
+//    }
+
     public double getAmount(){
         return this.amount;
     }
 
-    public String getDate(){
+    public long getDate(){
         return this.date;
     }
 
