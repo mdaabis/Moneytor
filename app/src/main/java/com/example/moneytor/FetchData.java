@@ -59,31 +59,33 @@ import okhttp3.Response;
 public class FetchData extends AsyncTask<Void, Void, Void> {
     DecimalFormat df = new DecimalFormat("#.00");
     private String balance;
-    private String spendToday;
-    private String currency;
+//    private String spendToday;
+//    private String currency;
     private String pots;
     private String transactions;
     private FirebaseAuth mFirebaseAuth;
     private DatabaseReference current_user_db;
+    List<Transaction> list;
 
 
     @Override
     protected Void doInBackground(Void... voids) {
-        String accessToken = "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJlYiI6IjVRNFo5MndzUnd2UzZ1SGthc2xVIiwianRpIjoiYWNjdG9rXzAwMDA5cnc1V050a2l4NG52ek5KWjMiLCJ0eXAiOiJhdCIsInYiOiI2In0.Z2kBTTgzyGvnGauAYS2S4oAJcHVjfR6VDPE7l3S0SeLdaJemiT9mBlIAcd84Mux3Q27uT9d35kMgRaNz4_xUig";
+        String accessToken = "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJlYiI6IllTVCtkVmhaNTBHcVRhRXZQNWtPIiwianRpIjoiYWNjdG9rXzAwMDA5cndIRzE5V2lzMzhDc2lQdUQiLCJ0eXAiOiJhdCIsInYiOiI2In0.-WUQ6xLGDU8pklBvPGoMFEjh5nHFGArG9ev5SB-S5mycUhW7beOniAmmt8FpQrOn7lGhyKe9uNgWThYwswEojw";
         Map<String, String> headers = new HashMap<>();
         headers.put("Authorization", ("Bearer "+ accessToken));
 
         String balanceURL = "https://api.monzo.com/balance?account_id=acc_00009np8oRwjAPAYEP0mCA";
         String potsURL = "https://api.monzo.com/pots";
-        String transactionsURL = "https://api.monzo.com/transactions?account_id=acc_00009np8oRwjAPAYEP0mCA";
+        final String transactionsURL = "https://api.monzo.com/transactions?account_id=acc_00009np8oRwjAPAYEP0mCA";
 
         balance = df.format(Double.parseDouble(parse(getJSON(balanceURL, headers), "balance")) / 100);
-        currency = parse(getJSON(balanceURL, headers), "currency");
-        spendToday = df.format(Double.parseDouble(parse(getJSON(balanceURL, headers), "spend_today")));
+//        currency = parse(getJSON(balanceURL, headers), "currency");
+//        spendToday = df.format(Double.parseDouble(parse(getJSON(balanceURL, headers), "spend_today")));
         pots = getJSON(potsURL, headers);
         transactions = getJSON(transactionsURL, headers);
         mFirebaseAuth = FirebaseAuth.getInstance();
         String userID = mFirebaseAuth.getCurrentUser().getUid();
+        list = new ArrayList<>();
 
 //        System.out.println(pots);
 //        System.out.println("This is transactions: "+ transactions);
@@ -101,34 +103,43 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
                     String dateAsString = JO.get("created").toString().substring(0, JO.get("created").toString().indexOf(".")) + "Z";
                     Date date = parseDate(dateAsString);
                     long epochDate = date.getTime();
-                    System.out.println("Date as epoch: " + epochDate);
-                    System.out.println("date: " + date);
+//                    System.out.println("Date as epoch: " + epochDate);
+//                    System.out.println("date: " + date);
 //                    System.out.println("date: " + JO.get("created").toString().substring(0, JO.get("created").toString().indexOf(":") + 5 ));
 
-                    Transaction transaction = new Transaction(JO.get("id").toString(), Double.parseDouble(JO.get("amount").toString()), epochDate, JO.get("currency").toString(), JO.get("merchant").toString(), JO.get("notes").toString(), JO.get("category").toString());
+                    Transaction transaction = new Transaction(JO.get("id").toString(), Double.parseDouble(JO.get("amount").toString()), JO.get("category").toString(), JO.get("currency").toString(), epochDate, JO.get("merchant").toString(), JO.get("notes").toString());
                     current_user_db.setValue(transaction);
                 }
                 System.out.println("Transactions not expired: " + transactions);
             } else {
                 System.out.println("Transactions expired: " + transactions);
+//                DatabaseReference myRef = FirebaseDatabase.getInstance().getReference().child("Users").child(userID).child("Transactions");
+                String path = "Users/" + userID + "/Transactions";
+                DatabaseReference myRef = FirebaseDatabase.getInstance().getReference(path);
+                myRef.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        list.clear();
+                        for(DataSnapshot snapshot: dataSnapshot.getChildren()){
+                            Transaction transaction = snapshot.getValue(Transaction.class);
+                            list.add(transaction);
+                            System.out.println(transaction.getAmount());
+
+                        }
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                    }
+                });
+//                System.out.println("As list: " + list.get(0).getAmount());
+                System.out.println("List size: " + list.size());
+//                System.out.println("As array: " + list.get(2).getAmount());
+//                System.out.println("As string: " + list.toString());
             }
         } catch (JSONException e) {
             e.printStackTrace();
             System.out.println("error jsonE");
         }
-
-//         This ValueEventListener reads
-//        DatabaseReference myRef = FirebaseDatabase.getInstance().getReference();
-//        myRef.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                System.out.println("This is snapshot: " + dataSnapshot.getValue());
-//            }
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//            }
-//        });
 
 //        myRef.addChildEventListener(new ChildEventListener() {
 //            @Override

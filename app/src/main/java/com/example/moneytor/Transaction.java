@@ -6,14 +6,14 @@ public class Transaction {
 
     private String transaction_id;
     private double amount;
-    private long date; //Needs to be formatted
+    private String category;
     private String currency;
+    private long date; //Needs to be formatted
     private String merchant;
     private String notes;
-    private String category;
 
-    public Transaction(String transaction_id, double amount, long date, String currency,
-                       String merchant, String notes, String category){
+    public Transaction(String transaction_id, double amount, String category, String currency, long date,
+                       String merchant, String notes){
         this.transaction_id=transaction_id;
         this.amount=amount;
         this.date=date;
@@ -21,6 +21,9 @@ public class Transaction {
         this.merchant=merchant;
         this.notes=notes;
         this.category=category;
+    }
+
+    public Transaction() {
     }
 
 //    public Transaction() {
@@ -33,16 +36,24 @@ public class Transaction {
 //        this.category="-1";
 //    }
 
+    public String getTransaction_id() {
+        return this.transaction_id;
+    }
+
     public double getAmount(){
         return this.amount;
     }
 
-    public long getDate(){
-        return this.date;
+    public String getCategory(){
+        return this.category;
     }
 
     public String getCurrency(){
         return this.currency;
+    }
+
+    public long getDate(){
+        return this.date;
     }
 
     public String getMerchant(){
@@ -51,13 +62,5 @@ public class Transaction {
 
     public String getNotes(){
         return this.notes;
-    }
-
-    public String getCategory(){
-        return this.category;
-    }
-
-    public String getTransaction_id() {
-        return this.transaction_id;
     }
 }
