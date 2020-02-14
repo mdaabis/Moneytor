@@ -40,6 +40,9 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -59,24 +62,23 @@ import okhttp3.Response;
 public class FetchData extends AsyncTask<Void, Void, Void> {
     DecimalFormat df = new DecimalFormat("#.00");
     private String balance;
-//    private String spendToday;
-//    private String currency;
     private String pots;
     private String transactions;
     private FirebaseAuth mFirebaseAuth;
     private DatabaseReference current_user_db;
-    List<Transaction> list;
-
+    public static List<Transaction> list = new ArrayList<>();
 
     @Override
     protected Void doInBackground(Void... voids) {
-        String accessToken = "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJlYiI6IllTVCtkVmhaNTBHcVRhRXZQNWtPIiwianRpIjoiYWNjdG9rXzAwMDA5cndIRzE5V2lzMzhDc2lQdUQiLCJ0eXAiOiJhdCIsInYiOiI2In0.-WUQ6xLGDU8pklBvPGoMFEjh5nHFGArG9ev5SB-S5mycUhW7beOniAmmt8FpQrOn7lGhyKe9uNgWThYwswEojw";
+        String accessToken = "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJlYiI6IjBYYXJOeFN4ZGFoVFBjS0ZHMzZlIiwianRpIjoiYWNjdG9rXzAwMDA5czBKV1FnSVlMOHhWVHViWjMiLCJ0eXAiOiJhdCIsInYiOiI2In0.t8q1sPFM-6Av2fbHIG83dPXFdoduVKKuXcXI3EUqjRs-3Baf98AH0-UYoV1MfHpjjOp9vu_aRJKHSMGBcSdvtA";
         Map<String, String> headers = new HashMap<>();
         headers.put("Authorization", ("Bearer "+ accessToken));
 
         String balanceURL = "https://api.monzo.com/balance?account_id=acc_00009np8oRwjAPAYEP0mCA";
         String potsURL = "https://api.monzo.com/pots";
+        String retrieveTransaction = "https://api.monzo.com/transactions?tx_00009o9YP2DOBKe410mGgr&expand[]=merchant";
         final String transactionsURL = "https://api.monzo.com/transactions?account_id=acc_00009np8oRwjAPAYEP0mCA";
+        System.out.println("This is transaction: " + getJSON(retrieveTransaction, headers));
 
         balance = df.format(Double.parseDouble(parse(getJSON(balanceURL, headers), "balance")) / 100);
 //        currency = parse(getJSON(balanceURL, headers), "currency");
@@ -85,35 +87,23 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
         transactions = getJSON(transactionsURL, headers);
         mFirebaseAuth = FirebaseAuth.getInstance();
         String userID = mFirebaseAuth.getCurrentUser().getUid();
-        list = new ArrayList<>();
-
-//        System.out.println(pots);
-//        System.out.println("This is transactions: "+ transactions);
 
         try {
             if (!transactions.equals("403")) {
                 String parsedTransactions = parseJSON(transactions);
-//                System.out.println("Transaction not equal to 403 and parsed transactions = " + parsedTransactions);
                 JSONArray JA = new JSONArray(parsedTransactions);
                 for (int i = 0; i < JA.length(); i++) {
-//                    Map newPost = new HashMap();
                     JSONObject JO = (JSONObject) JA.get(i);
                     current_user_db = FirebaseDatabase.getInstance().getReference().child("Users").child(userID).child("Transactions").child(JO.get("id").toString());
-//                    String date = JO.get("created").toString().substring(0,JO.get("created").toString().indexOf("T")); //Formatting date to only get day and not time
                     String dateAsString = JO.get("created").toString().substring(0, JO.get("created").toString().indexOf(".")) + "Z";
                     Date date = parseDate(dateAsString);
                     long epochDate = date.getTime();
-//                    System.out.println("Date as epoch: " + epochDate);
-//                    System.out.println("date: " + date);
-//                    System.out.println("date: " + JO.get("created").toString().substring(0, JO.get("created").toString().indexOf(":") + 5 ));
-
                     Transaction transaction = new Transaction(JO.get("id").toString(), Double.parseDouble(JO.get("amount").toString()), JO.get("category").toString(), JO.get("currency").toString(), epochDate, JO.get("merchant").toString(), JO.get("notes").toString());
                     current_user_db.setValue(transaction);
                 }
                 System.out.println("Transactions not expired: " + transactions);
             } else {
                 System.out.println("Transactions expired: " + transactions);
-//                DatabaseReference myRef = FirebaseDatabase.getInstance().getReference().child("Users").child(userID).child("Transactions");
                 String path = "Users/" + userID + "/Transactions";
                 DatabaseReference myRef = FirebaseDatabase.getInstance().getReference(path);
                 myRef.addValueEventListener(new ValueEventListener() {
@@ -123,55 +113,22 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
                         for(DataSnapshot snapshot: dataSnapshot.getChildren()){
                             Transaction transaction = snapshot.getValue(Transaction.class);
                             list.add(transaction);
-                            System.out.println(transaction.getAmount());
-
+                            Collections.sort(list, new Comparator<Transaction>() {
+                                public int compare(Transaction t1, Transaction t2) {
+                                    return Long.valueOf(t2.getDate()).compareTo(t1.getDate());
+                                }
+                            });
                         }
                     }
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
                     }
                 });
-//                System.out.println("As list: " + list.get(0).getAmount());
-                System.out.println("List size: " + list.size());
-//                System.out.println("As array: " + list.get(2).getAmount());
-//                System.out.println("As string: " + list.toString());
             }
         } catch (JSONException e) {
             e.printStackTrace();
             System.out.println("error jsonE");
         }
-
-//        myRef.addChildEventListener(new ChildEventListener() {
-//            @Override
-//            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-//                Transaction newPost = dataSnapshot.getValue(Transaction.class);
-//                System.out.println("Amount from onChildAdded " + newPost.getAmount());
-//                System.out.println("Currency from onChildAdded: " + newPost.getCurrency());
-//            }
-//
-//            @Override
-//            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-//                Transaction newPost = dataSnapshot.getValue(Transaction.class);
-//                System.out.println("Amount from onChildChanged: " + newPost.getAmount());
-//                System.out.println("Currency from onChildChanged: " + newPost.getCurrency());
-//            }
-//
-//            @Override
-//            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-//
-//            }
-//
-//            @Override
-//            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-//
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//            }
-//        });
-
         return null;
     }
 
