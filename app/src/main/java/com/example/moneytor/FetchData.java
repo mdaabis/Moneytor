@@ -148,8 +148,6 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
 
             }
         });
-
-
         return null;
 
 
@@ -217,7 +215,7 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
 
-        String b = "Account Balance:\n" + "        £"+this.balance;
+        String b = "Account Balance\n" + "         £"+this.balance;
         HomePage.tv.setText(b);
     }
 

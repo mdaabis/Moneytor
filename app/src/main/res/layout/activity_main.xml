@@ -103,7 +103,7 @@
         android:layout_width="150dp"
         android:layout_height="30dp"
         android:layout_gravity="center_horizontal"
-        android:layout_marginLeft="-81dp"
+        android:layout_marginLeft="-80dp"
         android:layout_marginTop="120dp"
         android:text="@string/no_account"
         android:contentDescription="@string/no_account"

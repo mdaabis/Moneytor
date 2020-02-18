@@ -94,7 +94,7 @@
         android:contentDescription="@string/password"
         android:ems="30"
         android:hint="@string/password"
-        android:inputType="textVisiblePassword|textPassword"
+        android:inputType="textPassword"
         android:textAlignment="center"
         android:visibility="visible"
         tools:visibility="visible" />
@@ -109,7 +109,7 @@
         android:contentDescription="@string/confirm_password"
         android:ems="30"
         android:hint="@string/confirm_password"
-        android:inputType="textVisiblePassword|textPassword"
+        android:inputType="textPassword"
         android:textAlignment="center"
         android:visibility="visible"
         tools:visibility="visible" />

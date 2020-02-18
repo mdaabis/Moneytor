@@ -24,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
     EditText emailId, password;
     FirebaseAuth mFirebaseAuth;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
+    private int exitCounter=0;
 
 
 
@@ -121,6 +122,16 @@ public class MainActivity extends AppCompatActivity {
         super.onStop();
         if (mAuthStateListener != null) {
             mFirebaseAuth.removeAuthStateListener(mAuthStateListener);
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(exitCounter<1){
+            Toast.makeText(MainActivity.this,"Press back again to exit.",Toast.LENGTH_SHORT).show();
+            exitCounter++;
+        } else {
+            android.os.Process.killProcess(android.os.Process.myPid());
         }
     }
 }

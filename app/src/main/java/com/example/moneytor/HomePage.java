@@ -46,7 +46,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
 
         FetchData process = new FetchData();
         process.execute();
-        tv=(TextView) findViewById(R.id.textView);
+        tv = (TextView) findViewById(R.id.textView);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("Home");
@@ -69,6 +69,9 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
+        for(int i=0; i<FetchData.list.size();i++){
+            System.out.println(i + " " + FetchData.list.get(i).getDate());
+        }
     }
 
 
