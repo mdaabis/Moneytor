@@ -12,5 +12,6 @@
     <color name="nav_bar_rest">#2699FB</color>
     <color name="title">#000000</color>
     <color name="user_name_nav">#000000</color>
+    <color name="font_colour">#FFFFFF</color>
 
 </resources>

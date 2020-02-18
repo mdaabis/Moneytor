@@ -16,8 +16,7 @@
         android:layout_height="550dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="115dp"
-        android:background="@color/white"
-        android:src="@drawable/rectangle"
+        android:src="@drawable/rect"
         android:contentDescription="@string/rectangle"/>
 
     <ImageView
@@ -69,7 +68,7 @@
         android:contentDescription="@string/password"
         android:ems="30"
         android:hint="@string/password"
-        android:inputType="textVisiblePassword|textPassword"
+        android:inputType="textPassword"
         android:textAlignment="center"
         android:visibility="visible"
         tools:visibility="visible" />

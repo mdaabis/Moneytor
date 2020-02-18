@@ -22,7 +22,7 @@
 
         <meta-data
             android:name="com.google.android.actions"
-            android:resource="@drawable/rectangle" />
+            android:resource="@drawable/rect" />
 
         <activity android:name=".MainActivity">
             <intent-filter>

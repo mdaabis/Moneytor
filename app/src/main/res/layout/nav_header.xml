@@ -11,14 +11,17 @@
     <ImageView
         android:layout_width="95dp"
         android:layout_height="25dp"
+        android:layout_marginTop="30dp"
+        android:layout_gravity="center_horizontal"
         android:src="@drawable/ic_person"/>
 
-    <EditText
+    <TextView
         android:id="@+id/current_user_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingTop="8dp"
         android:text="John Doe"
+        android:layout_gravity="center_horizontal"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         android:textColor="@color/user_name_nav"/>
 

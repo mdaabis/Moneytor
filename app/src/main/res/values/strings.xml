@@ -3,6 +3,7 @@
     <string name="logo">Logo</string>
     <string name="rectangle">White rectangle acting as intermediate layer between buttons and background</string>
     <string name="login">Login</string>
+    <string name="forgot_email">Send email</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="forgot_password">Forgot password? Click here.</string>

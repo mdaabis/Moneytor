@@ -67,10 +67,11 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
     private FirebaseAuth mFirebaseAuth;
     private DatabaseReference current_user_db;
     public static List<Transaction> list = new ArrayList<>();
+    public static String userID;
 
     @Override
     protected Void doInBackground(Void... voids) {
-        String accessToken = "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJlYiI6IjBYYXJOeFN4ZGFoVFBjS0ZHMzZlIiwianRpIjoiYWNjdG9rXzAwMDA5czBKV1FnSVlMOHhWVHViWjMiLCJ0eXAiOiJhdCIsInYiOiI2In0.t8q1sPFM-6Av2fbHIG83dPXFdoduVKKuXcXI3EUqjRs-3Baf98AH0-UYoV1MfHpjjOp9vu_aRJKHSMGBcSdvtA";
+        String accessToken = "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJlYiI6IjhycE1acnVyenNZbks1YWFFRjR3IiwianRpIjoiYWNjdG9rXzAwMDA5czl5WU9IcUdzREtDTHRhbXYiLCJ0eXAiOiJhdCIsInYiOiI2In0.IrWfGyof2m5f462ojKucZG-v27qgSF4qPKOhoGqnmj22-9ASaMilT3z02J5tdOQc7KCCEW10aBqqt3C7AkJLTg";
         Map<String, String> headers = new HashMap<>();
         headers.put("Authorization", ("Bearer "+ accessToken));
 
@@ -86,7 +87,7 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
         pots = getJSON(potsURL, headers);
         transactions = getJSON(transactionsURL, headers);
         mFirebaseAuth = FirebaseAuth.getInstance();
-        String userID = mFirebaseAuth.getCurrentUser().getUid();
+        userID = mFirebaseAuth.getCurrentUser().getUid();
 
         try {
             if (!transactions.equals("403")) {
@@ -129,7 +130,29 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
             e.printStackTrace();
             System.out.println("error jsonE");
         }
+
+        String path = "Users/" + userID ;
+        DatabaseReference myRef = FirebaseDatabase.getInstance().getReference(path);
+
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String firstName = dataSnapshot.child("First name").getValue().toString();
+                String surname = dataSnapshot.child("Surname").getValue().toString();
+                String fullName = firstName + " " + surname;
+                HomePage.navUsername.setText(fullName);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
         return null;
+
+
     }
 
     // Method gets rid of extra characters around JSON array
@@ -194,9 +217,8 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
 
-        String b = "£"+this.balance;
+        String b = "Account Balance:\n" + "        £"+this.balance;
         HomePage.tv.setText(b);
-
     }
 
     private static Date parseDate(String dateStr) {
@@ -208,11 +230,6 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
         }
         return new Date();
     }
-
-    // Removing unnecessary characters in middle of string
-//    public static String charRemoveAt(String str, int p) {
-//        return str.substring(0, p) + str.substring(p + 1);
-//    }
 
 }
 
