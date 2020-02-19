@@ -40,8 +40,16 @@
                 android:layout_marginTop="35dp"
                 android:layout_gravity="center_horizontal"
                 android:text="TextView" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/recyclerView"
+                android:layout_marginTop="120dp">
+            </androidx.recyclerview.widget.RecyclerView>
         </FrameLayout>
     </LinearLayout>
+
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/nav_view"

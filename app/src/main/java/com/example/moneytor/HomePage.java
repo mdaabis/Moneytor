@@ -7,6 +7,9 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
 import android.app.Notification;
@@ -22,6 +25,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.lang.Object;
+import java.util.ArrayList;
+
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -40,11 +45,18 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
     public static TextView tv;
     private int exitCounter=0;
 
+    private ArrayList<String> mAmount = new ArrayList<>();
+    private ArrayList<String> mCategory = new ArrayList<>();
+    private ArrayList<String> mDate = new ArrayList<>();
+    private ArrayList<String> mDescription = new ArrayList<>();
+    private ArrayList<String> mNotes = new ArrayList<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
+        initListBitmaps();
 
         FetchData process = new FetchData();
         process.execute();
@@ -61,21 +73,37 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         View headerView = navigationView.getHeaderView(0);
         navUsername = (TextView) headerView.findViewById(R.id.current_user_name);
 
-
-
-
         navigationView.setNavigationItemSelectedListener(this);
-
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-
-        for(int i=0; i<FetchData.list.size();i++){
-            System.out.println(i + " " + FetchData.list.get(i).getDate());
-        }
     }
 
+    private void initListBitmaps(){
+        for(int i=0; i<FetchData.list.size();i++) {
+            mAmount.add(Double.toString(FetchData.list.get(i).getAmount()));
+            mCategory.add(FetchData.list.get(i).getCategory());
+            mDate.add(Long.toString(FetchData.list.get(i).getDate()));
+            mDescription.add(FetchData.list.get(i).getDescription());
+            mNotes.add(FetchData.list.get(i).getNotes());
+
+            DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
+            dividerItemDecoration.setDrawable(getResources().getDrawable(R.drawable.recycler_view_divider));
+            RecyclerView recyclerView = findViewById(R.id.recyclerView);
+            recyclerView.addItemDecoration(dividerItemDecoration);
+
+        }
+        initRecyclerView();
+    }
+
+    private void initRecyclerView(){
+        RecyclerView recyclerView = findViewById(R.id.recyclerView);
+        RecyclerViewAdapter adapter = new RecyclerViewAdapter(this, mAmount, mCategory, mDate, mDescription, mNotes);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+    }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
@@ -114,11 +142,8 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
                 Toast.makeText(HomePage.this,"Press back again to logout.",Toast.LENGTH_SHORT).show();
                 exitCounter++;
             } else {
-//            MainActivity.emailId.setText("");
-//            MainActivity.password.setText("");
                 FirebaseAuth.getInstance().signOut();
                 changeActivity(HomePage.this, MainActivity.class);
-//            android.os.Process.killProcess(android.os.Process.myPid());
             }
         }
     }

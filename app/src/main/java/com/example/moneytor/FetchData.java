@@ -71,7 +71,7 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected Void doInBackground(Void... voids) {
-        String accessToken = "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJlYiI6IjhycE1acnVyenNZbks1YWFFRjR3IiwianRpIjoiYWNjdG9rXzAwMDA5czl5WU9IcUdzREtDTHRhbXYiLCJ0eXAiOiJhdCIsInYiOiI2In0.IrWfGyof2m5f462ojKucZG-v27qgSF4qPKOhoGqnmj22-9ASaMilT3z02J5tdOQc7KCCEW10aBqqt3C7AkJLTg";
+        String accessToken = "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJlYiI6ImgrdzRmRDZOaFQzcjFhR2F3ZURBIiwianRpIjoiYWNjdG9rXzAwMDA5c0NJZXQyZkR3R3hqMk1UOEQiLCJ0eXAiOiJhdCIsInYiOiI2In0.bpCPTsn7D_PVBACPdxx_UM2u36pr_pl2alF_mh21tD36ziKJZQmNKqVWG6zVyW8oIGNEEUKvSzR908XOVITMYQ";
         Map<String, String> headers = new HashMap<>();
         headers.put("Authorization", ("Bearer "+ accessToken));
 
@@ -99,7 +99,7 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
                     String dateAsString = JO.get("created").toString().substring(0, JO.get("created").toString().indexOf(".")) + "Z";
                     Date date = parseDate(dateAsString);
                     long epochDate = date.getTime();
-                    Transaction transaction = new Transaction(JO.get("id").toString(), Double.parseDouble(JO.get("amount").toString()), JO.get("category").toString(), JO.get("currency").toString(), epochDate, JO.get("merchant").toString(), JO.get("notes").toString());
+                    Transaction transaction = new Transaction(JO.get("id").toString(), Double.parseDouble(JO.get("amount").toString()), JO.get("category").toString(), JO.get("currency").toString(), epochDate,JO.get("description").toString(), JO.get("merchant").toString(), JO.get("notes").toString());
                     current_user_db.setValue(transaction);
                 }
                 System.out.println("Transactions not expired: " + transactions);
