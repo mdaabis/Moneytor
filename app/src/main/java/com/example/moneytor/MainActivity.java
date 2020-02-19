@@ -19,9 +19,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity {
-    TextView forgotPassword;
+    TextView forgotPassword, noAccount;
     Button btnSignUp, btnSignIn;
-    EditText emailId, password;
+    public static EditText emailId, password;
     FirebaseAuth mFirebaseAuth;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
     private int exitCounter=0;
@@ -39,17 +39,25 @@ public class MainActivity extends AppCompatActivity {
         emailId = (EditText) findViewById(R.id.username);
         password = (EditText) findViewById(R.id.password);
         mFirebaseAuth = FirebaseAuth.getInstance();
+        noAccount = (TextView) findViewById(R.id.no_account);
 
+        noAccount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(MainActivity.this,"Press the 'Register' button.", Toast.LENGTH_SHORT).show();
+
+            }
+        });
 
         mAuthStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser mFirebaseUser = mFirebaseAuth.getCurrentUser();
                 if (mFirebaseUser != null && mFirebaseUser.isEmailVerified()) {
-                    Toast.makeText(MainActivity.this,"You are logged in", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this,"You are logged in.", Toast.LENGTH_SHORT).show();
                     changeActivity(MainActivity.this, HomePage.class);
                 } else {
-                    Toast.makeText(MainActivity.this,"Please login",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this,"Please login.",Toast.LENGTH_SHORT).show();
                 }
             }
         };

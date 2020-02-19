@@ -19,6 +19,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.lang.Object;
 import com.google.android.material.navigation.NavigationView;
@@ -37,6 +38,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
     private FirebaseAuth.AuthStateListener mAuthStateListener;
     public static TextView navUsername;
     public static TextView tv;
+    private int exitCounter=0;
 
 
     @Override
@@ -108,7 +110,16 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            if(exitCounter<1){
+                Toast.makeText(HomePage.this,"Press back again to logout.",Toast.LENGTH_SHORT).show();
+                exitCounter++;
+            } else {
+//            MainActivity.emailId.setText("");
+//            MainActivity.password.setText("");
+                FirebaseAuth.getInstance().signOut();
+                changeActivity(HomePage.this, MainActivity.class);
+//            android.os.Process.killProcess(android.os.Process.myPid());
+            }
         }
     }
 
@@ -116,4 +127,5 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         Intent intent = new Intent(Current, Target);
         startActivity(intent);
     }
+
 }

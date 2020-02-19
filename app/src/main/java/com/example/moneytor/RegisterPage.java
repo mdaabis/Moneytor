@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -27,6 +28,7 @@ public class RegisterPage extends AppCompatActivity {
     EditText emailId, password, cnfrmpassword,first_name, surname;
     FirebaseAuth mFirebaseAuth;
     DatabaseReference current_user_db;
+    TextView haveAccount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +43,14 @@ public class RegisterPage extends AppCompatActivity {
         cnfrmpassword = (EditText) findViewById(R.id.ETconfirm);
         first_name = (EditText) findViewById(R.id.ETname);
         surname = (EditText) findViewById(R.id.ETsurname);
+        haveAccount = (TextView) findViewById(R.id.TVno_account);
+
+        haveAccount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(RegisterPage.this, "Press the 'Login' button.", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         btnSignIn.setOnClickListener(new View.OnClickListener() {
             @Override

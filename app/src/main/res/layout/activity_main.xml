@@ -106,6 +106,7 @@
         android:layout_marginLeft="-80dp"
         android:layout_marginTop="120dp"
         android:text="@string/no_account"
+        android:onClick="onClick"
         android:contentDescription="@string/no_account"
         android:textColor="@color/link_blue" />
 

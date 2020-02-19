@@ -13,7 +13,7 @@
     <ImageView
         android:id="@+id/rectangle"
         android:layout_width="337dp"
-        android:layout_height="630dp"
+        android:layout_height="610dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="80dp"
         android:contentDescription="@string/rectangle"
@@ -24,7 +24,7 @@
         android:layout_width="130dp"
         android:layout_height="130dp"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="-715dp"
+        android:layout_marginTop="-695dp"
         android:alpha="0.75"
         android:contentDescription="@string/logo"
         app:srcCompat="@drawable/compressed_logo" />
@@ -132,8 +132,9 @@
         android:layout_height="30dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginLeft="-71dp"
-        android:layout_marginTop="35dp"
-        android:contentDescription="@string/no_account"
+        android:layout_marginTop="20dp"
+        android:onClick="onClick"
+        android:contentDescription="@string/have_account"
         android:text="@string/have_account"
         android:textColor="@color/link_blue" />
 
@@ -146,6 +147,7 @@
         android:contentDescription="@string/register_txt"
         android:text="@string/login_button"
         android:textColor="#FFFFFF"
+        android:layout_marginTop="-8dp"
         android:textSize="18sp" />
 
 </LinearLayout>
