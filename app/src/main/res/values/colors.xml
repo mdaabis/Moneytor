@@ -13,5 +13,6 @@
     <color name="title">#000000</color>
     <color name="user_name_nav">#000000</color>
     <color name="font_colour">#FFFFFF</color>
-
+    <color name="amount_positive">#00FF06</color>
+    <color name="amount_negative">#FF0000</color>
 </resources>

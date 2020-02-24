@@ -25,7 +25,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.lang.Object;
+import java.text.DateFormat;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.TimeZone;
 
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -50,6 +55,9 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
     private ArrayList<String> mDate = new ArrayList<>();
     private ArrayList<String> mDescription = new ArrayList<>();
     private ArrayList<String> mNotes = new ArrayList<>();
+    private ArrayList<Boolean> mIsPositive = new ArrayList<>();
+
+    public static Boolean isPositive;
 
 
     @Override
@@ -58,10 +66,12 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         setContentView(R.layout.activity_home_page);
         initListBitmaps();
 
+        // Fetching and storing data from Monzo API into Firebase
         FetchData process = new FetchData();
         process.execute();
         tv = (TextView) findViewById(R.id.textView);
 
+        // Setting title and toolbar with correct colours and formatting
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("Home");
         int myColor = getResources().getColor(R.color.title);
@@ -81,13 +91,29 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
     }
 
     private void initListBitmaps(){
+        TextView amountLLI = (TextView) findViewById(R.id.amountLLI);
         for(int i=0; i<FetchData.list.size();i++) {
-            mAmount.add(Double.toString(FetchData.list.get(i).getAmount()));
-            mCategory.add(FetchData.list.get(i).getCategory());
-            mDate.add(Long.toString(FetchData.list.get(i).getDate()));
-            mDescription.add(FetchData.list.get(i).getDescription());
-            mNotes.add(FetchData.list.get(i).getNotes());
+            String amount = amountToPound(Double.toString(FetchData.list.get(i).getAmount()));
+            String category = capitalise(FetchData.list.get(i).getCategory());
+            String date = dateTimeToDate(epochToDate(Long.toString(FetchData.list.get(i).getDate())));
+            String description = FetchData.list.get(i).getDescription();
+            String notes = FetchData.list.get(i).getNotes();
+            isPositive = Double.toString(FetchData.list.get(i).getAmount()).charAt(0)!='-';
 
+
+//            System.out.println("this is positive: " + isPositive);
+            mAmount.add(amount);
+            mCategory.add(category);
+            mDate.add(date);
+            mDescription.add(description);
+            if (notes.equals("")){
+                mNotes.add("No notes");
+            } else {
+                mNotes.add(notes);
+            }
+            mIsPositive.add(isPositive);
+
+            // Adds divider between each item
             DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
             dividerItemDecoration.setDrawable(getResources().getDrawable(R.drawable.recycler_view_divider));
             RecyclerView recyclerView = findViewById(R.id.recyclerView);
@@ -99,10 +125,9 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
 
     private void initRecyclerView(){
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(this, mAmount, mCategory, mDate, mDescription, mNotes);
+        RecyclerViewAdapter adapter = new RecyclerViewAdapter(this, mAmount, mCategory, mDate, mDescription, mNotes, mIsPositive);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
     }
 
     @Override
@@ -151,6 +176,38 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
     public void changeActivity(Activity Current, Class Target){
         Intent intent = new Intent(Current, Target);
         startActivity(intent);
+    }
+
+    public String capitalise(String str) {
+        return str.substring(0, 1).toUpperCase() + str.substring(1);
+    }
+
+    public String epochToDate (String dateStr) {
+        Long date = Long.parseLong(dateStr);
+        DateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        format.setTimeZone(TimeZone.getTimeZone("Etc/UTC"));
+        String formatted = format.format(date);
+        System.out.println(formatted);
+        format.setTimeZone(TimeZone.getTimeZone("Australia/Sydney"));
+        formatted = format.format(date);
+        return formatted;
+    }
+
+    public String dateTimeToDate(String date) {
+        return date.substring(0, 10);
+    }
+
+    public String amountToPound(String amount) {
+        DecimalFormat df = new DecimalFormat("0.00");
+        Double amountL = Double.parseDouble(amount)/100;
+//        amountL = Double.parseDouble(df.format(amountL));
+        System.out.println("Amount before: " + amount);
+        System.out.println("Amount after: " + (df.format(amountL)));
+//        System.out.println("Amount after w/ substring: " + (amountL.toString().substring(1, amountL.toString().length());
+        if(amount.charAt(0)=='-') {
+            return "-£" + df.format(amountL).substring(1);
+        }
+        return "£" + df.format(amountL);
     }
 
 }

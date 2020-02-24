@@ -5,6 +5,7 @@ import android.provider.Settings;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -71,7 +72,7 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected Void doInBackground(Void... voids) {
-        String accessToken = "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJlYiI6ImgrdzRmRDZOaFQzcjFhR2F3ZURBIiwianRpIjoiYWNjdG9rXzAwMDA5c0NJZXQyZkR3R3hqMk1UOEQiLCJ0eXAiOiJhdCIsInYiOiI2In0.bpCPTsn7D_PVBACPdxx_UM2u36pr_pl2alF_mh21tD36ziKJZQmNKqVWG6zVyW8oIGNEEUKvSzR908XOVITMYQ";
+        String accessToken = "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJlYiI6ImVtUUFnSU9mN0ZyTmMrMCt3dVRPIiwianRpIjoiYWNjdG9rXzAwMDA5c0xJSWpiaE4yY1haNGtaSmgiLCJ0eXAiOiJhdCIsInYiOiI2In0.dnr_aVsQBV6tQjACp_GOvJa1ORkloKpMHNGPsN-MpW1SXd-4UlOKt5SPtXOhMHGrh62SvpA_-GNkBqsbaR9mRw";
         Map<String, String> headers = new HashMap<>();
         headers.put("Authorization", ("Bearer "+ accessToken));
 
@@ -141,6 +142,7 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
                 String surname = dataSnapshot.child("Surname").getValue().toString();
                 String fullName = firstName + " " + surname;
                 HomePage.navUsername.setText(fullName);
+//                Notifications.naviUsername.setText(fullName);
             }
 
             @Override

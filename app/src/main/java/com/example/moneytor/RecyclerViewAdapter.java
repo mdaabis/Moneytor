@@ -1,6 +1,7 @@
 package com.example.moneytor;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,14 +23,16 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private ArrayList<String> mDate = new ArrayList<>();
     private ArrayList<String> mDescription = new ArrayList<>();
     private ArrayList<String> mNotes = new ArrayList<>();
+    private ArrayList<Boolean> mIsPositive = new ArrayList<>();
     private Context mContext;
 
-    public RecyclerViewAdapter(Context mContext, ArrayList<String> mAmount, ArrayList<String> mCategory, ArrayList<String> mDate, ArrayList<String> mDescription, ArrayList<String> mNotes) {
+    public RecyclerViewAdapter(Context mContext, ArrayList<String> mAmount, ArrayList<String> mCategory, ArrayList<String> mDate, ArrayList<String> mDescription, ArrayList<String> mNotes, ArrayList<Boolean> mIsPositive) {
         this.mAmount = mAmount;
         this.mCategory = mCategory;
         this.mDate = mDate;
         this.mDescription = mDescription;
         this.mNotes = mNotes;
+        this.mIsPositive = mIsPositive;
         this.mContext = mContext;
     }
 
@@ -44,12 +47,18 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Log.d(TAG, "onBindViewHolder: called");
-
         holder.amount.setText(mAmount.get(position));
         holder.category.setText(mCategory.get(position));
         holder.date.setText(mDate.get(position));
         holder.description.setText(mDescription.get(position));
         holder.notes.setText(mNotes.get(position));
+
+//        if(mIsPositive.get(position)) {
+//            holder.amount.setTextColor(Color.BLUE);
+//        } else {
+//            holder.amount.setTextColor(Color.RED);
+//        }
+
     }
 
     @Override
@@ -70,7 +79,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             description = itemView.findViewById(R.id.descriptionLLI);
             notes = itemView.findViewById(R.id.notesLLI);
             parentLayout = itemView.findViewById(R.id.parent_layout);
-
         }
     }
 }
