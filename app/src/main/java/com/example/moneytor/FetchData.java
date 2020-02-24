@@ -67,12 +67,14 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
     private String transactions;
     private FirebaseAuth mFirebaseAuth;
     private DatabaseReference current_user_db;
+
     public static List<Transaction> list = new ArrayList<>();
     public static String userID;
+    public static String firstName, surname, fullname;
 
     @Override
     protected Void doInBackground(Void... voids) {
-        String accessToken = "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJlYiI6ImVtUUFnSU9mN0ZyTmMrMCt3dVRPIiwianRpIjoiYWNjdG9rXzAwMDA5c0xJSWpiaE4yY1haNGtaSmgiLCJ0eXAiOiJhdCIsInYiOiI2In0.dnr_aVsQBV6tQjACp_GOvJa1ORkloKpMHNGPsN-MpW1SXd-4UlOKt5SPtXOhMHGrh62SvpA_-GNkBqsbaR9mRw";
+        String accessToken = "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJlYiI6ImlyVjRjV2h6aTUxKzZYRUhSUERaIiwianRpIjoiYWNjdG9rXzAwMDA5c01zUGtrVkpYTlBCcmFHc1QiLCJ0eXAiOiJhdCIsInYiOiI2In0.819nCR_I5sfKkksa8PZzU5AyELhC8Enqk502GOLUAqn7SsrgBk1lyA9TY8wq7IfzOE7zg-7SkGpS-Z21-HLIoQ";
         Map<String, String> headers = new HashMap<>();
         headers.put("Authorization", ("Bearer "+ accessToken));
 
@@ -134,25 +136,25 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
 
         String path = "Users/" + userID ;
         DatabaseReference myRef = FirebaseDatabase.getInstance().getReference(path);
-
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                String firstName = dataSnapshot.child("First name").getValue().toString();
-                String surname = dataSnapshot.child("Surname").getValue().toString();
-                String fullName = firstName + " " + surname;
-                HomePage.navUsername.setText(fullName);
-//                Notifications.naviUsername.setText(fullName);
+                firstName = dataSnapshot.child("First name").getValue().toString();
+                surname = dataSnapshot.child("Surname").getValue().toString();
+                fullname = firstName + " " + surname;
+
+                HomePage.navUsername.setText(fullname);
+//                Notifications.naviUsername.setText("test");
+//                System.out.println("order of exec: FetchData 1");
+
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
             }
         });
+        System.out.println("order of exec: FetchData 2");
         return null;
-
-
     }
 
     // Method gets rid of extra characters around JSON array

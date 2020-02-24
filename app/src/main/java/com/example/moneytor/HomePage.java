@@ -80,10 +80,11 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         drawer = findViewById(R.id.drawer_layout);
 
         NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
         View headerView = navigationView.getHeaderView(0);
         navUsername = (TextView) headerView.findViewById(R.id.current_user_name);
 
-        navigationView.setNavigationItemSelectedListener(this);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -91,7 +92,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
     }
 
     private void initListBitmaps(){
-        TextView amountLLI = (TextView) findViewById(R.id.amountLLI);
+//        TextView amountLLI = (TextView) findViewById(R.id.amountLLI);
         for(int i=0; i<FetchData.list.size();i++) {
             String amount = amountToPound(Double.toString(FetchData.list.get(i).getAmount()));
             String category = capitalise(FetchData.list.get(i).getCategory());

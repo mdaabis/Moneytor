@@ -19,7 +19,6 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class Notifications extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
     private DrawerLayout drawer;
-//    public static TextView naviUsername;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,13 +30,15 @@ public class Notifications extends AppCompatActivity implements NavigationView.O
         int myColor = getResources().getColor(R.color.title);
         toolbar.setTitleTextColor(myColor);
         setSupportActionBar(toolbar);
-
         drawer = findViewById(R.id.drawer_layout);
 
-        NavigationView navigationView = findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_views);
         navigationView.setNavigationItemSelectedListener(this);
-//        View headerView = navigationView.getHeaderView(0);
-//        naviUsername = (TextView) headerView.findViewById(R.id.current_user_name);
+        View headerView = navigationView.getHeaderView(0);
+        TextView navUsername = (TextView) headerView.findViewById(R.id.current_user_name);
+        navUsername.setText(FetchData.fullname);
+
+        System.out.println("order of exec: Notifications 1");
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close);
