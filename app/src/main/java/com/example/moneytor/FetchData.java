@@ -5,6 +5,7 @@ import android.provider.Settings;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -67,6 +68,10 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
     private String transactions;
     private FirebaseAuth mFirebaseAuth;
     private DatabaseReference current_user_db;
+    private String name="";
+    private double latitude = 0.0;
+    private double longitude = 0.0;
+//    private LatLng latLng = new LatLng(0.0, 0.0);
 
     public static List<Transaction> list = new ArrayList<>();
     public static String userID;
@@ -74,15 +79,13 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected Void doInBackground(Void... voids) {
-        String accessToken = "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJlYiI6ImlyVjRjV2h6aTUxKzZYRUhSUERaIiwianRpIjoiYWNjdG9rXzAwMDA5c01zUGtrVkpYTlBCcmFHc1QiLCJ0eXAiOiJhdCIsInYiOiI2In0.819nCR_I5sfKkksa8PZzU5AyELhC8Enqk502GOLUAqn7SsrgBk1lyA9TY8wq7IfzOE7zg-7SkGpS-Z21-HLIoQ";
+        String accessToken = "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJlYiI6IlVkT2VWR1hJajREeWFsSzY1TkZLIiwianRpIjoiYWNjdG9rXzAwMDA5c1I1ZHNnWWdCd1dockVXZkoiLCJ0eXAiOiJhdCIsInYiOiI2In0.HiHpI537SvQdHwMlBdt7wFubxfezzvI3pnm5LgbVHsup8mecpCBhqNmBux9JWDnJrzq19sx3sQmvKrV-Sb3_IQ";
         Map<String, String> headers = new HashMap<>();
         headers.put("Authorization", ("Bearer "+ accessToken));
 
         String balanceURL = "https://api.monzo.com/balance?account_id=acc_00009np8oRwjAPAYEP0mCA";
         String potsURL = "https://api.monzo.com/pots";
-        String retrieveTransaction = "https://api.monzo.com/transactions?tx_00009o9YP2DOBKe410mGgr&expand[]=merchant";
-        final String transactionsURL = "https://api.monzo.com/transactions?account_id=acc_00009np8oRwjAPAYEP0mCA";
-        System.out.println("This is transaction: " + getJSON(retrieveTransaction, headers));
+        String transactionsURL = "https://api.monzo.com/transactions?expand[]=merchant&account_id=acc_00009np8oRwjAPAYEP0mCA";
 
         balance = df.format(Double.parseDouble(parse(getJSON(balanceURL, headers), "balance")) / 100);
 //        currency = parse(getJSON(balanceURL, headers), "currency");
@@ -102,10 +105,20 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
                     String dateAsString = JO.get("created").toString().substring(0, JO.get("created").toString().indexOf(".")) + "Z";
                     Date date = parseDate(dateAsString);
                     long epochDate = date.getTime();
-                    Transaction transaction = new Transaction(JO.get("id").toString(), Double.parseDouble(JO.get("amount").toString()), JO.get("category").toString(), JO.get("currency").toString(), epochDate,JO.get("description").toString(), JO.get("merchant").toString(), JO.get("notes").toString());
+                    if(JO.get("merchant").toString()=="null"){
+                        System.out.println("Merchant is null");
+                    } else {
+                        JSONObject mJO = (JSONObject) JO.get("merchant");
+                        JSONObject aJO = (JSONObject) mJO.get("address");
+                        name = mJO.get("name").toString();
+                        latitude = Double.parseDouble(aJO.get("latitude").toString());
+                        longitude = Double.parseDouble(aJO.get("longitude").toString());
+                    }
+                    Transaction transaction = new Transaction(JO.get("id").toString(), Double.parseDouble(JO.get("amount").toString()), JO.get("category").toString(), JO.get("currency").toString(), epochDate,JO.get("description").toString(), latitude, longitude, JO.get("merchant").toString(), name, JO.get("notes").toString());
                     current_user_db.setValue(transaction);
+
                 }
-                System.out.println("Transactions not expired: " + transactions);
+                System.out.println("Transactions not expired: " + parsedTransactions);
             } else {
                 System.out.println("Transactions expired: " + transactions);
                 String path = "Users/" + userID + "/Transactions";
@@ -144,16 +157,12 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
                 fullname = firstName + " " + surname;
 
                 HomePage.navUsername.setText(fullname);
-//                Notifications.naviUsername.setText("test");
-//                System.out.println("order of exec: FetchData 1");
-
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
             }
         });
-        System.out.println("order of exec: FetchData 2");
         return null;
     }
 

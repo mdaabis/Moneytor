@@ -62,6 +62,10 @@ public class Settings extends AppCompatActivity implements NavigationView.OnNavi
             case R.id.nav_notifications:
                 changeActivity(this, Notifications.class);
                 break;
+            case R.id.nav_map:
+                Intent intentM = new Intent(this, Map.class);
+                startActivityForResult(intentM, 0);
+                break;
             case R.id.nav_logout:
                 FirebaseAuth.getInstance().signOut();
                 Intent intent = new Intent(Settings.this, MainActivity.class);

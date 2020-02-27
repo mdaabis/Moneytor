@@ -81,7 +81,6 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
         View headerView = navigationView.getHeaderView(0);
         navUsername = (TextView) headerView.findViewById(R.id.current_user_name);
 
@@ -92,7 +91,6 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
     }
 
     private void initListBitmaps(){
-//        TextView amountLLI = (TextView) findViewById(R.id.amountLLI);
         for(int i=0; i<FetchData.list.size();i++) {
             String amount = amountToPound(Double.toString(FetchData.list.get(i).getAmount()));
             String category = capitalise(FetchData.list.get(i).getCategory());
@@ -104,7 +102,11 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
 
 //            System.out.println("this is positive: " + isPositive);
             mAmount.add(amount);
-            mCategory.add(category);
+            if(category=="Eating_out") {
+                mCategory.add("Eating out");
+            } else {
+                mCategory.add(category);
+            }
             mDate.add(date);
             mDescription.add(description);
             if (notes.equals("")){
@@ -148,6 +150,10 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
                 break;
             case R.id.nav_notifications:
                 changeActivity(this, Notifications.class);
+                break;
+            case R.id.nav_map:
+                Intent intentM = new Intent(this, Map.class);
+                startActivityForResult(intentM, 0);
                 break;
             case R.id.nav_logout:
                 FirebaseAuth.getInstance().signOut();

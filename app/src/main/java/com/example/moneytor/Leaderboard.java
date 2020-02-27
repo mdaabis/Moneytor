@@ -7,9 +7,11 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -61,6 +63,10 @@ public class Leaderboard extends AppCompatActivity implements NavigationView.OnN
                 break;
             case R.id.nav_notifications:
                 changeActivity(this, Notifications.class);
+                break;
+            case R.id.nav_map:
+                Intent intentM = new Intent(this, Map.class);
+                startActivityForResult(intentM, 0);
                 break;
             case R.id.nav_logout:
                 FirebaseAuth.getInstance().signOut();

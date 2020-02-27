@@ -1,5 +1,7 @@
 package com.example.moneytor;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.util.Date;
 
 public class Transaction {
@@ -11,27 +13,30 @@ public class Transaction {
     private long date; //Needs to be formatted
     private String description;
     private String merchant;
+    private String name;
     private String notes;
+    private double latitude;
+    private double longitude;
 
-    public Transaction(String transaction_id, double amount, String category, String currency, long date, String description,
-                       String merchant, String notes){
-        this.description=description;
-        this.transaction_id=transaction_id;
+    public Transaction(String transaction_id, double amount, String category, String currency, long date, String description, double latitude, double longitude,
+                       String merchant, String name, String notes){
         this.amount=amount;
-        this.date=date;
-        this.currency=currency;
-        this.merchant=merchant;
-        this.notes=notes;
         this.category=category;
+        this.currency=currency;
+        this.date=date;
+        this.description=description;
+        this.latitude=latitude;
+        this.longitude=longitude;
+        this.merchant=merchant;
+        this.name=name;
+        this.notes=notes;
+        this.transaction_id=transaction_id;
     }
 
     public Transaction() {
     }
 
 
-    public String getTransaction_id() {
-        return this.transaction_id;
-    }
 
     public double getAmount(){
         return this.amount;
@@ -53,11 +58,27 @@ public class Transaction {
         return description;
     }
 
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
     public String getMerchant(){
         return this.merchant;
     }
 
+    public String getName() {
+        return name;
+    }
+
     public String getNotes(){
         return this.notes;
+    }
+
+    public String getTransaction_id() {
+        return transaction_id;
     }
 }
