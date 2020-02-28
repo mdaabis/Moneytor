@@ -93,20 +93,19 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
     private void initListBitmaps(){
         for(int i=0; i<FetchData.list.size();i++) {
             String amount = amountToPound(Double.toString(FetchData.list.get(i).getAmount()));
-            String category = capitalise(FetchData.list.get(i).getCategory());
+            String category = FetchData.list.get(i).getCategory();
             String date = dateTimeToDate(epochToDate(Long.toString(FetchData.list.get(i).getDate())));
             String description = FetchData.list.get(i).getDescription();
             String notes = FetchData.list.get(i).getNotes();
             isPositive = Double.toString(FetchData.list.get(i).getAmount()).charAt(0)!='-';
+//            if(category=="Eating_out") {
+//                category="Eating out";
+//            }
 
 
 //            System.out.println("this is positive: " + isPositive);
             mAmount.add(amount);
-            if(category=="Eating_out") {
-                mCategory.add("Eating out");
-            } else {
-                mCategory.add(category);
-            }
+            mCategory.add(category);
             mDate.add(date);
             mDescription.add(description);
             if (notes.equals("")){
@@ -185,18 +184,15 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         startActivity(intent);
     }
 
-    public String capitalise(String str) {
-        return str.substring(0, 1).toUpperCase() + str.substring(1);
-    }
+//    public String capitalise(String str) {
+//        return str.substring(0, 1).toUpperCase() + str.substring(1);
+//    }
 
     public String epochToDate (String dateStr) {
         Long date = Long.parseLong(dateStr);
         DateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-        format.setTimeZone(TimeZone.getTimeZone("Etc/UTC"));
+        format.setTimeZone(TimeZone.getTimeZone("Europe/London"));
         String formatted = format.format(date);
-        System.out.println(formatted);
-        format.setTimeZone(TimeZone.getTimeZone("Australia/Sydney"));
-        formatted = format.format(date);
         return formatted;
     }
 
@@ -207,10 +203,6 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
     public String amountToPound(String amount) {
         DecimalFormat df = new DecimalFormat("0.00");
         Double amountL = Double.parseDouble(amount)/100;
-//        amountL = Double.parseDouble(df.format(amountL));
-        System.out.println("Amount before: " + amount);
-        System.out.println("Amount after: " + (df.format(amountL)));
-//        System.out.println("Amount after w/ substring: " + (amountL.toString().substring(1, amountL.toString().length());
         if(amount.charAt(0)=='-') {
             return "-£" + df.format(amountL).substring(1);
         }
