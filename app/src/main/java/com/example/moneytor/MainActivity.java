@@ -25,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
     FirebaseAuth mFirebaseAuth;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
     private int exitCounter=0;
+    public static String email,pwd;
 
 
 
@@ -54,10 +55,10 @@ public class MainActivity extends AppCompatActivity {
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser mFirebaseUser = mFirebaseAuth.getCurrentUser();
                 if (mFirebaseUser != null && mFirebaseUser.isEmailVerified()) {
-                    Toast.makeText(MainActivity.this,"You are logged in.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this,"You are logged in", Toast.LENGTH_SHORT).show();
                     changeActivity(MainActivity.this, HomePage.class);
                 } else {
-                    Toast.makeText(MainActivity.this,"Please login.",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this,"Please login",Toast.LENGTH_SHORT).show();
                 }
             }
         };
@@ -72,28 +73,28 @@ public class MainActivity extends AppCompatActivity {
         btnSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String email = emailId.getText().toString().trim();
-                String pwd = password.getText().toString();
+                email = emailId.getText().toString().trim();
+                pwd = password.getText().toString();
                 if (email.isEmpty() && pwd.isEmpty()) {
                     Toast.makeText(MainActivity.this,"Fields Are Empty!",Toast.LENGTH_SHORT).show();
                 } else if (pwd.isEmpty()) {
-                    password.setError("Please enter your password.");
+                    password.setError("Please enter your password");
                     password.requestFocus();
                 } else if(email.isEmpty()) {
-                    emailId.setError("Please enter your email id.");
+                    emailId.setError("Please enter your email id");
                     emailId.requestFocus();
                 } else  if(!(email.isEmpty() && pwd.isEmpty())){
                     mFirebaseAuth.signInWithEmailAndPassword(email,pwd).addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if(!task.isSuccessful()){
-                                Toast.makeText(MainActivity.this,"Incorrect login details, please try again.",Toast.LENGTH_SHORT).show();
+                                Toast.makeText(MainActivity.this,"Incorrect login details, please try again",Toast.LENGTH_SHORT).show();
                             } else{
                                 if(mFirebaseAuth.getCurrentUser().isEmailVerified()){
                                     changeActivity(MainActivity.this,HomePage.class);
-                                    Toast.makeText(MainActivity.this,"Login successful.",Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(MainActivity.this,"Login successful",Toast.LENGTH_SHORT).show();
                                 } else {
-                                    Toast.makeText(MainActivity.this,"Please verify your email address.",Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(MainActivity.this,"Please verify your email address",Toast.LENGTH_SHORT).show();
 
                                 }
                             }
@@ -104,12 +105,11 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
         forgotPassword.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                Toast.makeText(MainActivity.this,"Forgot password - To be completed",Toast.LENGTH_SHORT).show();
                 changeActivity(MainActivity.this, ForgotPassword.class);
-                //To be completed
             }
         });
     }

@@ -184,10 +184,6 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         startActivity(intent);
     }
 
-//    public String capitalise(String str) {
-//        return str.substring(0, 1).toUpperCase() + str.substring(1);
-//    }
-
     public String epochToDate (String dateStr) {
         Long date = Long.parseLong(dateStr);
         DateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");

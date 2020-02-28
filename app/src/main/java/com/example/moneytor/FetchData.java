@@ -71,7 +71,6 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
     private String name="";
     private double latitude = 0.0;
     private double longitude = 0.0;
-//    private LatLng latLng = new LatLng(0.0, 0.0);
 
     public static List<Transaction> list = new ArrayList<>();
     public static String userID;

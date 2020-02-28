@@ -42,7 +42,6 @@ public class Map extends FragmentActivity implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
-        LatLng inter = new LatLng(52.381409, -1.557429);
         ArrayList<String> title = new ArrayList<>();
         ArrayList<LatLng> latLngs = new ArrayList<>();
         ArrayList<String> amount = new ArrayList<>();

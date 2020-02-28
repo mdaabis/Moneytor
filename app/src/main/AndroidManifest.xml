@@ -4,8 +4,8 @@
     package="com.example.moneytor">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -15,7 +15,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".Map"></activity>
+        <activity android:name=".ResetPassword"></activity>
+        <activity android:name=".Map" />
         <activity android:name=".ForgotPassword" />
         <activity android:name=".Notifications" />
         <activity android:name=".Leaderboard" />
@@ -25,8 +26,7 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="@string/map_key"/>
-
+            android:value="@string/map_key" />
         <meta-data
             android:name="com.google.android.actions"
             android:resource="@drawable/rect" />
