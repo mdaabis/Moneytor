@@ -36,10 +36,12 @@ public class Settings extends AppCompatActivity implements NavigationView.OnNavi
         });
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("Settings");
-        int myColor = getResources().getColor(R.color.title);
-        toolbar.setTitleTextColor(myColor);
+//        toolbar.setTitle("Settings");
+//        int myColor = getResources().getColor(R.color.font_colour);
+//        toolbar.setTitleTextColor(myColor);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
 
         drawer = findViewById(R.id.drawer_layout);
 

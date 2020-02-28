@@ -28,10 +28,12 @@ public class Leaderboard extends AppCompatActivity implements NavigationView.OnN
         setContentView(R.layout.activity_leaderboard);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("Leaderboard");
-        int myColor = getResources().getColor(R.color.title);
-        toolbar.setTitleTextColor(myColor);
+//        toolbar.setTitle("Leaderboard");
+//        int myColor = getResources().getColor(R.color.font_colour);
+//        toolbar.setTitleTextColor(myColor);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
 
         drawer = findViewById(R.id.drawer_layout);
 

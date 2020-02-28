@@ -26,10 +26,12 @@ public class Notifications extends AppCompatActivity implements NavigationView.O
         setContentView(R.layout.activity_notifications);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("Notifications");
-        int myColor = getResources().getColor(R.color.title);
-        toolbar.setTitleTextColor(myColor);
+//        toolbar.setTitle("Notifications");
+//        int myColor = getResources().getColor(R.color.font_colour);
+//        toolbar.setTitleTextColor(myColor);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
         drawer = findViewById(R.id.drawer_layout);
 
         NavigationView navigationView = findViewById(R.id.nav_views);

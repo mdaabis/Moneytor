@@ -73,10 +73,11 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
 
         // Setting title and toolbar with correct colours and formatting
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("Home");
-        int myColor = getResources().getColor(R.color.title);
-        toolbar.setTitleTextColor(myColor);
+//        toolbar.setTitle("Home");
+//        int myColor = getResources().getColor(R.color.font_colour);
+//        toolbar.setTitleTextColor(myColor);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
         drawer = findViewById(R.id.drawer_layout);
 
         NavigationView navigationView = findViewById(R.id.nav_view);

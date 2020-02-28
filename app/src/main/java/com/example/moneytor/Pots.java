@@ -25,10 +25,11 @@ public class Pots extends AppCompatActivity  implements NavigationView.OnNavigat
         setContentView(R.layout.activity_pots);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("Pots");
-        int myColor = getResources().getColor(R.color.title);
-        toolbar.setTitleTextColor(myColor);
+//        toolbar.setTitle("Pots");
+//        int myColor = getResources().getColor(R.color.font_colour);
+//        toolbar.setTitleTextColor(myColor);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
 
         drawer = findViewById(R.id.drawer_layout);

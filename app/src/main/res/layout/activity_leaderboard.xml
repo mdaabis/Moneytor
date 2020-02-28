@@ -22,10 +22,22 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/app_bar"
+            android:background="@null"
             android:elevation="4dp"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            app:popupTheme="@style/Theme.AppCompat.Light" />
+            app:popupTheme="@style/Theme.AppCompat.Light" >
+
+            <TextView
+                android:layout_width="250dp"
+                android:layout_height="match_parent"
+                android:text="Leaderboard"
+                android:layout_marginLeft="30dp"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:textColor="@color/font_colour"
+                android:gravity = "center"
+                android:id="@+id/toolbar_title" />
+        </androidx.appcompat.widget.Toolbar>
 
         <FrameLayout
             android:id="@+id/fragment_container"
