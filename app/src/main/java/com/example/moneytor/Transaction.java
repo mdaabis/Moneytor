@@ -17,13 +17,15 @@ public class Transaction {
     private String notes;
     private double latitude;
     private double longitude;
+    private boolean declined;
 
-    public Transaction(String transaction_id, double amount, String category, String currency, long date, String description, double latitude, double longitude,
+    public Transaction(String transaction_id, double amount, String category, String currency, long date, boolean declined, String description, double latitude, double longitude,
                        String merchant, String name, String notes){
         this.amount=amount;
         this.category=category;
         this.currency=currency;
         this.date=date;
+        this.declined=declined;
         this.description=description;
         this.latitude=latitude;
         this.longitude=longitude;
@@ -52,6 +54,10 @@ public class Transaction {
 
     public long getDate(){
         return this.date;
+    }
+
+    public boolean getDeclined() {
+        return declined;
     }
 
     public String getDescription() {

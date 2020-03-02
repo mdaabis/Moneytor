@@ -78,7 +78,7 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected Void doInBackground(Void... voids) {
-        String accessToken = "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJlYiI6ImV2d1JWaVZpRE5MN3pIbmtKUjNZIiwianRpIjoiYWNjdG9rXzAwMDA5c1V6cDd6VUlEeHRIQVVKdk4iLCJ0eXAiOiJhdCIsInYiOiI2In0.slmt2SD021izKhM3TGN3U2WMQezY7NGfze9rGW-BqEOSOBfkpPhrD-ZSp_FPtE9t8ivwbThWPBa3KKTI1gRKkg";
+        String accessToken = "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJlYiI6IkxoeW1JWW5YcXdkYkxVcGRlSE9QIiwianRpIjoiYWNjdG9rXzAwMDA5c1p6bGdneUl0RE90cHpxa2IiLCJ0eXAiOiJhdCIsInYiOiI2In0.kzv6HMcN2tJr1mkV7ESy8_z38k7WuNpQJggBXaBq3if-O2OwrtsfyNn4npj_R64nXQfGyDcxPo7azK05381GQA";
         Map<String, String> headers = new HashMap<>();
         headers.put("Authorization", ("Bearer "+ accessToken));
 
@@ -104,7 +104,12 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
                     String dateAsString = JO.get("created").toString().substring(0, JO.get("created").toString().indexOf(".")) + "Z";
                     Date date = parseDate(dateAsString);
                     long epochDate = date.getTime();
+                    boolean declined=false;
 
+                    if(JO.has("decline_reason")){
+                        declined=true;
+                    }
+                    
                     // If transaction was a transfer (not in store) then the merchant will be null and there will be no lat/long values. These transactions will not be on the map
                     if(JO.get("merchant").toString().equals("null")){
                         System.out.println("Merchant is null");
@@ -120,7 +125,7 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
                         category="Eating out";
                     }
 
-                    Transaction transaction = new Transaction(JO.get("id").toString(), Double.parseDouble(JO.get("amount").toString()), category, JO.get("currency").toString(), epochDate,JO.get("description").toString(), latitude, longitude, JO.get("merchant").toString(), name, JO.get("notes").toString());
+                    Transaction transaction = new Transaction(JO.get("id").toString(), Double.parseDouble(JO.get("amount").toString()), category, JO.get("currency").toString(), epochDate, declined, JO.get("description").toString(), latitude, longitude, JO.get("merchant").toString(), name, JO.get("notes").toString());
                     current_user_db.setValue(transaction);
 
                 }
@@ -135,7 +140,9 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
                         list.clear();
                         for(DataSnapshot snapshot: dataSnapshot.getChildren()){
                             Transaction transaction = snapshot.getValue(Transaction.class);
-                            list.add(transaction);
+                            if(transaction.getDeclined()==false){
+                                list.add(transaction);
+                            }
                             Collections.sort(list, new Comparator<Transaction>() {
                                 public int compare(Transaction t1, Transaction t2) {
                                     return Long.valueOf(t2.getDate()).compareTo(t1.getDate());

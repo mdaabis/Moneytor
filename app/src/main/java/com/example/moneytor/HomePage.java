@@ -73,9 +73,6 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
 
         // Setting title and toolbar with correct colours and formatting
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        toolbar.setTitle("Home");
-//        int myColor = getResources().getColor(R.color.font_colour);
-//        toolbar.setTitleTextColor(myColor);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         drawer = findViewById(R.id.drawer_layout);
@@ -99,12 +96,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
             String description = FetchData.list.get(i).getDescription();
             String notes = FetchData.list.get(i).getNotes();
             isPositive = Double.toString(FetchData.list.get(i).getAmount()).charAt(0)!='-';
-//            if(category=="Eating_out") {
-//                category="Eating out";
-//            }
 
-
-//            System.out.println("this is positive: " + isPositive);
             mAmount.add(amount);
             mCategory.add(category);
             mDate.add(date);
