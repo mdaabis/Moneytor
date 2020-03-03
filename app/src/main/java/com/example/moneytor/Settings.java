@@ -8,19 +8,30 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
 
 public class Settings extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private DrawerLayout drawer;
     TextView resetTV, deleteTV, logoutTV, budgetingTV;
+    AlertDialog.Builder builder;
+    public int selectedElement;
+    private AlertDialog alert;
+    SharedPreferences.Editor editor;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +42,19 @@ public class Settings extends AppCompatActivity implements NavigationView.OnNavi
         deleteTV = (TextView) findViewById(R.id.delete_account);
         logoutTV = (TextView) findViewById(R.id.logout_settings);
         budgetingTV = (TextView) findViewById(R.id.change_plan);
+
+        builder = new AlertDialog.Builder(this);
+        builder.setTitle("My title");
+        builder.setMessage("This is my message.");
+        builder.setPositiveButton("OK", null);
+
+        budgetingTV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDialog();
+            }
+        });
+
 
         resetTV.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -48,9 +72,6 @@ public class Settings extends AppCompatActivity implements NavigationView.OnNavi
         });
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        toolbar.setTitle("Settings");
-//        int myColor = getResources().getColor(R.color.font_colour);
-//        toolbar.setTitleTextColor(myColor);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
@@ -111,5 +132,39 @@ public class Settings extends AppCompatActivity implements NavigationView.OnNavi
     public void changeActivity(Activity Current, Class Target){
         Intent intent = new Intent(Current, Target);
         startActivity(intent);
+    }
+
+    private void SingleChoiceWithRadioButton() {
+        SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+        selectedElement = sharedPref.getInt("selectedElement",-1);
+        editor = sharedPref.edit();
+
+        final String[] selectFruit= new String[]{"50/30/20","80/20", "Debt Avalanche", "Debt Snowfall"};
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Choose a budgeting plan");
+        builder.setSingleChoiceItems(selectFruit, selectedElement,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        editor.putInt("selectedElement", which);
+                        editor.apply();
+                    }
+                });
+        builder.setPositiveButton("ok",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        alert = builder.create();
+        alert.show();
+    }
+
+    private void showDialog(){
+        if(alert==null)
+            SingleChoiceWithRadioButton();
+        else
+            alert.show();
     }
 }
