@@ -11,7 +11,7 @@
     android:fitsSystemWindows="true"
     tools:context=".HomePage"
     android:layout_centerInParent="true"
-    tools:openDrawer="start">
+    tools:openDrawer="end">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -42,7 +42,13 @@
         <FrameLayout
             android:id="@+id/fragment_container"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent" >
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/leaderboard_recyclerView"/>
+        </FrameLayout>
     </LinearLayout>
 
     <com.google.android.material.navigation.NavigationView

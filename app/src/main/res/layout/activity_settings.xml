@@ -43,11 +43,62 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" >
 
-            <Button
-                android:id="@+id/buttonRST"
-                android:layout_width="wrap_content"
+            <TextView
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Button" />
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="145dp"
+                android:textColor="@color/title"
+                android:background="@drawable/rect"
+                android:id="@+id/change_plan"
+                android:alpha="0.7"
+                android:textSize="20sp"
+                android:textAlignment="center"
+                android:text="Change budgeting plan"
+                android:onClick="onClick"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:id="@+id/change_pswd"
+                android:layout_marginTop="190dp"
+                android:textColor="@color/title"
+                android:background="@drawable/rect"
+                android:alpha="0.7"
+                android:textSize="20sp"
+                android:textAlignment="center"
+                android:text="Change password"
+                android:onClick="onClick"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:id="@+id/logout_settings"
+                android:layout_marginTop="235dp"
+                android:textColor="@color/title"
+                android:background="@drawable/rect"
+                android:alpha="0.7"
+                android:textSize="20sp"
+                android:textAlignment="center"
+                android:text="Logout"
+                android:onClick="onClick"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:id="@+id/delete_account"
+                android:layout_marginTop="280dp"
+                android:textColor="@color/title"
+                android:background="@drawable/rect"
+                android:alpha="0.7"
+                android:textSize="20sp"
+                android:text="Delete account"
+                android:textAlignment="center"
+                android:onClick="onClick"/>
+
         </FrameLayout>
     </LinearLayout>
 

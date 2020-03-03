@@ -20,18 +20,30 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class Settings extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private DrawerLayout drawer;
-    Button reset;
+    TextView resetTV, deleteTV, logoutTV, budgetingTV;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
-        reset = (Button) findViewById(R.id.buttonRST);
-        reset.setOnClickListener(new View.OnClickListener() {
+        resetTV = (TextView) findViewById(R.id.change_pswd);
+        deleteTV = (TextView) findViewById(R.id.delete_account);
+        logoutTV = (TextView) findViewById(R.id.logout_settings);
+        budgetingTV = (TextView) findViewById(R.id.change_plan);
+
+        resetTV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 changeActivity(Settings.this, ResetPassword.class);
+            }
+        });
+
+        logoutTV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FirebaseAuth.getInstance().signOut();
+                changeActivity(Settings.this, MainActivity.class);
             }
         });
 

@@ -93,6 +93,7 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
         transactions = getJSON(transactionsURL, headers);
         mFirebaseAuth = FirebaseAuth.getInstance();
         userID = mFirebaseAuth.getCurrentUser().getUid();
+        System.out.println("Pots: "+pots);
 
         try {
             if (!transactions.equals("403")) {
@@ -109,7 +110,7 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
                     if(JO.has("decline_reason")){
                         declined=true;
                     }
-                    
+
                     // If transaction was a transfer (not in store) then the merchant will be null and there will be no lat/long values. These transactions will not be on the map
                     if(JO.get("merchant").toString().equals("null")){
                         System.out.println("Merchant is null");

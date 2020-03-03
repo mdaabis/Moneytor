@@ -163,7 +163,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
             drawer.closeDrawer(GravityCompat.START);
         } else {
             if(exitCounter<1){
-                Toast.makeText(HomePage.this,"Press back again to logout.",Toast.LENGTH_SHORT).show();
+                Toast.makeText(HomePage.this,"Press back again to logout",Toast.LENGTH_SHORT).show();
                 exitCounter++;
             } else {
                 FirebaseAuth.getInstance().signOut();

@@ -15,14 +15,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".BudgetingPlan"></activity>
+        <activity android:name=".BudgetingPlan" />
         <activity android:name=".ResetPassword" />
         <activity android:name=".Map" />
         <activity android:name=".ForgotPassword" />
         <activity android:name=".Notifications" />
         <activity android:name=".Leaderboard" />
         <activity android:name=".Settings" />
-        <activity android:name=".Pots"/>
+        <activity android:name=".Pots" />
         <activity android:name=".HomePage"/>
 
         <meta-data

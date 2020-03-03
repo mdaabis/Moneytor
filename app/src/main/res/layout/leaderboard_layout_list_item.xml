@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/rect_recycler_view"
+    android:layout_marginTop="25dp"
+    android:id="@+id/leaderboard_layout">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:id="@+id/circleImage"
+        android:src="@mipmap/ic_launcher" />
+
+    <TextView
+        android:layout_width="105dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/leaderboard_name"
+        android:layout_toRightOf="@id/circleImage"
+        android:layout_marginLeft="65dp"
+        android:textColor="@color/title"
+        android:text="Mostafa Daabis"
+        android:layout_marginTop="30dp"/>
+
+    <TextView
+        android:id="@+id/score"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/title"
+        android:text="103"
+        android:layout_toRightOf="@id/leaderboard_name"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="100dp"
+        android:textStyle="bold"
+        android:textSize="26sp"
+        />
+
+
+</RelativeLayout>

@@ -3,9 +3,13 @@ package com.example.moneytor;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentActivity;
 
+import android.content.res.Resources;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -42,9 +46,12 @@ public class Map extends FragmentActivity implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
+        map.getUiSettings().setCompassEnabled(false);
+
         ArrayList<String> title = new ArrayList<>();
         ArrayList<LatLng> latLngs = new ArrayList<>();
         ArrayList<String> amount = new ArrayList<>();
+
 
         for(int i=0;i<FetchData.list.size();i++) {
             if(FetchData.list.get(i).getLatitude()!=0.0) {
@@ -71,4 +78,6 @@ public class Map extends FragmentActivity implements OnMapReadyCallback {
         }
         return "£" + df.format(amountL);
     }
+
+
 }
