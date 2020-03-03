@@ -26,9 +26,6 @@ public class Notifications extends AppCompatActivity implements NavigationView.O
         setContentView(R.layout.activity_notifications);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        toolbar.setTitle("Notifications");
-//        int myColor = getResources().getColor(R.color.font_colour);
-//        toolbar.setTitleTextColor(myColor);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
@@ -39,8 +36,6 @@ public class Notifications extends AppCompatActivity implements NavigationView.O
         View headerView = navigationView.getHeaderView(0);
         TextView navUsername = (TextView) headerView.findViewById(R.id.current_user_name);
         navUsername.setText(FetchData.fullname);
-
-        System.out.println("order of exec: Notifications 1");
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -68,6 +63,9 @@ public class Notifications extends AppCompatActivity implements NavigationView.O
             case R.id.nav_map:
                 Intent intentM = new Intent(this, Map.class);
                 startActivityForResult(intentM, 0);
+                break;
+            case R.id.nav_budgeting:
+                changeActivity(this, BudgetingPlan.class);
                 break;
             case R.id.nav_logout:
                 FirebaseAuth.getInstance().signOut();

@@ -40,7 +40,6 @@ public class Leaderboard extends AppCompatActivity implements NavigationView.OnN
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-
         drawer = findViewById(R.id.drawer_layout);
 
         NavigationView navigationView = findViewById(R.id.nav_view);
@@ -76,6 +75,9 @@ public class Leaderboard extends AppCompatActivity implements NavigationView.OnN
                 Intent intentM = new Intent(this, Map.class);
                 startActivityForResult(intentM, 0);
                 break;
+            case R.id.nav_budgeting:
+                changeActivity(this, BudgetingPlan.class);
+                break;
             case R.id.nav_logout:
                 FirebaseAuth.getInstance().signOut();
                 Intent intent = new Intent(Leaderboard.this, MainActivity.class);
@@ -94,7 +96,7 @@ public class Leaderboard extends AppCompatActivity implements NavigationView.OnN
         }
     }
 
-    public void changeActivity(Activity Current, Class Target) {
+    private void changeActivity(Activity Current, Class Target) {
         Intent intent = new Intent(Current, Target);
         startActivity(intent);
     }

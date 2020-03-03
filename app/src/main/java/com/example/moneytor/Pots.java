@@ -25,9 +25,6 @@ public class Pots extends AppCompatActivity  implements NavigationView.OnNavigat
         setContentView(R.layout.activity_pots);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        toolbar.setTitle("Pots");
-//        int myColor = getResources().getColor(R.color.font_colour);
-//        toolbar.setTitleTextColor(myColor);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
@@ -66,6 +63,9 @@ public class Pots extends AppCompatActivity  implements NavigationView.OnNavigat
             case R.id.nav_map:
                 Intent intentM = new Intent(this, Map.class);
                 startActivityForResult(intentM, 0);
+                break;
+            case R.id.nav_budgeting:
+                changeActivity(this, BudgetingPlan.class);
                 break;
             case R.id.nav_logout:
                 FirebaseAuth.getInstance().signOut();

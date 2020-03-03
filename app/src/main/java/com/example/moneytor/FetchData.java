@@ -1,6 +1,5 @@
 package com.example.moneytor;
 import android.os.AsyncTask;
-import android.provider.Settings;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -71,10 +70,15 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
     private String name="";
     private double latitude = 0.0;
     private double longitude = 0.0;
+    public static double moneyIn=0.0;
+    public static double moneyOut=0.0;
+    private int selectedElement=-1;
 
     public static List<Transaction> list = new ArrayList<>();
     public static String userID;
     public static String firstName, surname, fullname;
+
+
 
     @Override
     protected Void doInBackground(Void... voids) {
@@ -102,10 +106,17 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
                 for (int i = 0; i < JA.length(); i++) {
                     JSONObject JO = (JSONObject) JA.get(i);
                     current_user_db = FirebaseDatabase.getInstance().getReference().child("Users").child(userID).child("Transactions").child(JO.get("id").toString());
+
                     String dateAsString = JO.get("created").toString().substring(0, JO.get("created").toString().indexOf(".")) + "Z";
                     Date date = parseDate(dateAsString);
                     long epochDate = date.getTime();
                     boolean declined=false;
+                    String ID = JO.get("id").toString();
+                    Double amount = Double.parseDouble(JO.get("amount").toString());
+                    String currency = JO.get("currency").toString();
+                    String description = JO.get("description").toString();
+                    String merchant = JO.get("merchant").toString();
+                    String notes = JO.get("notes").toString();
 
                     if(JO.has("decline_reason")){
                         declined=true;
@@ -126,7 +137,8 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
                         category="Eating out";
                     }
 
-                    Transaction transaction = new Transaction(JO.get("id").toString(), Double.parseDouble(JO.get("amount").toString()), category, JO.get("currency").toString(), epochDate, declined, JO.get("description").toString(), latitude, longitude, JO.get("merchant").toString(), name, JO.get("notes").toString());
+
+                    Transaction transaction = new Transaction(ID, amount, category, currency, epochDate, declined, description, latitude, longitude, merchant, name, notes);
                     current_user_db.setValue(transaction);
 
                 }
@@ -156,27 +168,18 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
                     }
                 });
             }
+
+
         } catch (JSONException e) {
             e.printStackTrace();
             System.out.println("error jsonE");
         }
 
-        String path = "Users/" + userID ;
-        DatabaseReference myRef = FirebaseDatabase.getInstance().getReference(path);
-        myRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                firstName = dataSnapshot.child("First name").getValue().toString();
-                surname = dataSnapshot.child("Surname").getValue().toString();
-                fullname = firstName + " " + surname;
+        addToTotals();
+        getSelectedElement();
+        getName();
 
-                HomePage.navUsername.setText(fullname);
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-            }
-        });
         return null;
     }
 
@@ -256,8 +259,82 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
         return new Date();
     }
 
-    public String capitalise(String str) {
+    private String capitalise(String str) {
         return str.substring(0, 1).toUpperCase() + str.substring(1);
+    }
+
+//    private void budgeting(String category, Double amount){
+//
+//    }
+
+    private void addToTotals(){
+        String path = "Users/" + userID + "/Transactions";
+        DatabaseReference myRef = FirebaseDatabase.getInstance().getReference(path);
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot snapshot: dataSnapshot.getChildren()){
+                    Transaction transaction = snapshot.getValue(Transaction.class);
+                    if(transaction.getDeclined()==false){
+                        // Format transaction amounts
+                        Double amount = transaction.getAmount()/100;
+
+                        // If transaction amount is positive, add to money coming in otherwise add to money going out
+                        if(amount<0.0){
+                            moneyOut -= amount;
+                        } else {
+                            moneyIn += amount;
+                        }
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
+
+        System.out.println("Money in: " + moneyIn);
+        System.out.println("Money out: " + moneyOut);
+    }
+
+    public int getSelectedElement(){
+        String path = "Users/" + userID + "/Selected Element";
+        DatabaseReference myRef = FirebaseDatabase.getInstance().getReference(path);
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                try{
+                    selectedElement = Integer.parseInt(dataSnapshot.getValue().toString());
+                } catch (Exception e) {
+                    System.out.println("getSelectedElement error");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        return selectedElement;
+    }
+
+    private void getName(){
+        String path = "Users/" + userID ;
+        DatabaseReference myRef = FirebaseDatabase.getInstance().getReference(path);
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                firstName = dataSnapshot.child("First name").getValue().toString();
+                surname = dataSnapshot.child("Surname").getValue().toString();
+                fullname = firstName + " " + surname;
+
+                HomePage.navUsername.setText(fullname);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
     }
 
 }

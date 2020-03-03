@@ -15,6 +15,11 @@
             android:title="Map"/>
 
         <item
+            android:id="@+id/nav_budgeting"
+            android:icon="@drawable/budget"
+            android:title="Budgeting"/>
+
+        <item
             android:id="@+id/nav_notifications"
             android:icon="@drawable/ic_notifications"
             android:title="Notifications"/>

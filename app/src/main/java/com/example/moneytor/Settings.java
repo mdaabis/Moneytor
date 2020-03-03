@@ -23,6 +23,7 @@ import android.widget.Toast;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class Settings extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private DrawerLayout drawer;
@@ -31,6 +32,7 @@ public class Settings extends AppCompatActivity implements NavigationView.OnNavi
     public int selectedElement;
     private AlertDialog alert;
     SharedPreferences.Editor editor;
+    private DatabaseReference current_user_db;
 
 
     @Override
@@ -111,6 +113,9 @@ public class Settings extends AppCompatActivity implements NavigationView.OnNavi
                 Intent intentM = new Intent(this, Map.class);
                 startActivityForResult(intentM, 0);
                 break;
+            case R.id.nav_budgeting:
+                changeActivity(this, BudgetingPlan.class);
+                break;
             case R.id.nav_logout:
                 FirebaseAuth.getInstance().signOut();
                 Intent intent = new Intent(Settings.this, MainActivity.class);
@@ -136,8 +141,10 @@ public class Settings extends AppCompatActivity implements NavigationView.OnNavi
 
     private void SingleChoiceWithRadioButton() {
         SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
-        selectedElement = sharedPref.getInt("selectedElement",-1);
+        selectedElement = sharedPref.getInt("selectedElement",0);
         editor = sharedPref.edit();
+        current_user_db = FirebaseDatabase.getInstance().getReference().child("Users").child(FetchData.userID).child("Selected Element");
+
 
         final String[] selectFruit= new String[]{"50/30/20","80/20", "Debt Avalanche", "Debt Snowfall"};
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -145,9 +152,10 @@ public class Settings extends AppCompatActivity implements NavigationView.OnNavi
         builder.setSingleChoiceItems(selectFruit, selectedElement,
                 new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        editor.putInt("selectedElement", which);
+                    public void onClick(DialogInterface dialog, int selectedElement) {
+                        editor.putInt("selectedElement", selectedElement);
                         editor.apply();
+                        current_user_db.setValue(selectedElement);
                     }
                 });
         builder.setPositiveButton("ok",

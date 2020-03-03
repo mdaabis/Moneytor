@@ -9,7 +9,7 @@
     android:backgroundTint="@color/background_blue"
     android:backgroundTintMode="screen"
     android:fitsSystemWindows="true"
-    tools:context=".HomePage"
+    tools:context=".BudgetingPlan"
     android:layout_centerInParent="true"
     tools:openDrawer="end">
 
@@ -25,20 +25,28 @@
             android:background="@null"
             android:elevation="4dp"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            app:popupTheme="@style/Theme.AppCompat.Light"/>
+            app:popupTheme="@style/Theme.AppCompat.Light" >
+
+            <TextView
+                android:layout_width="250dp"
+                android:layout_height="match_parent"
+                android:text="Budgeting"
+                android:layout_marginLeft="30dp"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:textColor="@color/font_colour"
+                android:gravity = "center"
+                android:id="@+id/toolbar_title" />
+        </androidx.appcompat.widget.Toolbar>
 
         <FrameLayout
             android:id="@+id/fragment_container"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" >
-
-
-        </FrameLayout>
+            android:layout_height="match_parent" />
     </LinearLayout>
 
-
     <com.google.android.material.navigation.NavigationView
-        android:id="@+id/nav_view"
+        android:id="@+id/nav_views"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"

@@ -30,6 +30,7 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Set;
 import java.util.TimeZone;
 
 import com.google.android.material.navigation.NavigationView;
@@ -86,6 +87,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
+
     }
 
     private void initListBitmaps(){
@@ -144,13 +146,14 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
                 changeActivity(this, Notifications.class);
                 break;
             case R.id.nav_map:
-                Intent intentM = new Intent(this, Map.class);
-                startActivityForResult(intentM, 0);
+                changeActivity(this, Map.class);
+                break;
+            case R.id.nav_budgeting:
+            changeActivity(this, BudgetingPlan.class);
                 break;
             case R.id.nav_logout:
                 FirebaseAuth.getInstance().signOut();
-                Intent intent = new Intent(HomePage.this, MainActivity.class);
-                startActivity(intent);
+                changeActivity(this, MainActivity.class);
                 break;
 
         }
