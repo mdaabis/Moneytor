@@ -90,14 +90,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         toggle.syncState();
 
         //
-        Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.DAY_OF_MONTH, 1);
-        cal.set(Calendar.HOUR_OF_DAY, 0);
-        cal.clear(Calendar.MINUTE);
-        cal.clear(Calendar.SECOND);
-        cal.clear(Calendar.MILLISECOND);
-        System.out.println("Start of the month:       " + cal.getTime());
-        System.out.println("... in milliseconds:      " + cal.getTimeInMillis());
+
 
     }
 

@@ -47,9 +47,6 @@ public class BudgetingPlan extends AppCompatActivity implements NavigationView.O
         toggle.syncState();
         selectedElement = FetchData.selectedElement;
         changeFragment();
-
-
-        System.out.println("Selected element fetch: " + FetchData.selectedElement);
     }
 
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
@@ -92,7 +89,6 @@ public class BudgetingPlan extends AppCompatActivity implements NavigationView.O
     public void changeFragment(){
         Fragment fragment;
 
-        System.out.println("Selected element: " + FetchData.selectedElement);
         if(selectedElement==0){
             fragment = new Fragment50_30_20();
         } else {

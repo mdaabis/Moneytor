@@ -71,11 +71,12 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
     private double latitude = 0.0;
     private double longitude = 0.0;
     public static double moneyIn=0.0;
-    public static double moneyOut=0.0;
+//    public static double moneyOut=0.0;
     public static int selectedElement=-1;
 
 
     public static List<Transaction> list = new ArrayList<>();
+    public static List<Transaction> transactionsThisMonthFD = new ArrayList<>();
     public static String userID;
     public static String firstName, surname, fullname;
 
@@ -261,15 +262,10 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
         return str.substring(0, 1).toUpperCase() + str.substring(1);
     }
 
-//    private void budgeting(String category, Double amount){
-//
-//    }
-
     private void addToTotals(){
 //        String path = "Users/" + userID + "/Transactions";
 //        DatabaseReference myRef = FirebaseDatabase.getInstance().getReference(path);
         moneyIn=0.0;
-        moneyOut=0.0;
 //        myRef.addValueEventListener(new ValueEventListener() {
 //            @Override
 //            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -293,19 +289,29 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
 //            }
 //        });
 
+        // Getting start of month in epoch form
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.DAY_OF_MONTH, 1);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.clear(Calendar.MINUTE);
+        cal.clear(Calendar.SECOND);
+        cal.clear(Calendar.MILLISECOND);
+        Long startOfMonth = cal.getTimeInMillis();
+
+        transactionsThisMonthFD.clear();
+
         for(int i = 0; i<list.size();i++){
             // Format transaction amounts
             Double amount = list.get(i).getAmount()/100;
-            // If transaction amount is positive, add to money coming in otherwise add to money going out
-            if(amount<0.0){
-                moneyOut -= amount;
-            } else {
-                moneyIn += amount;
+            // Obtaining transactions from this month
+            if(list.get(i).getDate()>startOfMonth) {
+                // If transaction amount is positive, add to money coming in otherwise add to money going out
+                transactionsThisMonthFD.add(list.get(i));
+                if(amount>0.0){
+                    moneyIn += amount;
+                }
             }
         }
-//
-        System.out.println("Money in: " + moneyIn);
-        System.out.println("Money out: " + moneyOut);
     }
 
     public void getSelectedElement(){
