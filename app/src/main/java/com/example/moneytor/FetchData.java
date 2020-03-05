@@ -72,7 +72,8 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
     private double longitude = 0.0;
     public static double moneyIn=0.0;
     public static double moneyOut=0.0;
-    private int selectedElement=-1;
+    public static int selectedElement=-1;
+
 
     public static List<Transaction> list = new ArrayList<>();
     public static String userID;
@@ -82,7 +83,7 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected Void doInBackground(Void... voids) {
-        String accessToken = "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJlYiI6IjE2Tlg1b2dKdURYanVKRFFPZEhKIiwianRpIjoiYWNjdG9rXzAwMDA5c2Q5cGFaaVpQbGJ0UEE0aWYiLCJ0eXAiOiJhdCIsInYiOiI2In0.-aTHwQrItcpU_XOiPlS8jvNGnvy26iy46Ibu7oiwlG4WIKVNeUIhxEHh8YXkNaCuballyN1tse2izesskUB0_w";
+        String accessToken = "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJlYiI6ImRvMmEwbzgvRThOSmNxam42bjJ6IiwianRpIjoiYWNjdG9rXzAwMDA5c2dCUEIxeGhpZU44MldhZFYiLCJ0eXAiOiJhdCIsInYiOiI2In0.ll6sNdJohjhh-a0099TYe8EOEV3VBuK6rTCpSoDELncixiMLhOGNinMNqGjRKwKtvx2F_haYW6Z_mMMbPAnCIA";
         Map<String, String> headers = new HashMap<>();
         headers.put("Authorization", ("Bearer "+ accessToken));
 
@@ -97,7 +98,6 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
         transactions = getJSON(transactionsURL, headers);
         mFirebaseAuth = FirebaseAuth.getInstance();
         userID = mFirebaseAuth.getCurrentUser().getUid();
-        System.out.println("Pots: "+pots);
 
         try {
             if (!transactions.equals("403")) {
@@ -175,11 +175,9 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
             System.out.println("error jsonE");
         }
 
-        addToTotals();
         getSelectedElement();
+        addToTotals();
         getName();
-
-
         return null;
     }
 
@@ -268,36 +266,49 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
 //    }
 
     private void addToTotals(){
-        String path = "Users/" + userID + "/Transactions";
-        DatabaseReference myRef = FirebaseDatabase.getInstance().getReference(path);
-        myRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for(DataSnapshot snapshot: dataSnapshot.getChildren()){
-                    Transaction transaction = snapshot.getValue(Transaction.class);
-                    if(transaction.getDeclined()==false){
-                        // Format transaction amounts
-                        Double amount = transaction.getAmount()/100;
+//        String path = "Users/" + userID + "/Transactions";
+//        DatabaseReference myRef = FirebaseDatabase.getInstance().getReference(path);
+        moneyIn=0.0;
+        moneyOut=0.0;
+//        myRef.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                for(DataSnapshot snapshot: dataSnapshot.getChildren()){
+//                    Transaction transaction = snapshot.getValue(Transaction.class);
+//                    if(transaction.getDeclined()==false){
+//                        // Format transaction amounts
+//                        Double amount = transaction.getAmount()/100;
+//
+//                        // If transaction amount is positive, add to money coming in otherwise add to money going out
+//                        if(amount<0.0){
+//                            moneyOut -= amount;
+//                        } else {
+//                            moneyIn += amount;
+//                        }
+//                    }
+//                }
+//            }
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//            }
+//        });
 
-                        // If transaction amount is positive, add to money coming in otherwise add to money going out
-                        if(amount<0.0){
-                            moneyOut -= amount;
-                        } else {
-                            moneyIn += amount;
-                        }
-                    }
-                }
+        for(int i = 0; i<list.size();i++){
+            // Format transaction amounts
+            Double amount = list.get(i).getAmount()/100;
+            // If transaction amount is positive, add to money coming in otherwise add to money going out
+            if(amount<0.0){
+                moneyOut -= amount;
+            } else {
+                moneyIn += amount;
             }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-            }
-        });
-
+        }
+//
         System.out.println("Money in: " + moneyIn);
         System.out.println("Money out: " + moneyOut);
     }
 
-    public int getSelectedElement(){
+    public void getSelectedElement(){
         String path = "Users/" + userID + "/Selected Element";
         DatabaseReference myRef = FirebaseDatabase.getInstance().getReference(path);
         myRef.addValueEventListener(new ValueEventListener() {
@@ -315,7 +326,7 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
 
             }
         });
-        return selectedElement;
+//        return selectedElement;
     }
 
     private void getName(){

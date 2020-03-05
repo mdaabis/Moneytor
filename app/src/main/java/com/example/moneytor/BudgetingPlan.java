@@ -5,6 +5,9 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -18,6 +21,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class BudgetingPlan extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
     private DrawerLayout drawer;
+    int selectedElement;
 
 
     @Override
@@ -41,6 +45,11 @@ public class BudgetingPlan extends AppCompatActivity implements NavigationView.O
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
+        selectedElement = FetchData.selectedElement;
+        changeFragment();
+
+
+        System.out.println("Selected element fetch: " + FetchData.selectedElement);
     }
 
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
@@ -80,7 +89,18 @@ public class BudgetingPlan extends AppCompatActivity implements NavigationView.O
         startActivity(intent);
     }
 
-    
+    public void changeFragment(){
+        Fragment fragment;
+
+        System.out.println("Selected element: " + FetchData.selectedElement);
+        if(selectedElement==0){
+            fragment = new Fragment50_30_20();
+        } else {
+            fragment = new Fragment80_20();
+        }
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
+    }
+
 
 
 }

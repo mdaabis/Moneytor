@@ -36,13 +36,17 @@
                 android:textStyle="bold"
                 android:textColor="@color/font_colour"
                 android:gravity = "center"
-                android:id="@+id/toolbar_title" />
+                android:id="@+id/toolbar_title_budgeting" />
+
+
         </androidx.appcompat.widget.Toolbar>
 
         <FrameLayout
             android:id="@+id/fragment_container"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent">
+
+        </FrameLayout>
     </LinearLayout>
 
     <com.google.android.material.navigation.NavigationView

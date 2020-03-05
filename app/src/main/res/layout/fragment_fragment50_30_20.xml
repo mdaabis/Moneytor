@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Fragment50_30_20">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/necessities_current"
+        android:layout_toStartOf="@id/necessities"
+        android:text="Current"
+        android:tooltipText="Bills and necessities (50%)"
+        android:singleLine="true"
+        android:layout_marginTop="200dp"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/necessities"
+        android:text="Bills and necessities"
+        android:tooltipText="Bills and necessities (50%)"
+        android:layout_marginTop="200dp"
+        android:layout_centerHorizontal="true"
+        android:textSize="14sp"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/necessities_target"
+        android:layout_toEndOf="@id/necessities"
+        android:text="Target"
+        android:tooltipText="Bills and necessities (50%)"
+        android:singleLine="true"
+        android:layout_marginTop="200dp"
+        />
+
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/wants_current"
+        android:layout_toStartOf="@id/wants"
+        android:text="Current"
+        android:tooltipText="Wants (30%)"
+        android:singleLine="true"
+        android:layout_marginTop="250dp"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/wants"
+        android:text="Wants"
+        android:tooltipText="Wants (30%)"
+        android:layout_marginTop="250dp"
+        android:layout_centerHorizontal="true"
+        android:textSize="14sp"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/wants_target"
+        android:layout_toEndOf="@id/wants"
+        android:text="Target"
+        android:tooltipText="Wants (30%)"
+        android:singleLine="true"
+        android:layout_marginTop="250dp"
+        android:layout_centerHorizontal="true"
+        />
+
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/investments_current"
+        android:layout_toStartOf="@id/investments"
+        android:text="Current"
+        android:tooltipText="Investments (30%)"
+        android:singleLine="true"
+        android:layout_marginTop="300dp"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/investments"
+        android:text="Wants"
+        android:tooltipText="Investments (30%)"
+        android:layout_marginTop="300dp"
+        android:layout_centerHorizontal="true"
+        android:textSize="14sp"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/investments_target"
+        android:layout_toEndOf="@id/investments"
+        android:text="Target"
+        android:tooltipText="Investments (30%)"
+        android:singleLine="true"
+        android:layout_marginTop="300dp"
+        android:layout_centerHorizontal="true"
+        />
+</RelativeLayout>

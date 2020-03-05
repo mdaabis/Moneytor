@@ -146,10 +146,10 @@ public class Settings extends AppCompatActivity implements NavigationView.OnNavi
         current_user_db = FirebaseDatabase.getInstance().getReference().child("Users").child(FetchData.userID).child("Selected Element");
 
 
-        final String[] selectFruit= new String[]{"50/30/20","80/20", "Debt Avalanche", "Debt Snowfall"};
+        final String[] selectTechnique= new String[]{"50/30/20","80/20"}; //Ad"Debt Avalanche", "Debt Snowfall"
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Choose a budgeting plan");
-        builder.setSingleChoiceItems(selectFruit, selectedElement,
+        builder.setSingleChoiceItems(selectTechnique, selectedElement,
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int selectedElement) {

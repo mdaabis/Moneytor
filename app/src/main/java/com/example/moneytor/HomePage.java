@@ -29,6 +29,7 @@ import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Set;
 import java.util.TimeZone;
@@ -87,6 +88,16 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
+
+        //
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.DAY_OF_MONTH, 1);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.clear(Calendar.MINUTE);
+        cal.clear(Calendar.SECOND);
+        cal.clear(Calendar.MILLISECOND);
+        System.out.println("Start of the month:       " + cal.getTime());
+        System.out.println("... in milliseconds:      " + cal.getTimeInMillis());
 
     }
 
