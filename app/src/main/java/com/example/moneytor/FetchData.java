@@ -84,7 +84,7 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected Void doInBackground(Void... voids) {
-        String accessToken = "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJlYiI6Im5tMW5kRGF5RU5NeXBta2gxc0toIiwianRpIjoiYWNjdG9rXzAwMDA5c2h6alVIUDJIbThzWXFXeXYiLCJ0eXAiOiJhdCIsInYiOiI2In0.AN2-ovlIp8ky1_0HCIWunBImwWCx8ORMiuolQIweXyWkdGnrBYeQ7L8WAi3VxzI6Duo7VQTgYwiUJiAsY-5dgg";
+        String accessToken = "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJlYiI6IlkxZ0YydmkwMnZTS09WWk5INFhXIiwianRpIjoiYWNjdG9rXzAwMDA5c2ozaWx1R2JtUmViOEx2VVgiLCJ0eXAiOiJhdCIsInYiOiI2In0.vQYR_IyimW4Jxoc2zj468Msk2EFd3jr1w5wR0YqXY75w9t_Sb6ljkHAuw4AKqDXhlN5HKIUYh5QVV_HdDMT2Cw";
         Map<String, String> headers = new HashMap<>();
         headers.put("Authorization", ("Bearer "+ accessToken));
 
@@ -308,7 +308,7 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
                 // If transaction amount is positive, add to money coming in otherwise add to money going out
                 transactionsThisMonthFD.add(list.get(i));
                 if(amount>0.0){
-                    moneyIn += amount;
+                    moneyIn += (amount*100);
                 }
             }
         }

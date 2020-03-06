@@ -50,7 +50,7 @@ public class Fragment80_20 extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_fragment80_20, container, false);
         addAmounts();
-        percentage();
+        remaining();
 
         pb20 = (ProgressBar) view.findViewById(R.id.progress_bar_investment);
         pb80 = (ProgressBar) view.findViewById(R.id.progress_bar_other);
@@ -64,14 +64,24 @@ public class Fragment80_20 extends Fragment {
 
         monthTV.setText(getMonth());
         inTV.setText(moneyIn);
-        outTV.setText("Out: £"+moneyOut);
+        outTV.setText("Out: £"+amountToPound(Double.toString(moneyOut)));
 
-        pb20.setTooltipText("Remaining: £" + (Double.toString(remaining20)));
+//        System.out.println("Spent 80: " + spent80);
+//        System.out.println("Fetch Money in: " + FetchData.moneyIn);
+//        System.out.println("Fetch Money in * 0.2 : " + (FetchData.moneyIn*0.2));
+
+        percentage80 = (int) Math.round((spent80/(FetchData.moneyIn*0.8))*100);
+        percentage20 = (int) Math.round((FetchData.moneyIn - spent80)/(FetchData.moneyIn*0.2)*100);
+        System.out.println("percentage 20: " + percentage20);
+        System.out.println("percentage 80: " + percentage80);
+//        System.out.println("remaining 80: " + remaining80);
+//        System.out.println("remaining 20: " + remaining20);
+
+        pb20.setTooltipText("Remaining: " + amountToPoundWithMinus(Double.toString(remaining20)));
         pb20.setProgress(percentage20);
 
-        pb80.setTooltipText("Remaining: £" + (Double.toString(remaining80)));
+        pb80.setTooltipText("Remaining: " + amountToPoundWithMinus(Double.toString(remaining80)));
         pb80.setProgress(percentage80);
-
         return view;
     }
 
@@ -79,10 +89,8 @@ public class Fragment80_20 extends Fragment {
         DecimalFormat df = new DecimalFormat("0.00");
         Double amountL = Double.parseDouble(amount)/100;
         if(amount.charAt(0)=='-') {
-            System.out.println("Amount to pound method: "+ df.format(amountL).substring(1));
             return "" + df.format(amountL).substring(1);
         }
-        System.out.println("Amount to pound method: "+ df.format(amountL));
         return "" + df.format(amountL);
     }
 
@@ -93,14 +101,14 @@ public class Fragment80_20 extends Fragment {
             if(transactionsThisMonth.get(i).getAmount()<0.0) {
                 Double amountInPounds = Double.parseDouble(amountToPound(Double.toString(transactionsThisMonth.get(i).getAmount())));
                 if(transactionsThisMonth.get(i).getCategory().equals("Finances")){
-                    spent20+=amountInPounds;
+                    spent20+=(amountInPounds*100);
                 } else {
-                    spent80+=amountInPounds;
+                    spent80+=(amountInPounds*100);
                 }
             }
         }
 
-        moneyOut = spent20 + spent80;
+        moneyOut = (spent20 + spent80);
     }
 
     private String getMonth(){
@@ -116,18 +124,22 @@ public class Fragment80_20 extends Fragment {
         return month;
     }
 
-    private void percentage(){
-        if(FetchData.moneyIn==0) {
-            percentage20 = 100;
-            percentage80 = 100;
-        } else {
-            percentage20 = (int) (spent20/(FetchData.moneyIn*0.2)) * 100;
-            percentage80 = (int) (spent80/(FetchData.moneyIn*0.8)) * 100;
-        }
-
-        remaining20 = (FetchData.moneyIn*0.2) - spent20;
+    private void remaining(){
+        remaining20 = (FetchData.moneyIn*0.2) - (FetchData.moneyIn - spent80 - spent20);
         remaining80 = (FetchData.moneyIn*0.8) - spent80;
-        System.out.println("Money in: " + FetchData.moneyIn);
+        System.out.println("Remaining 20: " + remaining20);
+        System.out.println("Remaining 80: " + remaining80);
+    }
+
+    private String amountToPoundWithMinus(String amount) {
+        DecimalFormat df = new DecimalFormat("0.00");
+        Double amountL = Double.parseDouble(amount)/100;
+        if(amount.charAt(0)=='-') {
+//            System.out.println("Amount to pound method: "+ df.format(amountL).substring(1));
+            return "-£" + df.format(amountL).substring(1);
+        }
+//        System.out.println("Amount to pound method: "+ df.format(amountL));
+        return "£" + df.format(amountL);
     }
 
 

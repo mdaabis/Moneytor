@@ -58,7 +58,7 @@
 
     <ProgressBar
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="15dp"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_below="@+id/investmentTV"
@@ -75,11 +75,11 @@
         android:textColor="@color/font_colour"
         android:layout_below="@id/progress_bar_investment"
         android:id="@+id/otherTV"
-        android:layout_marginTop="50dp"/>
+        android:layout_marginTop="75dp"/>
 
     <ProgressBar
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="15dp"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_below="@+id/otherTV"
