@@ -6,76 +6,84 @@
     tools:context=".Fragment80_20">
 
     <TextView
+        android:id="@+id/month"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/investment_current80"
-        android:layout_toStartOf="@id/investment80"
-        android:text="Current"
-        android:tooltipText="Investment (20%)"
-        android:singleLine="true"
-        android:layout_marginTop="200dp"
-        />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/investment80"
-        android:text="Wants"
-        android:tooltipText="Investment (20%)"
-        android:layout_marginTop="200dp"
+        android:text="test"
+        android:textColor="@color/font_colour"
         android:layout_centerHorizontal="true"
-        android:singleLine="true"
-        android:textSize="14sp"
-        />
+        android:textSize="60sp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/investment_target80"
-        android:layout_toEndOf="@id/investment80"
-        android:text="Target"
-        android:tooltipText="Investment (20%)"
-        android:singleLine="true"
-        android:layout_marginTop="200dp"
+        android:id="@+id/in"
+        android:text="in"
+        android:textColor="@color/font_colour"
+        android:textSize="26sp"
+        android:layout_marginTop="100dp"
+        android:layout_toLeftOf="@+id/center"
+        android:layout_marginRight="50dp"
+        />
+
+    <TextView
+        android:layout_width="3dp"
+        android:layout_height="40dp"
         android:layout_centerHorizontal="true"
-        />
+        android:layout_marginTop="100dp"
+        android:background="@drawable/rect"
+        android:id="@+id/center"/>
+
+
+    <TextView
+        android:id="@+id/out"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:layout_marginRight="-155dp"
+        android:layout_toLeftOf="@id/center"
+        android:textColor="@color/font_colour"
+        android:text="out"
+        android:textSize="26sp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/other_current80"
-        android:layout_toStartOf="@id/other80"
-        android:text="Current"
-        android:tooltipText="other (80%)"
-        android:singleLine="true"
-        android:layout_marginTop="250dp"
-        />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/other80"
-        android:text="other"
-        android:tooltipText="other(80%)"
-        android:layout_marginTop="250dp"
         android:layout_centerHorizontal="true"
-        android:textSize="14sp"
-        />
+        android:text="Investments/savings"
+        android:textColor="@color/font_colour"
+        android:textSize="24sp"
+        android:id="@+id/investmentTV"
+        android:layout_marginTop="200dp"/>
+
+    <ProgressBar
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_below="@+id/investmentTV"
+        style="?android:progressBarStyleHorizontal"
+        android:progressDrawable="@drawable/progress_bar_circle"
+        android:id="@+id/progress_bar_investment" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/other_target80"
-        android:layout_toEndOf="@id/other80"
-        android:text="Target"
-        android:tooltipText="other (80%)"
-        android:singleLine="true"
-        android:layout_marginTop="250dp"
-        />
+        android:layout_centerHorizontal="true"
+        android:text="Other"
+        android:textSize="24sp"
+        android:textColor="@color/font_colour"
+        android:layout_below="@id/progress_bar_investment"
+        android:id="@+id/otherTV"
+        android:layout_marginTop="50dp"/>
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/progress_bar"/>
-
+    <ProgressBar
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_below="@+id/otherTV"
+        style="?android:progressBarStyleHorizontal"
+        android:progressDrawable="@drawable/progress_bar_circle"
+        android:id="@+id/progress_bar_other" />
 </RelativeLayout>

@@ -22,12 +22,23 @@ import java.util.List;
 public class Fragment80_20 extends Fragment {
 
 //    int selectedElement = FetchData.selectedElement;
-    ImageView pb;
+    ProgressBar pb20;
+    ProgressBar pb80;
+    TextView inTV;
+    TextView outTV;
+    TextView savingsTV;
+    TextView otherTV;
+    TextView monthTV;
 
 
     private double spent80;
     private double spent20;
-    private String month="";
+    private int percentage20;
+    private int percentage80;
+    private double remaining20;
+    private double remaining80;
+    private double moneyOut;
+
 
     public Fragment80_20() {
     }
@@ -38,13 +49,28 @@ public class Fragment80_20 extends Fragment {
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_fragment80_20, container, false);
-
-
-        pb = (ImageView) view.findViewById(R.id.progress_bar);
-//        pb.setTooltipText("D rus the g hench");
-
         addAmounts();
-        getMonth();
+        percentage();
+
+        pb20 = (ProgressBar) view.findViewById(R.id.progress_bar_investment);
+        pb80 = (ProgressBar) view.findViewById(R.id.progress_bar_other);
+        inTV = (TextView) view.findViewById(R.id.in);
+        outTV = (TextView) view.findViewById(R.id.out);
+        savingsTV = (TextView) view.findViewById(R.id.investmentTV);
+        otherTV = (TextView) view.findViewById(R.id.otherTV);
+        monthTV = (TextView) view.findViewById(R.id.month);
+
+        String moneyIn = "In: £"+amountToPound(Double.toString(FetchData.moneyIn));
+
+        monthTV.setText(getMonth());
+        inTV.setText(moneyIn);
+        outTV.setText("Out: £"+moneyOut);
+
+        pb20.setTooltipText("Remaining: £" + (Double.toString(remaining20)));
+        pb20.setProgress(percentage20);
+
+        pb80.setTooltipText("Remaining: £" + (Double.toString(remaining80)));
+        pb80.setProgress(percentage80);
 
         return view;
     }
@@ -53,8 +79,10 @@ public class Fragment80_20 extends Fragment {
         DecimalFormat df = new DecimalFormat("0.00");
         Double amountL = Double.parseDouble(amount)/100;
         if(amount.charAt(0)=='-') {
-            return "-" + df.format(amountL).substring(1);
+            System.out.println("Amount to pound method: "+ df.format(amountL).substring(1));
+            return "" + df.format(amountL).substring(1);
         }
+        System.out.println("Amount to pound method: "+ df.format(amountL));
         return "" + df.format(amountL);
     }
 
@@ -71,6 +99,8 @@ public class Fragment80_20 extends Fragment {
                 }
             }
         }
+
+        moneyOut = spent20 + spent80;
     }
 
     private String getMonth(){
@@ -85,4 +115,20 @@ public class Fragment80_20 extends Fragment {
         System.out.println("Month name: " + month);
         return month;
     }
+
+    private void percentage(){
+        if(FetchData.moneyIn==0) {
+            percentage20 = 100;
+            percentage80 = 100;
+        } else {
+            percentage20 = (int) (spent20/(FetchData.moneyIn*0.2)) * 100;
+            percentage80 = (int) (spent80/(FetchData.moneyIn*0.8)) * 100;
+        }
+
+        remaining20 = (FetchData.moneyIn*0.2) - spent20;
+        remaining80 = (FetchData.moneyIn*0.8) - spent80;
+        System.out.println("Money in: " + FetchData.moneyIn);
+    }
+
+
 }
