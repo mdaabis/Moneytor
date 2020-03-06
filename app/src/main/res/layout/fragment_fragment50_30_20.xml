@@ -6,107 +6,105 @@
     tools:context=".Fragment50_30_20">
 
     <TextView
+        android:id="@+id/month50"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/necessities_current"
-        android:layout_toStartOf="@id/necessities"
-        android:text="Current"
-        android:tooltipText="Bills and necessities (50%)"
-        android:singleLine="true"
-        android:layout_marginTop="200dp"
-        />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/necessities"
-        android:text="Bills and necessities"
-        android:tooltipText="Bills and necessities (50%)"
-        android:layout_marginTop="200dp"
         android:layout_centerHorizontal="true"
-        android:textSize="14sp"
-        />
+        android:text="test"
+        android:textColor="@color/font_colour"
+        android:textSize="60sp" />
 
     <TextView
+        android:id="@+id/in50"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/necessities_target"
-        android:layout_toEndOf="@id/necessities"
-        android:text="Target"
-        android:tooltipText="Bills and necessities (50%)"
-        android:singleLine="true"
-        android:layout_marginTop="200dp"
-        />
-
-
+        android:layout_marginTop="100dp"
+        android:layout_marginRight="50dp"
+        android:layout_toLeftOf="@+id/center50"
+        android:text="in"
+        android:textColor="@color/font_colour"
+        android:textSize="26sp" />
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/wants_current"
-        android:layout_toStartOf="@id/wants"
-        android:text="Current"
-        android:tooltipText="Wants (30%)"
-        android:singleLine="true"
-        android:layout_marginTop="250dp"
-        />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/wants"
-        android:text="Wants"
-        android:tooltipText="Wants (30%)"
-        android:layout_marginTop="250dp"
+        android:id="@+id/center50"
+        android:layout_width="3dp"
+        android:layout_height="40dp"
         android:layout_centerHorizontal="true"
-        android:textSize="14sp"
-        />
+        android:layout_marginTop="100dp"
+        android:background="@drawable/rect" />
+
 
     <TextView
+        android:id="@+id/out50"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/wants_target"
-        android:layout_toEndOf="@id/wants"
-        android:text="Target"
-        android:tooltipText="Wants (30%)"
-        android:singleLine="true"
-        android:layout_marginTop="250dp"
+        android:layout_marginTop="100dp"
+        android:layout_marginRight="-155dp"
+        android:layout_toLeftOf="@id/center50"
+        android:text="out"
+        android:textColor="@color/font_colour"
+        android:textSize="26sp" />
+
+    <TextView
+        android:id="@+id/billsTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/center50"
         android:layout_centerHorizontal="true"
-        />
+        android:layout_marginTop="40dp"
+        android:text="Bills/necessities"
+        android:textColor="@color/font_colour"
+        android:textSize="24sp" />
 
-
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/investments_current"
-        android:layout_toStartOf="@id/investments"
-        android:text="Current"
-        android:tooltipText="Investments (30%)"
-        android:singleLine="true"
-        android:layout_marginTop="300dp"
-        />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/investments"
-        android:text="Wants"
-        android:tooltipText="Investments (30%)"
-        android:layout_marginTop="300dp"
+    <ProgressBar
+        android:id="@+id/progress_bar_bills"
+        style="?android:progressBarStyleHorizontal"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_below="@+id/billsTV"
         android:layout_centerHorizontal="true"
-        android:textSize="14sp"
-        />
+        android:layout_marginTop="15dp"
+        android:progressDrawable="@drawable/progress_bar_circle" />
 
     <TextView
+        android:id="@+id/recreationTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/investments_target"
-        android:layout_toEndOf="@id/investments"
-        android:text="Target"
-        android:tooltipText="Investments (30%)"
-        android:singleLine="true"
-        android:layout_marginTop="300dp"
+        android:layout_below="@id/progress_bar_bills"
         android:layout_centerHorizontal="true"
-        />
+        android:layout_marginTop="45dp"
+        android:text="Recreation"
+        android:textColor="@color/font_colour"
+        android:textSize="24sp" />
+
+    <ProgressBar
+        android:id="@+id/progress_bar_recreation"
+        style="?android:progressBarStyleHorizontal"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_below="@+id/recreationTV"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp"
+        android:progressDrawable="@drawable/progress_bar_circle" />
+
+    <TextView
+        android:id="@+id/savingsTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/progress_bar_recreation"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="45dp"
+        android:text="Investment/savings"
+        android:textColor="@color/font_colour"
+        android:textSize="24sp" />
+
+    <ProgressBar
+        android:id="@+id/progress_bar_savings"
+        style="?android:progressBarStyleHorizontal"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_below="@+id/savingsTV"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp"
+        android:progressDrawable="@drawable/progress_bar_circle" />
 </RelativeLayout>

@@ -53,18 +53,18 @@ public class Map extends FragmentActivity implements OnMapReadyCallback {
         ArrayList<String> amount = new ArrayList<>();
 
 
-        for(int i=0;i<FetchData.list.size();i++) {
-            if(FetchData.list.get(i).getLatitude()!=0.0) {
+        for (int i = 0; i < FetchData.list.size(); i++) {
+            if (FetchData.list.get(i).getLatitude() != 0.0) {
                 title.add(FetchData.list.get(i).getName());
-                String convert = amountToPound(""+FetchData.list.get(i).getAmount());
+                String convert = amountToPound("" + FetchData.list.get(i).getAmount());
                 amount.add(convert);
                 Double latitude = FetchData.list.get(i).getLatitude();
-                Double longitude= FetchData.list.get(i).getLongitude();
+                Double longitude = FetchData.list.get(i).getLongitude();
                 latLngs.add(new LatLng(latitude, longitude));
             }
         }
 
-        for(int i=0;i<title.size();i++){
+        for (int i = 0; i < title.size(); i++) {
             map.addMarker(new MarkerOptions().position(latLngs.get(i)).title(title.get(i)).snippet(amount.get(i)));
             map.moveCamera(CameraUpdateFactory.newLatLng(latLngs.get(i)));
         }
@@ -72,8 +72,8 @@ public class Map extends FragmentActivity implements OnMapReadyCallback {
 
     public String amountToPound(String amount) {
         DecimalFormat df = new DecimalFormat("0.00");
-        Double amountL = Double.parseDouble(amount)/100;
-        if(amount.charAt(0)=='-') {
+        Double amountL = Double.parseDouble(amount) / 100;
+        if (amount.charAt(0) == '-') {
             return "-£" + df.format(amountL).substring(1);
         }
         return "£" + df.format(amountL);

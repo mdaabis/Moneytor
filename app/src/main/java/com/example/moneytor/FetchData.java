@@ -1,4 +1,5 @@
 package com.example.moneytor;
+
 import android.os.AsyncTask;
 
 import androidx.annotation.NonNull;
@@ -67,12 +68,12 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
     private String transactions;
     private FirebaseAuth mFirebaseAuth;
     private DatabaseReference current_user_db;
-    private String name="";
+    private String name = "";
     private double latitude = 0.0;
     private double longitude = 0.0;
-    public static double moneyIn=0.0;
-//    public static double moneyOut=0.0;
-    public static int selectedElement=-1;
+    public static double moneyIn = 0.0;
+    //    public static double moneyOut=0.0;
+    public static int selectedElement = -1;
 
 
     public static List<Transaction> list = new ArrayList<>();
@@ -81,12 +82,11 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
     public static String firstName, surname, fullname;
 
 
-
     @Override
     protected Void doInBackground(Void... voids) {
         String accessToken = "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJlYiI6IlkxZ0YydmkwMnZTS09WWk5INFhXIiwianRpIjoiYWNjdG9rXzAwMDA5c2ozaWx1R2JtUmViOEx2VVgiLCJ0eXAiOiJhdCIsInYiOiI2In0.vQYR_IyimW4Jxoc2zj468Msk2EFd3jr1w5wR0YqXY75w9t_Sb6ljkHAuw4AKqDXhlN5HKIUYh5QVV_HdDMT2Cw";
         Map<String, String> headers = new HashMap<>();
-        headers.put("Authorization", ("Bearer "+ accessToken));
+        headers.put("Authorization", ("Bearer " + accessToken));
 
         String balanceURL = "https://api.monzo.com/balance?account_id=acc_00009np8oRwjAPAYEP0mCA";
         String potsURL = "https://api.monzo.com/pots";
@@ -111,7 +111,7 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
                     String dateAsString = JO.get("created").toString().substring(0, JO.get("created").toString().indexOf(".")) + "Z";
                     Date date = parseDate(dateAsString);
                     long epochDate = date.getTime();
-                    boolean declined=false;
+                    boolean declined = false;
                     String ID = JO.get("id").toString();
                     Double amount = Double.parseDouble(JO.get("amount").toString());
                     String currency = JO.get("currency").toString();
@@ -119,12 +119,12 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
                     String merchant = JO.get("merchant").toString();
                     String notes = JO.get("notes").toString();
 
-                    if(JO.has("decline_reason")){
-                        declined=true;
+                    if (JO.has("decline_reason")) {
+                        declined = true;
                     }
 
                     // If transaction was a transfer (not in store) then the merchant will be null and there will be no lat/long values. These transactions will not be on the map
-                    if(JO.get("merchant").toString().equals("null")){
+                    if (JO.get("merchant").toString().equals("null")) {
                         System.out.println("Merchant is null");
                     } else {
                         JSONObject mJO = (JSONObject) JO.get("merchant");
@@ -134,8 +134,8 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
                         longitude = Double.parseDouble(aJO.get("longitude").toString());
                     }
                     String category = capitalise(JO.get("category").toString()).trim();
-                    if(category.equals("Eating_out")){
-                        category="Eating out";
+                    if (category.equals("Eating_out")) {
+                        category = "Eating out";
                     }
 
 
@@ -152,9 +152,9 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         list.clear();
-                        for(DataSnapshot snapshot: dataSnapshot.getChildren()){
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                             Transaction transaction = snapshot.getValue(Transaction.class);
-                            if(transaction.getDeclined()==false){
+                            if (transaction.getDeclined() == false) {
                                 list.add(transaction);
                             }
                             Collections.sort(list, new Comparator<Transaction>() {
@@ -164,6 +164,7 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
                             });
                         }
                     }
+
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
                     }
@@ -183,9 +184,9 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
     }
 
     // Method gets rid of extra characters around JSON array
-    private static String parseJSON(String transactions){
-        String parsed=transactions.substring(transactions.indexOf("["));
-        return parsed.substring(0, parsed.length()-1);
+    private static String parseJSON(String transactions) {
+        String parsed = transactions.substring(transactions.indexOf("["));
+        return parsed.substring(0, parsed.length() - 1);
     }
 
     private static String getJSON(String address, Map<String, String> headers) {
@@ -225,7 +226,7 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
         return builder.toString();
     }
 
-    private static String parse(String data, String type){
+    private static String parse(String data, String type) {
         try {
             JSONObject JO = new JSONObject(data);
             if (type.equals("balance")) {
@@ -235,7 +236,7 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
             } else if (type.equals("currency")) {
                 return JO.getString("currency");
             }
-        } catch (JSONException e){
+        } catch (JSONException e) {
             e.printStackTrace();
         }
         return "-1";
@@ -244,14 +245,14 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
 
-        String b = "Account Balance\n" + "         £"+this.balance;
+        String b = "Account Balance\n" + "         £" + this.balance;
         HomePage.tv.setText(b);
     }
 
     private static Date parseDate(String dateStr) {
 //        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
         try {
-           return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").parse(dateStr);
+            return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").parse(dateStr);
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -262,10 +263,10 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
         return str.substring(0, 1).toUpperCase() + str.substring(1);
     }
 
-    private void addToTotals(){
+    private void addToTotals() {
 //        String path = "Users/" + userID + "/Transactions";
 //        DatabaseReference myRef = FirebaseDatabase.getInstance().getReference(path);
-        moneyIn=0.0;
+        moneyIn = 0.0;
 //        myRef.addValueEventListener(new ValueEventListener() {
 //            @Override
 //            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -300,27 +301,27 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
 
         transactionsThisMonthFD.clear();
 
-        for(int i = 0; i<list.size();i++){
+        for (int i = 0; i < list.size(); i++) {
             // Format transaction amounts
-            Double amount = list.get(i).getAmount()/100;
+            Double amount = list.get(i).getAmount() / 100;
             // Obtaining transactions from this month
-            if(list.get(i).getDate()>startOfMonth) {
+            if (list.get(i).getDate() > startOfMonth) {
                 // If transaction amount is positive, add to money coming in otherwise add to money going out
                 transactionsThisMonthFD.add(list.get(i));
-                if(amount>0.0){
-                    moneyIn += (amount*100);
+                if (amount > 0.0) {
+                    moneyIn += (amount * 100);
                 }
             }
         }
     }
 
-    public void getSelectedElement(){
+    public void getSelectedElement() {
         String path = "Users/" + userID + "/Selected Element";
         DatabaseReference myRef = FirebaseDatabase.getInstance().getReference(path);
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                try{
+                try {
                     selectedElement = Integer.parseInt(dataSnapshot.getValue().toString());
                 } catch (Exception e) {
                     System.out.println("getSelectedElement error");
@@ -335,8 +336,8 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
 //        return selectedElement;
     }
 
-    private void getName(){
-        String path = "Users/" + userID ;
+    private void getName() {
+        String path = "Users/" + userID;
         DatabaseReference myRef = FirebaseDatabase.getInstance().getReference(path);
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
