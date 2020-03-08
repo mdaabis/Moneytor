@@ -18,6 +18,8 @@ import com.google.firebase.auth.FirebaseAuth;
 public class ForgotPassword extends AppCompatActivity {
     TextView TVemail;
     Button forgotPassword;
+    Button back;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,6 +27,15 @@ public class ForgotPassword extends AppCompatActivity {
 
         TVemail = (TextView) findViewById(R.id.userEmail);
         forgotPassword = findViewById(R.id.forgot);
+        back = (Button) findViewById(R.id.back_button_forgot_pwd);
+
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setResult(RESULT_CANCELED);
+                finish();
+            }
+        });
 
         forgotPassword.setOnClickListener(new View.OnClickListener() {
             @Override

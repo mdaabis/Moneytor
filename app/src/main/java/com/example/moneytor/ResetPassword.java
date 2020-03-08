@@ -18,12 +18,14 @@ import com.google.firebase.auth.FirebaseAuth;
 public class ResetPassword extends AppCompatActivity {
     EditText currentPwd;
     Button sendRstEmail;
+    Button back;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reset_password);
 
+        back = (Button) findViewById(R.id.back_button_settings);
         currentPwd = (EditText) findViewById(R.id.currentPassword);
         sendRstEmail = (Button) findViewById(R.id.sendResetEmail);
 
@@ -49,6 +51,14 @@ public class ResetPassword extends AppCompatActivity {
                     System.out.println("Main page pwd: " + MainActivity.pwd);
                     System.out.println("This pwd: " + currentPwd.getText());
                 }
+            }
+        });
+
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setResult(RESULT_CANCELED);
+                finish();
             }
         });
 

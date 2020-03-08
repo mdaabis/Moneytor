@@ -51,9 +51,6 @@ public class BudgetingPlan extends AppCompatActivity implements NavigationView.O
 
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch (menuItem.getItemId()){
-            case R.id.nav_pots:
-                changeActivity(this, Pots.class);
-                break;
             case R.id.nav_settings:
                 changeActivity(this, Settings.class);
                 break;

@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.material.navigation.NavigationView;
@@ -45,9 +46,6 @@ public class Notifications extends AppCompatActivity implements NavigationView.O
 
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch (menuItem.getItemId()){
-            case R.id.nav_pots:
-                changeActivity(this, Pots.class);
-                break;
             case R.id.nav_settings:
                 changeActivity(this, Settings.class);
                 break;

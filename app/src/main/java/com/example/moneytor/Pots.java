@@ -45,9 +45,6 @@ public class Pots extends AppCompatActivity  implements NavigationView.OnNavigat
 
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch (menuItem.getItemId()){
-            case R.id.nav_pots:
-                changeActivity(this, Pots.class);
-                break;
             case R.id.nav_settings:
                 changeActivity(this, Settings.class);
                 break;

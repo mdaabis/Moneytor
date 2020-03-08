@@ -5,15 +5,15 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_centerInParent="true"
     android:background="@drawable/background"
     android:backgroundTint="@color/background_blue"
     android:backgroundTintMode="screen"
     android:fitsSystemWindows="true"
     tools:context=".Notifications"
-    android:layout_centerInParent="true"
-    tools:openDrawer="start">
+    tools:openDrawer="end">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -25,35 +25,53 @@
             android:background="@null"
             android:elevation="4dp"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            app:popupTheme="@style/Theme.AppCompat.Light" >
+            app:popupTheme="@style/Theme.AppCompat.Light">
 
             <TextView
+                android:id="@+id/toolbar_title"
                 android:layout_width="250dp"
                 android:layout_height="match_parent"
-                android:text="Notifications"
                 android:layout_marginLeft="30dp"
-                android:textSize="24sp"
-                android:textStyle="bold"
+                android:gravity="center"
+                android:text="Notifications"
                 android:textColor="@color/font_colour"
-                android:gravity = "center"
-                android:id="@+id/toolbar_title" />
+                android:textSize="24sp"
+                android:textStyle="bold" />
         </androidx.appcompat.widget.Toolbar>
 
         <FrameLayout
             android:id="@+id/fragment_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
-    </LinearLayout>
+
+        <ImageView
+            android:id="@+id/no_notification_icon"
+            android:layout_width="323dp"
+            android:layout_height="333dp"
+            android:layout_centerInParent="true"
+            android:alpha="0.5"
+            android:src="@drawable/no_notifications" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="No notifications to show"
+            android:layout_marginTop="30dp"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:foregroundGravity="center"
+            android:layout_below="@id/no_notification_icon"
+            android:textSize="24sp"/>
+    </RelativeLayout>
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/nav_views"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        app:headerLayout="@layout/nav_header"
-        app:menu="@menu/drawer_menu"
         android:background="@color/nav_bar_rest"
-        />
+        app:headerLayout="@layout/nav_header"
+        app:menu="@menu/drawer_menu" />
 
 </androidx.drawerlayout.widget.DrawerLayout>
 

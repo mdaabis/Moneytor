@@ -61,8 +61,8 @@ public class Settings extends AppCompatActivity implements NavigationView.OnNavi
         resetTV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                changeActivity(Settings.this, ResetPassword.class);
-            }
+                Intent intent = new Intent(Settings.this, ResetPassword.class);
+                startActivityForResult(intent, 0);            }
         });
 
         logoutTV.setOnClickListener(new View.OnClickListener() {
@@ -94,9 +94,6 @@ public class Settings extends AppCompatActivity implements NavigationView.OnNavi
 
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch (menuItem.getItemId()){
-            case R.id.nav_pots:
-                changeActivity(this, Pots.class);
-                break;
             case R.id.nav_settings:
                 changeActivity(this, Settings.class);
                 break;

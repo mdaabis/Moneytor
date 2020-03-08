@@ -48,7 +48,7 @@ public class RegisterPage extends AppCompatActivity {
         haveAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(RegisterPage.this, "Press the 'Login' button.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(RegisterPage.this, "Press the 'Login' button", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -68,26 +68,26 @@ public class RegisterPage extends AppCompatActivity {
                 String cnfrmPwd = cnfrmpassword.getText().toString();
                 String regex = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
                 if (email.isEmpty() && pwd.isEmpty()) {
-                    Toast.makeText(RegisterPage.this, "Fields Are Empty.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RegisterPage.this, "Fields Are Empty", Toast.LENGTH_SHORT).show();
                 } else if (pwd.isEmpty()) {
-                    password.setError("Please enter your password.");
+                    password.setError("Please enter your password");
                     password.requestFocus();
                 } else if (email.isEmpty()) {
-                    emailId.setError("Please enter email.");
+                    emailId.setError("Please enter email");
                     emailId.requestFocus();
                 } else if (!pwd.equals(cnfrmPwd)) {
-                    Toast.makeText(RegisterPage.this, "Passwords do not match.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RegisterPage.this, "Passwords do not match", Toast.LENGTH_SHORT).show();
                 } else if (!email.matches(regex)) {
-                    Toast.makeText(RegisterPage.this, "Invalid email address.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RegisterPage.this, "Invalid email address", Toast.LENGTH_SHORT).show();
                 } else if(pwd.length()<8){
-                    password.setError("Password must be at least 8 characters long.");
+                    password.setError("Password must be at least 8 characters long");
                     password.requestFocus();
                 } else  if(!(email.isEmpty() && pwd.isEmpty())){
                     mFirebaseAuth.createUserWithEmailAndPassword(email, pwd).addOnCompleteListener(RegisterPage.this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if(!task.isSuccessful()){
-                                Toast.makeText(RegisterPage.this,"Sign up unsuccessful, please try again.",Toast.LENGTH_SHORT).show();
+                                Toast.makeText(RegisterPage.this,"Sign up unsuccessful, please try again",Toast.LENGTH_SHORT).show();
                             }
                             else {
                                 String user_id = mFirebaseAuth.getCurrentUser().getUid();
@@ -108,7 +108,7 @@ public class RegisterPage extends AppCompatActivity {
                                             public void onComplete(@NonNull Task<Void> task) {
                                                 if (task.isSuccessful()) {
                                                     startActivity(new Intent(RegisterPage.this,MainActivity.class));
-                                                    Toast.makeText(RegisterPage.this,"Registration successful, please verify your email address.",Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(RegisterPage.this,"Registration successful, please verify your email address",Toast.LENGTH_SHORT).show();
                                                 }
                                             }
                                         });
@@ -116,7 +116,7 @@ public class RegisterPage extends AppCompatActivity {
                         }
                     });
                 } else {
-                    Toast.makeText(RegisterPage.this,"Error occurred.",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RegisterPage.this,"Error occurred",Toast.LENGTH_SHORT).show();
                 }
 
             }

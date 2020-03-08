@@ -64,13 +64,13 @@ public class Fragment50_30_20 extends Fragment {
         outTV.setText("Out: £" + amountToPound(Double.toString(moneyOut)));
 
         billsPB.setProgress(percentageBills);
-        billsPB.setTooltipText("" + amountToPoundWithMinus(Double.toString(remainingBills)));
+        billsPB.setTooltipText("Remaining " + amountToPoundWithMinus(Double.toString(remainingBills)));
 
         recreationPB.setProgress(percentageRecreation);
-        recreationPB.setTooltipText("" + amountToPoundWithMinus(Double.toString(remainingRecreation)));
+        recreationPB.setTooltipText("Remaining " + amountToPoundWithMinus(Double.toString(remainingRecreation)));
 
         savingsPB.setProgress(percentageSavings);
-        savingsPB.setTooltipText("" + amountToPoundWithMinus(Double.toString(remainingSavings)));
+        savingsPB.setTooltipText("Remaining " + amountToPoundWithMinus(Double.toString(remainingSavings)));
 
         month.setText(getMonth());
 

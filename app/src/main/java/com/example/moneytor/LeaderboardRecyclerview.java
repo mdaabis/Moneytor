@@ -54,7 +54,7 @@ public class LeaderboardRecyclerview extends RecyclerView.Adapter<LeaderboardRec
             public void onClick(View v) {
                 Log.d(TAG, "onClick: clicked on");
 
-                Toast.makeText(context, mNames.get(position), Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "User's budgeting technique would be shown here", Toast.LENGTH_SHORT).show();
             }
         });
     }
