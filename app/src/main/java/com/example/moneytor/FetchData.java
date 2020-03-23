@@ -84,7 +84,8 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected Void doInBackground(Void... voids) {
-        String accessToken = "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJlYiI6IjROZDNJZkFwa3lheTkyM1UrV05jIiwianRpIjoiYWNjdG9rXzAwMDA5c29JS2R1Vjlsc3huTmE3V3MiLCJ0eXAiOiJhdCIsInYiOiI2In0.YM11FrkhaHiK3GZ9UlEfWEX5QwZHvsm9IjMbroTG0Wxrwk4BvsLcNg-Odye6bfBp2YOBBNVuF87BXANujNqb7g";
+
+        String accessToken = "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJlYiI6InhKNlNETzNiSXBRYTYzNWMyRzhpIiwianRpIjoiYWNjdG9rXzAwMDA5dElsVzlKblJ0ZkR2ZGFTdUgiLCJ0eXAiOiJhdCIsInYiOiI2In0.5-RQq7BgaK0ifS4QKNE3ddgPNJiq44NP04mnB7HMkh0vFU1c3h7RZPr2iL-Rg8ub3k8KCqrN68wmQ2X0CRaJzg";
         Map<String, String> headers = new HashMap<>();
         headers.put("Authorization", ("Bearer " + accessToken));
 
@@ -124,9 +125,7 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
                     }
 
                     // If transaction was a transfer (not in store) then the merchant will be null and there will be no lat/long values. These transactions will not be on the map
-                    if (JO.get("merchant").toString().equals("null")) {
-                        System.out.println("Merchant is null");
-                    } else {
+                    if (!JO.get("merchant").toString().equals("null")) {
                         JSONObject mJO = (JSONObject) JO.get("merchant");
                         JSONObject aJO = (JSONObject) mJO.get("address");
                         name = mJO.get("name").toString();

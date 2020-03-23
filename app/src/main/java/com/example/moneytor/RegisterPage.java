@@ -1,16 +1,16 @@
 package com.example.moneytor;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -21,11 +21,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class RegisterPage extends AppCompatActivity {
-    Button btnSignIn,btnSignUp;
-    EditText emailId, password, cnfrmpassword,first_name, surname;
+    Button btnSignIn, btnSignUp;
+    EditText emailId, password, cnfrmpassword, first_name, surname;
     FirebaseAuth mFirebaseAuth;
     DatabaseReference current_user_db;
     TextView haveAccount;
@@ -34,6 +35,7 @@ public class RegisterPage extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_page);
+
 
         btnSignIn = (Button) findViewById(R.id.BTNlogin_button);
         btnSignUp = (Button) findViewById(R.id.BTNregister);
@@ -55,7 +57,7 @@ public class RegisterPage extends AppCompatActivity {
         btnSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent (RegisterPage.this, MainActivity.class);
+                Intent intent = new Intent(RegisterPage.this, MainActivity.class);
                 startActivity(intent);
             }
         });
@@ -79,17 +81,16 @@ public class RegisterPage extends AppCompatActivity {
                     Toast.makeText(RegisterPage.this, "Passwords do not match", Toast.LENGTH_SHORT).show();
                 } else if (!email.matches(regex)) {
                     Toast.makeText(RegisterPage.this, "Invalid email address", Toast.LENGTH_SHORT).show();
-                } else if(pwd.length()<8){
+                } else if (pwd.length() < 8) {
                     password.setError("Password must be at least 8 characters long");
                     password.requestFocus();
-                } else  if(!(email.isEmpty() && pwd.isEmpty())){
+                } else if (!(email.isEmpty() && pwd.isEmpty())) {
                     mFirebaseAuth.createUserWithEmailAndPassword(email, pwd).addOnCompleteListener(RegisterPage.this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
-                            if(!task.isSuccessful()){
-                                Toast.makeText(RegisterPage.this,"Sign up unsuccessful, please try again",Toast.LENGTH_SHORT).show();
-                            }
-                            else {
+                            if (!task.isSuccessful()) {
+                                Toast.makeText(RegisterPage.this, "Sign up unsuccessful, please try again", Toast.LENGTH_SHORT).show();
+                            } else {
                                 String user_id = mFirebaseAuth.getCurrentUser().getUid();
                                 String firstName = first_name.getText().toString();
                                 String surName = surname.getText().toString();
@@ -107,8 +108,8 @@ public class RegisterPage extends AppCompatActivity {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
                                                 if (task.isSuccessful()) {
-                                                    startActivity(new Intent(RegisterPage.this,MainActivity.class));
-                                                    Toast.makeText(RegisterPage.this,"Registration successful, please verify your email address",Toast.LENGTH_SHORT).show();
+                                                    startActivity(new Intent(RegisterPage.this, MainActivity.class));
+                                                    Toast.makeText(RegisterPage.this, "Registration successful, please verify your email address", Toast.LENGTH_SHORT).show();
                                                 }
                                             }
                                         });
@@ -116,7 +117,7 @@ public class RegisterPage extends AppCompatActivity {
                         }
                     });
                 } else {
-                    Toast.makeText(RegisterPage.this,"Error occurred",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RegisterPage.this, "Error occurred", Toast.LENGTH_SHORT).show();
                 }
 
             }

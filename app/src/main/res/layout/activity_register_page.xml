@@ -45,19 +45,6 @@
         android:textSize="30sp" />
 
     <EditText
-        android:id="@+id/ETusername"
-        android:layout_width="300dp"
-        android:layout_height="40dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="35dp"
-        android:contentDescription="@string/email"
-        android:ems="30"
-        android:hint="@string/email"
-        android:inputType="textPersonName"
-        android:singleLine="true"
-        android:textAlignment="center"
-        android:textColor="#48000000" />
-    <EditText
         android:id="@+id/ETname"
         android:layout_width="300dp"
         android:layout_height="40dp"
@@ -79,6 +66,20 @@
         android:contentDescription="@string/surname"
         android:ems="30"
         android:hint="@string/surname"
+        android:inputType="textPersonName"
+        android:singleLine="true"
+        android:textAlignment="center"
+        android:textColor="#48000000" />
+
+    <EditText
+        android:id="@+id/ETusername"
+        android:layout_width="300dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="35dp"
+        android:contentDescription="@string/email"
+        android:ems="30"
+        android:hint="@string/email"
         android:inputType="textPersonName"
         android:singleLine="true"
         android:textAlignment="center"
@@ -113,6 +114,7 @@
         android:textAlignment="center"
         android:visibility="visible"
         tools:visibility="visible" />
+
 
     <Button
         android:id="@+id/BTNregister"

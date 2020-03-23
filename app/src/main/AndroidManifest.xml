@@ -23,7 +23,18 @@
         <activity android:name=".Leaderboard" />
         <activity android:name=".Settings" />
         <activity android:name=".Pots" />
-        <activity android:name=".HomePage"/>
+        <activity android:name=".HomePage">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="www.moneytor.com/oath/callback/"
+                    android:scheme="https" />
+            </intent-filter>
+        </activity>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -35,10 +46,10 @@
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity android:name=".RegisterPage" />
     </application>
 

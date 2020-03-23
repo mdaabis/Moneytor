@@ -90,7 +90,7 @@ public class Fragment50_30_20 extends Fragment {
     private void addAmounts() {
         List<Transaction> transactionsThisMonth = FetchData.transactionsThisMonthFD;
         List<String> billsList = new ArrayList<>(Arrays.asList("Bills", "Expenses", "Groceries", "Transport"));
-        List<String> recreationList = new ArrayList<>(Arrays.asList("Charity", "Eating out", "Entertainment", "Family", "General", "Holidays", "Personal care", "Shopping"));
+        List<String> recreationList = new ArrayList<>(Arrays.asList("Charity", "Eating out", "Entertainment", "Family", "General", "Holidays", "Personal care", "Shopping", "Cash"));
         List<String> savingsList = new ArrayList<>(Arrays.asList("Finances"));
 
 
