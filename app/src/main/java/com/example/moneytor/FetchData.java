@@ -1,7 +1,5 @@
 package com.example.moneytor;
 
-import android.content.Intent;
-import android.net.Uri;
 import android.os.AsyncTask;
 
 import androidx.annotation.NonNull;
@@ -42,7 +40,6 @@ import java.util.Map;
 
 public class FetchData extends AsyncTask<Void, Void, Void> {
     public static double moneyIn = 0.0;
-    //    public static double moneyOut=0.0;
     public static int selectedElement = -1;
     public static List<Transaction> list = new ArrayList<>();
     public static List<Transaction> transactionsThisMonthFD = new ArrayList<>();
@@ -130,21 +127,10 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
     @Override
     protected Void doInBackground(Void... voids) {
 
-
         String accessToken = "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJlYiI6InM0bStQSzllZWMwVE1EK29SNkIzIiwianRpIjoiYWNjdG9rXzAwMDA5dEtaamhqaHo3akRvUm1FUEQiLCJ0eXAiOiJhdCIsInYiOiI2In0.6jnwVs7vvUOrCzXcAdKbXPouEjN8DBOx4TuVlBvD2fixc_9kCuRWnsnYbWQ73bxij-qvDFyG7hhMNmq-n-4aGg";
+        String accessToken2 = getAccessToken();
         Map<String, String> headers = new HashMap<>();
         headers.put("Authorization", ("Bearer " + accessToken));
-
-        String clientID = "oauth2client_00009rR0hHMOqkIriiVAQ5";
-        String redirectURI = "https://www.moneytor.com/oath/callback/";
-        String state = "state_token";
-        String redMonzo = "https://auth.monzo.com/?client_id=" + clientID + "&redirect_uri=" + redirectURI + "&response_type=code&state=" + state;
-        System.out.println("red monzo: " + getJSON(redMonzo, headers));
-
-
-
-
-
 
         String balanceURL = "https://api.monzo.com/balance?account_id=acc_00009np8oRwjAPAYEP0mCA";
         String potsURL = "https://api.monzo.com/pots";
@@ -155,8 +141,10 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
 //        spendToday = df.format(Double.parseDouble(parse(getJSON(balanceURL, headers), "spend_today")));
         pots = getJSON(potsURL, headers);
         transactions = getJSON(transactionsURL, headers);
-        mFirebaseAuth = FirebaseAuth.getInstance();
-        userID = mFirebaseAuth.getCurrentUser().getUid();
+        if (FirebaseAuth.getInstance() != null) {
+            mFirebaseAuth = FirebaseAuth.getInstance();
+            userID = mFirebaseAuth.getCurrentUser().getUid();
+        }
 
         try {
             if (!transactions.equals("403")) {
@@ -302,7 +290,7 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
         }
     }
 
-    public void getSelectedElement() {
+    private void getSelectedElement() {
         String path = "Users/" + userID + "/Selected Element";
         DatabaseReference myRef = FirebaseDatabase.getInstance().getReference(path);
         myRef.addValueEventListener(new ValueEventListener() {
@@ -341,6 +329,12 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
             }
         });
     }
+
+    private String getAccessToken(){
+
+        return "";
+    }
+
 
 }
 

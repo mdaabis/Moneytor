@@ -1,16 +1,11 @@
 package com.example.moneytor;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.webkit.CookieManager;
-import android.webkit.CookieSyncManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,22 +22,26 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.TimeZone;
 
+
 public class HomePage extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     public static TextView navUsername;
     public static TextView tv;
     public static Boolean isPositive;
+    public static int authenticated = 0;
+    public static String authorisationCode = "";
+    public static String returnedStateToken = "";
     FirebaseAuth mFirebaseAuth;
     private DrawerLayout drawer;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
-
     private int exitCounter = 0;
-
     private ArrayList<String> mAmount = new ArrayList<>();
     private ArrayList<String> mCategory = new ArrayList<>();
     private ArrayList<String> mDate = new ArrayList<>();
@@ -50,13 +49,12 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
     private ArrayList<String> mNotes = new ArrayList<>();
     private ArrayList<Boolean> mIsPositive = new ArrayList<>();
 
-    public static int authenticated = 0;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
+
+        authentication();
         initListBitmaps();
 
         // Fetching and storing data from Monzo API into Firebase
@@ -64,22 +62,6 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         process.execute();
         tv = (TextView) findViewById(R.id.textView);
 
-        String clientID = "oauth2client_00009rR0hHMOqkIriiVAQ5";
-        String redirectURI = "https://www.moneytor.com/";
-        String state = "state_token";
-        String redMonzo = "https://auth.monzo.com/?client_id=" + clientID + "&redirect_uri=" + redirectURI + "&response_type=code&state=" + state;
-
-        if (authenticated == 0) {
-            System.out.println("test: 0");
-//            changeActivity(this, Authentication.class);
-//            Uri uri = Uri.parse(redMonzo);
-//            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-//            startActivity(intent);
-            authenticated = 1;
-        } else {
-            System.out.println("test: 1");
-        }
-//        System.out.println("uri: " + getIntent().getData());
 
         // Setting title and toolbar with correct colours and formatting
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -99,38 +81,37 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
 
 
     }
-//    private static String getJSON(String url) {
-//        StringBuilder builder = new StringBuilder();
-//        HttpClient client = new DefaultHttpClient();
-//        HttpGet httpGet = new HttpGet(url);
-//
-//        try {
-//            HttpResponse response = client.execute(httpGet);
-//            StatusLine statusLine = response.getStatusLine();
-//            int statusCode = statusLine.getStatusCode();
-//            if (statusCode == 200) {
-//                HttpEntity entity = response.getEntity();
-//                InputStream content = entity.getContent();
-//                BufferedReader reader = new BufferedReader(new InputStreamReader(content));
-//                String line;
-//                while ((line = reader.readLine()) != null) {
-//                    builder.append(line);
-//                }
-//            } else {
-////                System.err.println("Error code " + statusCode);
-//                return "403";
-//            }
-//        } catch (ClientProtocolException e) {
-//            e.printStackTrace();
-//            e.getMessage();
-//
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            e.getMessage();
-//        }
-//        return builder.toString();
-//    }
 
+    private void authentication(){
+        String clientID = "oauth2client_00009rR0hHMOqkIriiVAQ5";
+        String redirectURI = "https://www.moneytor.com/";
+        String state = "state_token";
+        String redMonzo = "https://auth.monzo.com/?client_id=" + clientID + "&redirect_uri=" + redirectURI + "&response_type=code&state=" + state;
+
+        if (authenticated == 0) {
+            Toast.makeText(HomePage.this, "Please authenticate", Toast.LENGTH_SHORT).show();
+            System.out.println("test: 0");
+            Uri uri = Uri.parse(redMonzo);
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            startActivity(intent);
+            authenticated = 1;
+        } else {
+            System.out.println("test: 1");
+        }
+        System.out.println("uri: " + getIntent().getData());
+        if (getIntent().getData() != null) {
+            String returnedURI = getIntent().getData().toString();
+            authorisationCode = stringBetween(returnedURI, "?code=", "&state");
+            returnedStateToken = stringBetween(returnedURI+"end", "&state=", "end");
+            System.out.println("authcode: " + authorisationCode);
+            System.out.println("returned state token: " + returnedStateToken);
+        }
+    }
+
+    private String stringBetween(String uri, String start, String end) {
+        String str = StringUtils.substringBetween(uri, start, end);
+        return str;
+    }
 
     private void initListBitmaps() {
         for (int i = 0; i < FetchData.list.size(); i++) {
@@ -239,12 +220,5 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
             return "-£" + df.format(amountL).substring(1);
         }
         return "£" + df.format(amountL);
-    }
-
-    @Override
-    protected void onDestroy() {
-        authenticated = 0;
-        FirebaseAuth.getInstance().signOut();
-        super.onDestroy();
     }
 }

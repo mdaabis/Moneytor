@@ -62,4 +62,9 @@ public class ForgotPassword extends AppCompatActivity {
 
 
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
 }

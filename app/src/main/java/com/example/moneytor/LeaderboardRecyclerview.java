@@ -79,4 +79,6 @@ public class LeaderboardRecyclerview extends RecyclerView.Adapter<LeaderboardRec
             parentLayout = itemView.findViewById(R.id.leaderboard_layout);
         }
     }
+
+
 }

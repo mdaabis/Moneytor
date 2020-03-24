@@ -30,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth.AuthStateListener mAuthStateListener;
     private int exitCounter = 0;
 
+    private static FirebaseUser mFirebaseUser;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
         mAuthStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser mFirebaseUser = mFirebaseAuth.getCurrentUser();
+                mFirebaseUser = mFirebaseAuth.getCurrentUser();
                 if (mFirebaseUser != null && mFirebaseUser.isEmailVerified()) {
                     Toast.makeText(MainActivity.this, "You are logged in", Toast.LENGTH_SHORT).show();
                     changeActivity(MainActivity.this, HomePage.class);
@@ -131,8 +133,8 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onStart() {
+//        mFirebaseAuth.addAuthStateListener(mAuthStateListener);
         super.onStart();
-        mFirebaseAuth.addAuthStateListener(mAuthStateListener);
     }
 
     @Override

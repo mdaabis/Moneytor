@@ -10,6 +10,8 @@ import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
