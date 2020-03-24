@@ -37,7 +37,7 @@ public class Map extends FragmentActivity implements OnMapReadyCallback {
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setResult(RESULT_CANCELED);
+//                setResult(RESULT_CANCELED);
                 finish();
             }
         });

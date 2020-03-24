@@ -66,8 +66,7 @@ public class Leaderboard extends AppCompatActivity implements NavigationView.OnN
                 changeActivity(this, Notifications.class);
                 break;
             case R.id.nav_map:
-                Intent intentM = new Intent(this, Map.class);
-                startActivityForResult(intentM, 0);
+                changeActivity(this, Map.class);
                 break;
             case R.id.nav_budgeting:
                 changeActivity(this, BudgetingPlan.class);

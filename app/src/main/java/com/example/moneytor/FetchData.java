@@ -1,15 +1,12 @@
 package com.example.moneytor;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -31,37 +28,26 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.net.ssl.HttpsURLConnection;
-
-import okhttp3.Headers;
-import okhttp3.MultipartBody;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
 
 public class FetchData extends AsyncTask<Void, Void, Void> {
+    public static double moneyIn = 0.0;
+    //    public static double moneyOut=0.0;
+    public static int selectedElement = -1;
+    public static List<Transaction> list = new ArrayList<>();
+    public static List<Transaction> transactionsThisMonthFD = new ArrayList<>();
+    public static String userID;
+    public static String firstName, surname, fullname;
     DecimalFormat df = new DecimalFormat("#.00");
     private String balance;
     private String pots;
@@ -71,116 +57,6 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
     private String name = "";
     private double latitude = 0.0;
     private double longitude = 0.0;
-    public static double moneyIn = 0.0;
-    //    public static double moneyOut=0.0;
-    public static int selectedElement = -1;
-
-
-    public static List<Transaction> list = new ArrayList<>();
-    public static List<Transaction> transactionsThisMonthFD = new ArrayList<>();
-    public static String userID;
-    public static String firstName, surname, fullname;
-
-
-    @Override
-    protected Void doInBackground(Void... voids) {
-
-        String accessToken = "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJlYiI6InhKNlNETzNiSXBRYTYzNWMyRzhpIiwianRpIjoiYWNjdG9rXzAwMDA5dElsVzlKblJ0ZkR2ZGFTdUgiLCJ0eXAiOiJhdCIsInYiOiI2In0.5-RQq7BgaK0ifS4QKNE3ddgPNJiq44NP04mnB7HMkh0vFU1c3h7RZPr2iL-Rg8ub3k8KCqrN68wmQ2X0CRaJzg";
-        Map<String, String> headers = new HashMap<>();
-        headers.put("Authorization", ("Bearer " + accessToken));
-
-        String balanceURL = "https://api.monzo.com/balance?account_id=acc_00009np8oRwjAPAYEP0mCA";
-        String potsURL = "https://api.monzo.com/pots";
-        String transactionsURL = "https://api.monzo.com/transactions?expand[]=merchant&account_id=acc_00009np8oRwjAPAYEP0mCA";
-
-        balance = df.format(Double.parseDouble(parse(getJSON(balanceURL, headers), "balance")) / 100);
-//        currency = parse(getJSON(balanceURL, headers), "currency");
-//        spendToday = df.format(Double.parseDouble(parse(getJSON(balanceURL, headers), "spend_today")));
-        pots = getJSON(potsURL, headers);
-        transactions = getJSON(transactionsURL, headers);
-        mFirebaseAuth = FirebaseAuth.getInstance();
-        userID = mFirebaseAuth.getCurrentUser().getUid();
-
-        try {
-            if (!transactions.equals("403")) {
-                String parsedTransactions = parseJSON(transactions);
-                JSONArray JA = new JSONArray(parsedTransactions);
-                for (int i = 0; i < JA.length(); i++) {
-                    JSONObject JO = (JSONObject) JA.get(i);
-                    current_user_db = FirebaseDatabase.getInstance().getReference().child("Users").child(userID).child("Transactions").child(JO.get("id").toString());
-
-                    String dateAsString = JO.get("created").toString().substring(0, JO.get("created").toString().indexOf(".")) + "Z";
-                    Date date = parseDate(dateAsString);
-                    long epochDate = date.getTime();
-                    boolean declined = false;
-                    String ID = JO.get("id").toString();
-                    Double amount = Double.parseDouble(JO.get("amount").toString());
-                    String currency = JO.get("currency").toString();
-                    String description = JO.get("description").toString();
-                    String merchant = JO.get("merchant").toString();
-                    String notes = JO.get("notes").toString();
-
-                    if (JO.has("decline_reason")) {
-                        declined = true;
-                    }
-
-                    // If transaction was a transfer (not in store) then the merchant will be null and there will be no lat/long values. These transactions will not be on the map
-                    if (!JO.get("merchant").toString().equals("null")) {
-                        JSONObject mJO = (JSONObject) JO.get("merchant");
-                        JSONObject aJO = (JSONObject) mJO.get("address");
-                        name = mJO.get("name").toString();
-                        latitude = Double.parseDouble(aJO.get("latitude").toString());
-                        longitude = Double.parseDouble(aJO.get("longitude").toString());
-                    }
-                    String category = capitalise(JO.get("category").toString()).trim();
-                    if (category.equals("Eating_out")) {
-                        category = "Eating out";
-                    }
-
-
-                    Transaction transaction = new Transaction(ID, amount, category, currency, epochDate, declined, description, latitude, longitude, merchant, name, notes);
-                    current_user_db.setValue(transaction);
-
-                }
-                System.out.println("Transactions not expired: " + parsedTransactions);
-            } else {
-                System.out.println("Transactions expired: " + transactions);
-                String path = "Users/" + userID + "/Transactions";
-                DatabaseReference myRef = FirebaseDatabase.getInstance().getReference(path);
-                myRef.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        list.clear();
-                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                            Transaction transaction = snapshot.getValue(Transaction.class);
-                            if (transaction.getDeclined() == false) {
-                                list.add(transaction);
-                            }
-                            Collections.sort(list, new Comparator<Transaction>() {
-                                public int compare(Transaction t1, Transaction t2) {
-                                    return Long.valueOf(t2.getDate()).compareTo(t1.getDate());
-                                }
-                            });
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                    }
-                });
-            }
-
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-            System.out.println("error jsonE");
-        }
-
-        getSelectedElement();
-        addToTotals();
-        getName();
-        return null;
-    }
 
     // Method gets rid of extra characters around JSON array
     private static String parseJSON(String transactions) {
@@ -241,13 +117,6 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
         return "-1";
     }
 
-    protected void onPostExecute(Void aVoid) {
-        super.onPostExecute(aVoid);
-
-        String b = "Account Balance\n" + "         £" + this.balance;
-        HomePage.tv.setText(b);
-    }
-
     private static Date parseDate(String dateStr) {
 //        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
         try {
@@ -256,6 +125,125 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
             e.printStackTrace();
         }
         return new Date();
+    }
+
+    @Override
+    protected Void doInBackground(Void... voids) {
+
+
+        String accessToken = "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJlYiI6InM0bStQSzllZWMwVE1EK29SNkIzIiwianRpIjoiYWNjdG9rXzAwMDA5dEtaamhqaHo3akRvUm1FUEQiLCJ0eXAiOiJhdCIsInYiOiI2In0.6jnwVs7vvUOrCzXcAdKbXPouEjN8DBOx4TuVlBvD2fixc_9kCuRWnsnYbWQ73bxij-qvDFyG7hhMNmq-n-4aGg";
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Authorization", ("Bearer " + accessToken));
+
+        String clientID = "oauth2client_00009rR0hHMOqkIriiVAQ5";
+        String redirectURI = "https://www.moneytor.com/oath/callback/";
+        String state = "state_token";
+        String redMonzo = "https://auth.monzo.com/?client_id=" + clientID + "&redirect_uri=" + redirectURI + "&response_type=code&state=" + state;
+        System.out.println("red monzo: " + getJSON(redMonzo, headers));
+
+
+
+
+
+
+        String balanceURL = "https://api.monzo.com/balance?account_id=acc_00009np8oRwjAPAYEP0mCA";
+        String potsURL = "https://api.monzo.com/pots";
+        String transactionsURL = "https://api.monzo.com/transactions?expand[]=merchant&account_id=acc_00009np8oRwjAPAYEP0mCA";
+
+        balance = df.format(Double.parseDouble(parse(getJSON(balanceURL, headers), "balance")) / 100);
+//        currency = parse(getJSON(balanceURL, headers), "currency");
+//        spendToday = df.format(Double.parseDouble(parse(getJSON(balanceURL, headers), "spend_today")));
+        pots = getJSON(potsURL, headers);
+        transactions = getJSON(transactionsURL, headers);
+        mFirebaseAuth = FirebaseAuth.getInstance();
+        userID = mFirebaseAuth.getCurrentUser().getUid();
+
+        try {
+            if (!transactions.equals("403")) {
+                String parsedTransactions = parseJSON(transactions);
+                JSONArray JA = new JSONArray(parsedTransactions);
+                for (int i = 0; i < JA.length(); i++) {
+                    JSONObject JO = (JSONObject) JA.get(i);
+                    current_user_db = FirebaseDatabase.getInstance().getReference().child("Users").child(userID).child("Transactions").child(JO.get("id").toString());
+
+                    String dateAsString = JO.get("created").toString().substring(0, JO.get("created").toString().indexOf(".")) + "Z";
+                    Date date = parseDate(dateAsString);
+                    long epochDate = date.getTime();
+                    boolean declined = false;
+                    String ID = JO.get("id").toString();
+                    Double amount = Double.parseDouble(JO.get("amount").toString());
+                    String currency = JO.get("currency").toString();
+                    String description = JO.get("description").toString();
+                    String merchant = JO.get("merchant").toString();
+                    String notes = JO.get("notes").toString();
+
+                    if (JO.has("decline_reason")) {
+                        declined = true;
+                    }
+
+                    // If transaction was a transfer (not in store) then the merchant will be null and there will be no lat/long values. These transactions will not be on the map
+                    if (!JO.get("merchant").toString().equals("null")) {
+                        JSONObject mJO = (JSONObject) JO.get("merchant");
+                        JSONObject aJO = (JSONObject) mJO.get("address");
+                        name = mJO.get("name").toString();
+                        latitude = Double.parseDouble(aJO.get("latitude").toString());
+                        longitude = Double.parseDouble(aJO.get("longitude").toString());
+                    }
+                    String category = capitalise(JO.get("category").toString()).trim();
+                    if (category.equals("Eating_out")) {
+                        category = "Eating out";
+                    }
+
+
+                    Transaction transaction = new Transaction(ID, amount, category, currency, epochDate, declined, description, latitude, longitude, merchant, name, notes);
+                    current_user_db.setValue(transaction);
+
+                }
+                System.out.println("Transactions not expired: " + parsedTransactions);
+
+            } else {
+                System.out.println("Transactions expired: " + transactions);
+            }
+            String path = "Users/" + userID + "/Transactions";
+            DatabaseReference myRef = FirebaseDatabase.getInstance().getReference(path);
+            myRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    list.clear();
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        Transaction transaction = snapshot.getValue(Transaction.class);
+                        if (transaction.getDeclined() == false) {
+                            list.add(transaction);
+                        }
+                        Collections.sort(list, new Comparator<Transaction>() {
+                            public int compare(Transaction t1, Transaction t2) {
+                                return Long.valueOf(t2.getDate()).compareTo(t1.getDate());
+                            }
+                        });
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                }
+            });
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+            System.out.println("error jsonE");
+        }
+
+        getSelectedElement();
+        addToTotals();
+        getName();
+        return null;
+    }
+
+    protected void onPostExecute(Void aVoid) {
+        super.onPostExecute(aVoid);
+
+        String b = "Account Balance\n" + "         £" + this.balance;
+        HomePage.tv.setText(b);
     }
 
     private String capitalise(String str) {

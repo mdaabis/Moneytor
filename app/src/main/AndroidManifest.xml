@@ -15,15 +15,17 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"
         tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name=".Authentication"></activity>
         <activity android:name=".BudgetingPlan" />
         <activity android:name=".ResetPassword" />
         <activity android:name=".Map" />
         <activity android:name=".ForgotPassword" />
         <activity android:name=".Notifications" />
-        <activity android:name=".Leaderboard" />
+        <activity android:name=".Leaderboard">        </activity>
         <activity android:name=".Settings" />
         <activity android:name=".Pots" />
-        <activity android:name=".HomePage">
+        <activity android:name=".HomePage" >
+
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -31,8 +33,19 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:host="www.moneytor.com/oath/callback/"
+                    android:host="www.moneytor.com"
                     android:scheme="https" />
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="moneytor.com"
+                    android:scheme="app" />
             </intent-filter>
         </activity>
 
@@ -46,11 +59,11 @@
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".RegisterPage" />
+        <activity android:name=".RegisterPage"></activity>
     </application>
 
 </manifest>

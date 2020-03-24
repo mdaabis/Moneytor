@@ -1,56 +1,47 @@
 package com.example.moneytor;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.MenuItem;
+import android.view.View;
+import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.Activity;
-import android.app.Notification;
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
+import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 
-import java.lang.Object;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Set;
 import java.util.TimeZone;
 
-import com.google.android.material.navigation.NavigationView;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
-import org.w3c.dom.Text;
-
-public class HomePage extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
-    private DrawerLayout drawer;
-    FirebaseAuth mFirebaseAuth;
-    private FirebaseAuth.AuthStateListener mAuthStateListener;
+public class HomePage extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     public static TextView navUsername;
     public static TextView tv;
-    private int exitCounter=0;
+    public static Boolean isPositive;
+    FirebaseAuth mFirebaseAuth;
+    private DrawerLayout drawer;
+    private FirebaseAuth.AuthStateListener mAuthStateListener;
+
+    private int exitCounter = 0;
 
     private ArrayList<String> mAmount = new ArrayList<>();
     private ArrayList<String> mCategory = new ArrayList<>();
@@ -59,7 +50,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
     private ArrayList<String> mNotes = new ArrayList<>();
     private ArrayList<Boolean> mIsPositive = new ArrayList<>();
 
-    public static Boolean isPositive;
+    public static int authenticated = 0;
 
 
     @Override
@@ -72,6 +63,23 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         FetchData process = new FetchData();
         process.execute();
         tv = (TextView) findViewById(R.id.textView);
+
+        String clientID = "oauth2client_00009rR0hHMOqkIriiVAQ5";
+        String redirectURI = "https://www.moneytor.com/";
+        String state = "state_token";
+        String redMonzo = "https://auth.monzo.com/?client_id=" + clientID + "&redirect_uri=" + redirectURI + "&response_type=code&state=" + state;
+
+        if (authenticated == 0) {
+            System.out.println("test: 0");
+//            changeActivity(this, Authentication.class);
+//            Uri uri = Uri.parse(redMonzo);
+//            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+//            startActivity(intent);
+            authenticated = 1;
+        } else {
+            System.out.println("test: 1");
+        }
+//        System.out.println("uri: " + getIntent().getData());
 
         // Setting title and toolbar with correct colours and formatting
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -89,25 +97,55 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        //
-
 
     }
+//    private static String getJSON(String url) {
+//        StringBuilder builder = new StringBuilder();
+//        HttpClient client = new DefaultHttpClient();
+//        HttpGet httpGet = new HttpGet(url);
+//
+//        try {
+//            HttpResponse response = client.execute(httpGet);
+//            StatusLine statusLine = response.getStatusLine();
+//            int statusCode = statusLine.getStatusCode();
+//            if (statusCode == 200) {
+//                HttpEntity entity = response.getEntity();
+//                InputStream content = entity.getContent();
+//                BufferedReader reader = new BufferedReader(new InputStreamReader(content));
+//                String line;
+//                while ((line = reader.readLine()) != null) {
+//                    builder.append(line);
+//                }
+//            } else {
+////                System.err.println("Error code " + statusCode);
+//                return "403";
+//            }
+//        } catch (ClientProtocolException e) {
+//            e.printStackTrace();
+//            e.getMessage();
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            e.getMessage();
+//        }
+//        return builder.toString();
+//    }
 
-    private void initListBitmaps(){
-        for(int i=0; i<FetchData.list.size();i++) {
+
+    private void initListBitmaps() {
+        for (int i = 0; i < FetchData.list.size(); i++) {
             String amount = amountToPound(Double.toString(FetchData.list.get(i).getAmount()));
             String category = FetchData.list.get(i).getCategory();
             String date = dateTimeToDate(epochToDate(Long.toString(FetchData.list.get(i).getDate())));
             String description = FetchData.list.get(i).getDescription();
             String notes = FetchData.list.get(i).getNotes();
-            isPositive = Double.toString(FetchData.list.get(i).getAmount()).charAt(0)!='-';
+            isPositive = Double.toString(FetchData.list.get(i).getAmount()).charAt(0) != '-';
 
             mAmount.add(amount);
             mCategory.add(category);
             mDate.add(date);
             mDescription.add(description);
-            if (notes.equals("")){
+            if (notes.equals("")) {
                 mNotes.add("No notes");
             } else {
                 mNotes.add(notes);
@@ -124,7 +162,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         initRecyclerView();
     }
 
-    private void initRecyclerView(){
+    private void initRecyclerView() {
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         RecyclerViewAdapter adapter = new RecyclerViewAdapter(this, mAmount, mCategory, mDate, mDescription, mNotes, mIsPositive);
         recyclerView.setAdapter(adapter);
@@ -133,12 +171,12 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-        switch (menuItem.getItemId()){
+        switch (menuItem.getItemId()) {
             case R.id.nav_settings:
                 changeActivity(this, Settings.class);
                 break;
             case R.id.nav_home:
-            changeActivity(this, HomePage.class);
+                changeActivity(this, HomePage.class);
                 break;
             case R.id.nav_leaderboard:
                 changeActivity(this, Leaderboard.class);
@@ -150,11 +188,12 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
                 changeActivity(this, Map.class);
                 break;
             case R.id.nav_budgeting:
-            changeActivity(this, BudgetingPlan.class);
+                changeActivity(this, BudgetingPlan.class);
                 break;
             case R.id.nav_logout:
                 FirebaseAuth.getInstance().signOut();
                 changeActivity(this, MainActivity.class);
+                authenticated = 0;
                 break;
 
         }
@@ -166,8 +205,8 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            if(exitCounter<1){
-                Toast.makeText(HomePage.this,"Press back again to logout",Toast.LENGTH_SHORT).show();
+            if (exitCounter < 1) {
+                Toast.makeText(HomePage.this, "Press back again to logout", Toast.LENGTH_SHORT).show();
                 exitCounter++;
             } else {
                 FirebaseAuth.getInstance().signOut();
@@ -176,12 +215,12 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         }
     }
 
-    public void changeActivity(Activity Current, Class Target){
+    public void changeActivity(Activity Current, Class Target) {
         Intent intent = new Intent(Current, Target);
         startActivity(intent);
     }
 
-    public String epochToDate (String dateStr) {
+    public String epochToDate(String dateStr) {
         Long date = Long.parseLong(dateStr);
         DateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         format.setTimeZone(TimeZone.getTimeZone("Europe/London"));
@@ -195,11 +234,17 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
 
     public String amountToPound(String amount) {
         DecimalFormat df = new DecimalFormat("0.00");
-        Double amountL = Double.parseDouble(amount)/100;
-        if(amount.charAt(0)=='-') {
+        Double amountL = Double.parseDouble(amount) / 100;
+        if (amount.charAt(0) == '-') {
             return "-£" + df.format(amountL).substring(1);
         }
         return "£" + df.format(amountL);
     }
 
+    @Override
+    protected void onDestroy() {
+        authenticated = 0;
+        FirebaseAuth.getInstance().signOut();
+        super.onDestroy();
+    }
 }

@@ -23,7 +23,6 @@ public class BudgetingPlan extends AppCompatActivity implements NavigationView.O
     private DrawerLayout drawer;
     int selectedElement;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,6 +46,8 @@ public class BudgetingPlan extends AppCompatActivity implements NavigationView.O
         toggle.syncState();
         selectedElement = FetchData.selectedElement;
         changeFragment();
+
+
     }
 
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
