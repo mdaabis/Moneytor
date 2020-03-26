@@ -141,17 +141,7 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
         SharedPreferences sharedPreferences = context.getSharedPreferences(Authentication.SHARED_PREFS, MODE_PRIVATE);
         String accessToken = sharedPreferences.getString(Authentication.ACCESS_TOKEN, "");
 
-//        System.out.println("Shared pref access token: " + accessToken);
-//        String accessToken = Authentication.accessToken;
-//        System.out.println("Authcode fetchdata: " + HomePage.authorisationCode);
-//        String accessToken2="";
-//        do {
-//            if (!HomePage.authorisationCode.equals("")) {
-//                accessToken2 = getAccessToken();
-//                System.out.println("headers: " + headers.toString());
-//                handleResponse();
-//            }
-//        } while (getAccessToken() != null);
+
         headers.put("Authorization", ("Bearer " + accessToken));
         handleResponse();
 //        System.out.println("access token in fetchdata: " + accessToken2);
@@ -163,16 +153,13 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
         String potsURL = "https://api.monzo.com/pots";
         String transactionsURL = "https://api.monzo.com/transactions?expand[]=merchant&account_id=acc_00009np8oRwjAPAYEP0mCA";
 
-        balance = df.format(Double.parseDouble(parse(getJSON(balanceURL, headers), "balance")) / 100);
-//        currency = parse(getJSON(balanceURL, headers), "currency");
-//        spendToday = df.format(Double.parseDouble(parse(getJSON(balanceURL, headers), "spend_today")));
-        pots = getJSON(potsURL, headers);
-        transactions = getJSON(transactionsURL, headers);
-        if (FirebaseAuth.getInstance() != null) {
+        do {
+            balance = df.format(Double.parseDouble(parse(getJSON(balanceURL, headers), "balance")) / 100);
+            pots = getJSON(potsURL, headers);
+            transactions = getJSON(transactionsURL, headers);
             mFirebaseAuth = FirebaseAuth.getInstance();
             userID = mFirebaseAuth.getCurrentUser().getUid();
-        }
-
+        } while (balance.equals("-.01"));
         try {
             if (!transactions.equals("403")) {
                 String parsedTransactions = parseJSON(transactions);
