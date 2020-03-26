@@ -203,6 +203,11 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         startActivity(intent);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
     public String epochToDate(String dateStr) {
         Long date = Long.parseLong(dateStr);
         DateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");

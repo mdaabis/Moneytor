@@ -13,19 +13,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
 import org.apache.http.StatusLine;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -34,7 +28,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -56,8 +49,8 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
     public static List<Transaction> transactionsThisMonthFD = new ArrayList<>();
     public static String userID;
     public static String firstName, surname, fullname;
+    public static String balance = "";
     DecimalFormat df = new DecimalFormat("#.00");
-    public static String balance="";
     private String pots;
     private String transactions;
     private FirebaseAuth mFirebaseAuth;
@@ -66,19 +59,14 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
     private double latitude = 0.0;
     private double longitude = 0.0;
 
-//    private String clientID = "oauth2client_00009rR0hHMOqkIriiVAQ5";
-//    private String redirectURI = "https://www.moneytor.com/";
-//    private String state = "state_token";
-//    private String clientSecret = "mnzpub.nio98cyoi2OnW4hdtK9fOwFXdj8cSfIGHL/etY7y93mqxRO3bKRYShZAgh39aXd6s2ejXafbXTdhYyJxMI2f";
-//    private String redMonzo = "https://auth.monzo.com/?client_id=" + clientID + "&redirect_uri=" + redirectURI + "&response_type=code&state=" + state;
     private Map<String, String> headers = new HashMap<>();
-
 
     private Context context;
 
-    public FetchData (Context context){
+    public FetchData(Context context) {
         this.context = context;
     }
+
     // Method gets rid of extra characters around JSON array
     private static String parseJSON(String transactions) {
         String parsed = transactions.substring(transactions.indexOf("["));
@@ -170,7 +158,7 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
         return null;
     }
 
-    private void handleResponse(){
+    private void handleResponse() {
         String balanceURL = "https://api.monzo.com/balance?account_id=acc_00009np8oRwjAPAYEP0mCA";
         String potsURL = "https://api.monzo.com/pots";
         String transactionsURL = "https://api.monzo.com/transactions?expand[]=merchant&account_id=acc_00009np8oRwjAPAYEP0mCA";
