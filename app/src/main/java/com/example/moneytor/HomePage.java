@@ -2,6 +2,7 @@ package com.example.moneytor;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,8 +21,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
-
-import org.apache.commons.lang3.StringUtils;
 
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -56,7 +55,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         initListBitmaps();
 
         // Fetching and storing data from Monzo API into Firebase
-        FetchData process = new FetchData();
+        FetchData process = new FetchData(getApplicationContext());
         process.execute();
         tv = (TextView) findViewById(R.id.textView);
 
@@ -76,7 +75,6 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-
 
     }
 
@@ -106,13 +104,15 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
 //        }
 //    }
 
-    private String stringBetween(String uri, String start, String end) {
-        String str = StringUtils.substringBetween(uri, start, end);
-        return str;
-    }
+
+//    private String stringBetween(String uri, String start, String end) {
+//        String str = StringUtils.substringBetween(uri, start, end);
+//        return str;
+//    }
 
     private void initListBitmaps() {
         for (int i = 0; i < FetchData.list.size(); i++) {
+            boolean notZero = FetchData.list.get(i).getAmount() != 0.0;
             String amount = amountToPound(Double.toString(FetchData.list.get(i).getAmount()));
             String category = FetchData.list.get(i).getCategory();
             String date = dateTimeToDate(epochToDate(Long.toString(FetchData.list.get(i).getDate())));
@@ -120,16 +120,19 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
             String notes = FetchData.list.get(i).getNotes();
             isPositive = Double.toString(FetchData.list.get(i).getAmount()).charAt(0) != '-';
 
-            mAmount.add(amount);
-            mCategory.add(category);
-            mDate.add(date);
-            mDescription.add(description);
-            if (notes.equals("")) {
-                mNotes.add("No notes");
-            } else {
-                mNotes.add(notes);
+            if(notZero){
+                System.out.println("Transaction: " + i + " - " + FetchData.list.get(i).getAmount());
+                mAmount.add(amount);
+                mCategory.add(category);
+                mDate.add(date);
+                mDescription.add(description);
+                if (notes.equals("")) {
+                    mNotes.add("No notes");
+                } else {
+                    mNotes.add(notes);
+                }
+                mIsPositive.add(isPositive);
             }
-            mIsPositive.add(isPositive);
 
             // Adds divider between each item
             DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
@@ -171,8 +174,9 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
                 break;
             case R.id.nav_logout:
                 FirebaseAuth.getInstance().signOut();
+                SharedPreferences sharedPreferences = getSharedPreferences(Authentication.SHARED_PREFS, MODE_PRIVATE);
+                sharedPreferences.edit().clear().apply();
                 changeActivity(this, MainActivity.class);
-                MainActivity.authenticated = 0;
                 break;
 
         }

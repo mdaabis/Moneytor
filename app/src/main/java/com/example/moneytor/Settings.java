@@ -115,8 +115,9 @@ public class Settings extends AppCompatActivity implements NavigationView.OnNavi
                 break;
             case R.id.nav_logout:
                 FirebaseAuth.getInstance().signOut();
-                Intent intent = new Intent(Settings.this, MainActivity.class);
-                startActivity(intent);
+                SharedPreferences sharedPreferences = getSharedPreferences(Authentication.SHARED_PREFS, MODE_PRIVATE);
+                sharedPreferences.edit().clear().apply();
+                changeActivity(this, MainActivity.class);
                 break;
         }
         return true;

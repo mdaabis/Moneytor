@@ -1,15 +1,10 @@
 package com.example.moneytor;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentActivity;
-
-import android.content.res.Resources;
 import android.os.Bundle;
-import android.util.TypedValue;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.RelativeLayout;
+
+import androidx.fragment.app.FragmentActivity;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -54,7 +49,7 @@ public class Map extends FragmentActivity implements OnMapReadyCallback {
 
 
         for (int i = 0; i < FetchData.list.size(); i++) {
-            if (FetchData.list.get(i).getLatitude() != 0.0) {
+            if (FetchData.list.get(i).getLatitude() != 0.0 && FetchData.list.get(i).getAmount() != 0) {
                 title.add(FetchData.list.get(i).getName());
                 String convert = amountToPound("" + FetchData.list.get(i).getAmount());
                 amount.add(convert);

@@ -11,6 +11,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -73,6 +74,8 @@ public class BudgetingPlan extends AppCompatActivity implements NavigationView.O
                 break;
             case R.id.nav_logout:
                 FirebaseAuth.getInstance().signOut();
+                SharedPreferences sharedPreferences = getSharedPreferences(Authentication.SHARED_PREFS, MODE_PRIVATE);
+                sharedPreferences.edit().clear().apply();
                 changeActivity(this, MainActivity.class);
                 break;
         }

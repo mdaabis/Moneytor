@@ -9,6 +9,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -67,8 +68,9 @@ public class Notifications extends AppCompatActivity implements NavigationView.O
                 break;
             case R.id.nav_logout:
                 FirebaseAuth.getInstance().signOut();
-                Intent intent = new Intent(Notifications.this, MainActivity.class);
-                startActivity(intent);
+                SharedPreferences sharedPreferences = getSharedPreferences(Authentication.SHARED_PREFS, MODE_PRIVATE);
+                sharedPreferences.edit().clear().apply();
+                changeActivity(this, MainActivity.class);
                 break;
         }
         return true;

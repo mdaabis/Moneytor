@@ -2,6 +2,7 @@ package com.example.moneytor;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -19,18 +20,19 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.time.Instant;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     public static EditText emailId, password;
     public static String email, pwd;
+    public static int authenticated = 0;
+    private static FirebaseUser mFirebaseUser;
     TextView forgotPassword, noAccount;
     Button btnSignUp, btnSignIn;
     FirebaseAuth mFirebaseAuth;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
     private int exitCounter = 0;
-    public static int authenticated = 0;
-    private static FirebaseUser mFirebaseUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,12 +106,13 @@ public class MainActivity extends AppCompatActivity {
                                 if (mFirebaseAuth.getCurrentUser().isEmailVerified()) {
 //                                    changeActivity(MainActivity.this, HomePage.class);
                                     Toast.makeText(MainActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
-                                    if (authenticated == 0) {
+                                    SharedPreferences sharedPreferences = getSharedPreferences(Authentication.SHARED_PREFS, MODE_PRIVATE);
+                                    if (!hasTokenExpired() && sharedPreferences.contains(Authentication.ACCESS_TOKEN)) {
+                                        changeActivity(MainActivity.this, HomePage.class);
+                                    } else {
                                         Toast.makeText(MainActivity.this, "Please authorise your account", Toast.LENGTH_SHORT).show();
                                         changeActivity(MainActivity.this, Authentication.class);
 //                                        authenticated = 1;
-                                    } else {
-                                        changeActivity(MainActivity.this, HomePage.class);
                                     }
                                     System.out.println("Authenticated: " + authenticated);
 
@@ -133,6 +136,15 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(intent, 0);
             }
         });
+    }
+
+    private boolean hasTokenExpired() {
+        SharedPreferences sharedPreferences = getSharedPreferences(Authentication.SHARED_PREFS, MODE_PRIVATE);
+        long expireEpoch = sharedPreferences.getLong(Authentication.EXPIRE_DATE, 0);
+        Instant instant = Instant.now();
+        long timeStampSeconds = instant.getEpochSecond();
+        boolean expired = timeStampSeconds > expireEpoch;
+        return expired;
     }
 
     public void changeActivity(Activity Current, Class Target) {
