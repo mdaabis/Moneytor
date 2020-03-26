@@ -15,16 +15,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".Authentication"></activity>
-        <activity android:name=".BudgetingPlan" />
-        <activity android:name=".ResetPassword" />
-        <activity android:name=".Map" />
-        <activity android:name=".ForgotPassword" />
-        <activity android:name=".Notifications" />
-        <activity android:name=".Leaderboard">        </activity>
-        <activity android:name=".Settings" />
-        <activity android:name=".Pots" />
-        <activity android:name=".HomePage" >
+        <activity android:name=".Authentication">
+
 
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -47,7 +39,17 @@
                     android:host="moneytor.com"
                     android:scheme="app" />
             </intent-filter>
+
         </activity>
+        <activity android:name=".BudgetingPlan" />
+        <activity android:name=".ResetPassword" />
+        <activity android:name=".Map" />
+        <activity android:name=".ForgotPassword" />
+        <activity android:name=".Notifications" />
+        <activity android:name=".Leaderboard"></activity>
+        <activity android:name=".Settings" />
+        <activity android:name=".Pots" />
+        <activity android:name=".HomePage" ></activity>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"

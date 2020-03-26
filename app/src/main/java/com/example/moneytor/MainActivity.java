@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
     FirebaseAuth mFirebaseAuth;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
     private int exitCounter = 0;
-
+    public static int authenticated = 0;
     private static FirebaseUser mFirebaseUser;
 
     @Override
@@ -102,8 +102,17 @@ public class MainActivity extends AppCompatActivity {
                                 Toast.makeText(MainActivity.this, "Incorrect login details, please try again", Toast.LENGTH_SHORT).show();
                             } else {
                                 if (mFirebaseAuth.getCurrentUser().isEmailVerified()) {
-                                    changeActivity(MainActivity.this, HomePage.class);
+//                                    changeActivity(MainActivity.this, HomePage.class);
                                     Toast.makeText(MainActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
+                                    if (authenticated == 0) {
+                                        Toast.makeText(MainActivity.this, "Please authorise your account", Toast.LENGTH_SHORT).show();
+                                        changeActivity(MainActivity.this, Authentication.class);
+//                                        authenticated = 1;
+                                    } else {
+                                        changeActivity(MainActivity.this, HomePage.class);
+                                    }
+                                    System.out.println("Authenticated: " + authenticated);
+
                                 } else {
                                     Toast.makeText(MainActivity.this, "Please verify your email address", Toast.LENGTH_SHORT).show();
 

@@ -11,13 +11,19 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
 import org.apache.http.StatusLine;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,6 +32,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -54,6 +61,15 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
     private String name = "";
     private double latitude = 0.0;
     private double longitude = 0.0;
+
+    private String clientID = "oauth2client_00009rR0hHMOqkIriiVAQ5";
+    private String redirectURI = "https://www.moneytor.com/";
+    private String state = "state_token";
+    private String clientSecret = "mnzpub.nio98cyoi2OnW4hdtK9fOwFXdj8cSfIGHL/etY7y93mqxRO3bKRYShZAgh39aXd6s2ejXafbXTdhYyJxMI2f";
+    private String redMonzo = "https://auth.monzo.com/?client_id=" + clientID + "&redirect_uri=" + redirectURI + "&response_type=code&state=" + state;
+    private Map<String, String> headers = new HashMap<>();
+
+
 
     // Method gets rid of extra characters around JSON array
     private static String parseJSON(String transactions) {
@@ -126,12 +142,24 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected Void doInBackground(Void... voids) {
-
-        String accessToken = "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJlYiI6InM0bStQSzllZWMwVE1EK29SNkIzIiwianRpIjoiYWNjdG9rXzAwMDA5dEtaamhqaHo3akRvUm1FUEQiLCJ0eXAiOiJhdCIsInYiOiI2In0.6jnwVs7vvUOrCzXcAdKbXPouEjN8DBOx4TuVlBvD2fixc_9kCuRWnsnYbWQ73bxij-qvDFyG7hhMNmq-n-4aGg";
-        String accessToken2 = getAccessToken();
-        Map<String, String> headers = new HashMap<>();
+        System.out.println("Fetch data access token: " + Authentication.accessToken);
+        String accessToken = Authentication.accessToken;
+//        System.out.println("Authcode fetchdata: " + HomePage.authorisationCode);
+//        String accessToken2="";
+//        do {
+//            if (!HomePage.authorisationCode.equals("")) {
+//                accessToken2 = getAccessToken();
+//                System.out.println("headers: " + headers.toString());
+//                handleResponse();
+//            }
+//        } while (getAccessToken() != null);
         headers.put("Authorization", ("Bearer " + accessToken));
+        handleResponse();
+//        System.out.println("access token in fetchdata: " + accessToken2);
+        return null;
+    }
 
+    private void handleResponse(){
         String balanceURL = "https://api.monzo.com/balance?account_id=acc_00009np8oRwjAPAYEP0mCA";
         String potsURL = "https://api.monzo.com/pots";
         String transactionsURL = "https://api.monzo.com/transactions?expand[]=merchant&account_id=acc_00009np8oRwjAPAYEP0mCA";
@@ -224,7 +252,6 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
         getSelectedElement();
         addToTotals();
         getName();
-        return null;
     }
 
     protected void onPostExecute(Void aVoid) {
@@ -331,8 +358,52 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
     }
 
     private String getAccessToken(){
+        /*
+         * Create the POST request
+         */
+        String accessTokenURL = "https://api.monzo.com/oauth2/token";
 
+        HttpClient httpClient = new DefaultHttpClient();
+        HttpPost httpPost = new HttpPost(accessTokenURL);
+// Request parameters and other properties.
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        params.add(new BasicNameValuePair("grant_type", "authorization_code"));
+        params.add(new BasicNameValuePair("client_id", clientID));
+        params.add(new BasicNameValuePair("client_secret", clientSecret));
+        params.add(new BasicNameValuePair("redirect_uri", redirectURI));
+        params.add(new BasicNameValuePair("code", Authentication.authorisationCode));
+        try {
+            httpPost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            // writing error to Log
+            e.printStackTrace();
+        }
+        /*
+         * Execute the HTTP Request
+         */
+        try {
+            HttpResponse response = httpClient.execute(httpPost);
+            HttpEntity respEntity = response.getEntity();
+
+            if (respEntity != null) {
+                // EntityUtils to get the response content
+                String content =  EntityUtils.toString(respEntity);
+                String parsedAccessToken = stringBetween(content, "\"access_token\":\"", "\",\"client_id\"");
+                return parsedAccessToken;
+            }
+        } catch (ClientProtocolException e) {
+            // writing exception to log
+            e.printStackTrace();
+        } catch (IOException e) {
+            // writing exception to log
+            e.printStackTrace();
+        }
         return "";
+    }
+
+    private String stringBetween(String uri, String start, String end) {
+        String str = StringUtils.substringBetween(uri, start, end);
+        return str;
     }
 
 

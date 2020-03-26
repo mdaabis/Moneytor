@@ -2,7 +2,6 @@ package com.example.moneytor;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -35,9 +34,8 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
     public static TextView navUsername;
     public static TextView tv;
     public static Boolean isPositive;
-    public static int authenticated = 0;
-    public static String authorisationCode = "";
-    public static String returnedStateToken = "";
+    //    public static String authorisationCode = "";
+    //    public static String returnedStateToken = "";
     FirebaseAuth mFirebaseAuth;
     private DrawerLayout drawer;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
@@ -54,7 +52,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
 
-        authentication();
+//        authentication();
         initListBitmaps();
 
         // Fetching and storing data from Monzo API into Firebase
@@ -82,31 +80,31 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
 
     }
 
-    private void authentication(){
-        String clientID = "oauth2client_00009rR0hHMOqkIriiVAQ5";
-        String redirectURI = "https://www.moneytor.com/";
-        String state = "state_token";
-        String redMonzo = "https://auth.monzo.com/?client_id=" + clientID + "&redirect_uri=" + redirectURI + "&response_type=code&state=" + state;
-
-        if (authenticated == 0) {
-            Toast.makeText(HomePage.this, "Please authenticate", Toast.LENGTH_SHORT).show();
-            System.out.println("test: 0");
-            Uri uri = Uri.parse(redMonzo);
-            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-            startActivity(intent);
-            authenticated = 1;
-        } else {
-            System.out.println("test: 1");
-        }
-        System.out.println("uri: " + getIntent().getData());
-        if (getIntent().getData() != null) {
-            String returnedURI = getIntent().getData().toString();
-            authorisationCode = stringBetween(returnedURI, "?code=", "&state");
-            returnedStateToken = stringBetween(returnedURI+"end", "&state=", "end");
-            System.out.println("authcode: " + authorisationCode);
-            System.out.println("returned state token: " + returnedStateToken);
-        }
-    }
+//    private void authentication(){
+//        String clientID = "oauth2client_00009rR0hHMOqkIriiVAQ5";
+//        String redirectURI = "https://www.moneytor.com/";
+//        String state = "state_token";
+//        String redMonzo = "https://auth.monzo.com/?client_id=" + clientID + "&redirect_uri=" + redirectURI + "&response_type=code&state=" + state;
+//
+//        if (authenticated == 0) {
+//            Toast.makeText(HomePage.this, "Please authenticate", Toast.LENGTH_SHORT).show();
+//            System.out.println("test: 0");
+//            Uri uri = Uri.parse(redMonzo);
+//            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+//            startActivity(intent);
+//            authenticated = 1;
+//        } else {
+//            System.out.println("test: 1");
+//        }
+//        System.out.println("uri: " + getIntent().getData());
+//        if (getIntent().getData() != null) {
+//            String returnedURI = getIntent().getData().toString();
+//            authorisationCode = stringBetween(returnedURI, "?code=", "&state");
+//            returnedStateToken = stringBetween(returnedURI+"end", "&state=", "end");
+//            System.out.println("authcode: " + authorisationCode);
+//            System.out.println("returned state token: " + returnedStateToken);
+//        }
+//    }
 
     private String stringBetween(String uri, String start, String end) {
         String str = StringUtils.substringBetween(uri, start, end);
@@ -174,7 +172,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
             case R.id.nav_logout:
                 FirebaseAuth.getInstance().signOut();
                 changeActivity(this, MainActivity.class);
-                authenticated = 0;
+                MainActivity.authenticated = 0;
                 break;
 
         }
