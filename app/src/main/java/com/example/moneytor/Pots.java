@@ -25,9 +25,11 @@ public class Pots extends AppCompatActivity  implements NavigationView.OnNavigat
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pots);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        if(getSupportActionBar()!=null){
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
+        }
 
 
         drawer = findViewById(R.id.drawer_layout);
@@ -35,8 +37,8 @@ public class Pots extends AppCompatActivity  implements NavigationView.OnNavigat
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         View headerView = navigationView.getHeaderView(0);
-        TextView navUsername = (TextView) headerView.findViewById(R.id.current_user_name);
-        navUsername.setText(FetchData.fullname);
+        TextView navUsername = headerView.findViewById(R.id.current_user_name);
+        navUsername.setText(FetchData.fullName);
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close);

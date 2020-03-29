@@ -1,6 +1,8 @@
 package com.example.moneytor;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -33,11 +35,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
     public static TextView navUsername;
     public static TextView tv;
     public static Boolean isPositive;
-    //    public static String authorisationCode = "";
-    //    public static String returnedStateToken = "";
-    FirebaseAuth mFirebaseAuth;
     private DrawerLayout drawer;
-    private FirebaseAuth.AuthStateListener mAuthStateListener;
     private int exitCounter = 0;
     private ArrayList<String> mAmount = new ArrayList<>();
     private ArrayList<String> mCategory = new ArrayList<>();
@@ -45,72 +43,59 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
     private ArrayList<String> mDescription = new ArrayList<>();
     private ArrayList<String> mNotes = new ArrayList<>();
     private ArrayList<Boolean> mIsPositive = new ArrayList<>();
+    private RecyclerViewAdapter adapter;
+    private AlertDialog alert;
+    private AlertDialog.Builder builder;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
 
-//        authentication();
-        initListBitmaps();
-
         // Fetching and storing data from Monzo API into Firebase
         FetchData process = new FetchData(getApplicationContext());
         process.execute();
-        tv = (TextView) findViewById(R.id.textView);
+        tv = findViewById(R.id.textView);
+
+        initListBitmaps();
 
 
         // Setting title and toolbar with correct colours and formatting
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
+        }
+
         drawer = findViewById(R.id.drawer_layout);
+
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         View headerView = navigationView.getHeaderView(0);
-        navUsername = (TextView) headerView.findViewById(R.id.current_user_name);
+        navUsername = headerView.findViewById(R.id.current_user_name);
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
+//        new java.util.Timer().schedule(
+//                new java.util.TimerTask() {
+//                    @Override
+//                    public void run() {
+//                        initListBitmaps();
+//                        cancel();
+//                    }
+//                },
+//                10000
+//        );
+
+
     }
 
-//    private void authentication(){
-//        String clientID = "oauth2client_00009rR0hHMOqkIriiVAQ5";
-//        String redirectURI = "https://www.moneytor.com/";
-//        String state = "state_token";
-//        String redMonzo = "https://auth.monzo.com/?client_id=" + clientID + "&redirect_uri=" + redirectURI + "&response_type=code&state=" + state;
-//
-//        if (authenticated == 0) {
-//            Toast.makeText(HomePage.this, "Please authenticate", Toast.LENGTH_SHORT).show();
-//            System.out.println("test: 0");
-//            Uri uri = Uri.parse(redMonzo);
-//            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-//            startActivity(intent);
-//            authenticated = 1;
-//        } else {
-//            System.out.println("test: 1");
-//        }
-//        System.out.println("uri: " + getIntent().getData());
-//        if (getIntent().getData() != null) {
-//            String returnedURI = getIntent().getData().toString();
-//            authorisationCode = stringBetween(returnedURI, "?code=", "&state");
-//            returnedStateToken = stringBetween(returnedURI+"end", "&state=", "end");
-//            System.out.println("authcode: " + authorisationCode);
-//            System.out.println("returned state token: " + returnedStateToken);
-//        }
-//    }
-
-
-//    private String stringBetween(String uri, String start, String end) {
-//        String str = StringUtils.substringBetween(uri, start, end);
-//        return str;
-//    }
-
-    private void initListBitmaps() {
+    public void initListBitmaps() {
         for (int i = 0; i < FetchData.list.size(); i++) {
             boolean notZero = FetchData.list.get(i).getAmount() != 0.0;
             String amount = amountToPound(Double.toString(FetchData.list.get(i).getAmount()));
@@ -120,8 +105,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
             String notes = FetchData.list.get(i).getNotes();
             isPositive = Double.toString(FetchData.list.get(i).getAmount()).charAt(0) != '-';
 
-            if(notZero){
-                System.out.println("Transaction: " + i + " - " + FetchData.list.get(i).getAmount());
+            if (notZero) {
                 mAmount.add(amount);
                 mCategory.add(category);
                 mDate.add(date);
@@ -137,16 +121,17 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
             // Adds divider between each item
             DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
             dividerItemDecoration.setDrawable(getResources().getDrawable(R.drawable.recycler_view_divider));
-            RecyclerView recyclerView = findViewById(R.id.recyclerView);
-            recyclerView.addItemDecoration(dividerItemDecoration);
+            RecyclerView recyclerViewObj = findViewById(R.id.recyclerView);
+            recyclerViewObj.addItemDecoration(dividerItemDecoration);
 
         }
+
         initRecyclerView();
     }
 
-    private void initRecyclerView() {
+    public void initRecyclerView() {
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(this, mAmount, mCategory, mDate, mDescription, mNotes, mIsPositive);
+        adapter = new RecyclerViewAdapter(this, mAmount, mCategory, mDate, mDescription, mNotes, mIsPositive);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
@@ -198,29 +183,24 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         }
     }
 
-    public void changeActivity(Activity Current, Class Target) {
+    private void changeActivity(Activity Current, Class Target) {
         Intent intent = new Intent(Current, Target);
         startActivity(intent);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
 
-    public String epochToDate(String dateStr) {
+    private String epochToDate(String dateStr) {
         Long date = Long.parseLong(dateStr);
         DateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         format.setTimeZone(TimeZone.getTimeZone("Europe/London"));
-        String formatted = format.format(date);
-        return formatted;
+        return format.format(date);
     }
 
-    public String dateTimeToDate(String date) {
+    private String dateTimeToDate(String date) {
         return date.substring(0, 10);
     }
 
-    public String amountToPound(String amount) {
+    private String amountToPound(String amount) {
         DecimalFormat df = new DecimalFormat("0.00");
         Double amountL = Double.parseDouble(amount) / 100;
         if (amount.charAt(0) == '-') {
@@ -228,4 +208,5 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         }
         return "£" + df.format(amountL);
     }
+
 }

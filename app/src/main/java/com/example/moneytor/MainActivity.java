@@ -26,9 +26,9 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
     public static EditText emailId, password;
     public static String email, pwd;
-    public static int authenticated = 0;
     private static FirebaseUser mFirebaseUser;
-    TextView forgotPassword, noAccount;
+    private TextView noAccount;
+    private TextView forgotPassword;
     Button btnSignUp, btnSignIn;
     FirebaseAuth mFirebaseAuth;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
@@ -47,19 +47,18 @@ public class MainActivity extends AppCompatActivity {
 
         }
 
-        forgotPassword = (TextView) findViewById(R.id.forgot_password);
-        btnSignUp = (Button) findViewById(R.id.register);
-        btnSignIn = (Button) findViewById(R.id.login_button);
-        emailId = (EditText) findViewById(R.id.username);
-        password = (EditText) findViewById(R.id.password);
+        forgotPassword = findViewById(R.id.forgot_password);
+        btnSignUp = findViewById(R.id.register);
+        btnSignIn = findViewById(R.id.login_button);
+        emailId = findViewById(R.id.username);
+        password = findViewById(R.id.password);
         mFirebaseAuth = FirebaseAuth.getInstance();
-        noAccount = (TextView) findViewById(R.id.no_account);
+        noAccount = findViewById(R.id.no_account);
 
         noAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Toast.makeText(MainActivity.this, "Press the 'Register' button.", Toast.LENGTH_SHORT).show();
-
             }
         });
 
@@ -114,7 +113,6 @@ public class MainActivity extends AppCompatActivity {
                                         changeActivity(MainActivity.this, Authentication.class);
 //                                        authenticated = 1;
                                     }
-                                    System.out.println("Authenticated: " + authenticated);
 
                                 } else {
                                     Toast.makeText(MainActivity.this, "Please verify your email address", Toast.LENGTH_SHORT).show();
@@ -154,7 +152,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onStart() {
-//        mFirebaseAuth.addAuthStateListener(mAuthStateListener);
         super.onStart();
     }
 

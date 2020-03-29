@@ -1,16 +1,12 @@
 package com.example.moneytor;
 
-import com.google.android.gms.maps.model.LatLng;
-
-import java.util.Date;
-
 public class Transaction {
 
     private String transaction_id;
     private double amount;
     private String category;
     private String currency;
-    private long date; //Needs to be formatted
+    private long date;
     private String description;
     private String merchant;
     private String name;
@@ -20,39 +16,38 @@ public class Transaction {
     private boolean declined;
 
     public Transaction(String transaction_id, double amount, String category, String currency, long date, boolean declined, String description, double latitude, double longitude,
-                       String merchant, String name, String notes){
-        this.amount=amount;
-        this.category=category;
-        this.currency=currency;
-        this.date=date;
-        this.declined=declined;
-        this.description=description;
-        this.latitude=latitude;
-        this.longitude=longitude;
-        this.merchant=merchant;
-        this.name=name;
-        this.notes=notes;
-        this.transaction_id=transaction_id;
+                       String merchant, String name, String notes) {
+        this.amount = amount;
+        this.category = category;
+        this.currency = currency;
+        this.date = date;
+        this.declined = declined;
+        this.description = description;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.merchant = merchant;
+        this.name = name;
+        this.notes = notes;
+        this.transaction_id = transaction_id;
     }
 
     public Transaction() {
     }
 
 
-
-    public double getAmount(){
+    public double getAmount() {
         return this.amount;
     }
 
-    public String getCategory(){
+    public String getCategory() {
         return this.category;
     }
 
-    public String getCurrency(){
+    public String getCurrency() {
         return this.currency;
     }
 
-    public long getDate(){
+    public long getDate() {
         return this.date;
     }
 
@@ -72,7 +67,7 @@ public class Transaction {
         return longitude;
     }
 
-    public String getMerchant(){
+    public String getMerchant() {
         return this.merchant;
     }
 
@@ -80,7 +75,7 @@ public class Transaction {
         return name;
     }
 
-    public String getNotes(){
+    public String getNotes() {
         return this.notes;
     }
 

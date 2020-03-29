@@ -48,10 +48,11 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
     public static List<Transaction> list = new ArrayList<>();
     public static List<Transaction> transactionsThisMonthFD = new ArrayList<>();
     public static String userID;
-    public static String firstName, surname, fullname;
+    public static String firstName;
+    public static String surname;
+    public static String fullName;
     public static String balance = "";
-    DecimalFormat df = new DecimalFormat("#.00");
-    private String pots;
+    private DecimalFormat df = new DecimalFormat("#.00");
     private String transactions;
     private FirebaseAuth mFirebaseAuth;
     private DatabaseReference current_user_db;
@@ -113,13 +114,22 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
     private static String parse(String data, String type) {
         try {
             JSONObject JO = new JSONObject(data);
-            if (type.equals("balance")) {
-                return JO.getString("total_balance");
-            } else if (type.equals("spend_today")) {
-                return JO.getString("spend_today");
-            } else if (type.equals("currency")) {
-                return JO.getString("currency");
+//            if (type.equals("balance")) {
+//                return JO.getString("total_balance");
+//            } else if (type.equals("spend_today")) {
+//                return JO.getString("spend_today");
+//            } else if (type.equals("currency")) {
+//                return JO.getString("currency");
+//            }
+            switch (type) {
+                case "balance":
+                    return JO.getString("total_balance");
+                case "spend_today":
+                    return JO.getString("spend_today");
+                case "currency":
+                    return JO.getString("currency");
             }
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -141,7 +151,6 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
         SharedPreferences sharedPreferences = context.getSharedPreferences(Authentication.SHARED_PREFS, MODE_PRIVATE);
         String accessToken = sharedPreferences.getString(Authentication.ACCESS_TOKEN, "");
 
-
         headers.put("Authorization", ("Bearer " + accessToken));
         handleResponse();
 //        System.out.println("access token in fetchdata: " + accessToken2);
@@ -150,12 +159,10 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
 
     private void handleResponse() {
         String balanceURL = "https://api.monzo.com/balance?account_id=acc_00009np8oRwjAPAYEP0mCA";
-        String potsURL = "https://api.monzo.com/pots";
         String transactionsURL = "https://api.monzo.com/transactions?expand[]=merchant&account_id=acc_00009np8oRwjAPAYEP0mCA";
 
         do {
             balance = df.format(Double.parseDouble(parse(getJSON(balanceURL, headers), "balance")) / 100);
-            pots = getJSON(potsURL, headers);
             transactions = getJSON(transactionsURL, headers);
             mFirebaseAuth = FirebaseAuth.getInstance();
             userID = mFirebaseAuth.getCurrentUser().getUid();
@@ -196,15 +203,9 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
                         category = "Eating out";
                     }
 
-
                     Transaction transaction = new Transaction(ID, amount, category, currency, epochDate, declined, description, latitude, longitude, merchant, name, notes);
                     current_user_db.setValue(transaction);
-
                 }
-                System.out.println("Transactions not expired: " + parsedTransactions);
-
-            } else {
-                System.out.println("Transactions expired: " + transactions);
             }
             String path = "Users/" + userID + "/Transactions";
             DatabaseReference myRef = FirebaseDatabase.getInstance().getReference(path);
@@ -214,7 +215,7 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
                     list.clear();
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                         Transaction transaction = snapshot.getValue(Transaction.class);
-                        if (transaction.getDeclined() == false) {
+                        if (transaction != null && !transaction.getDeclined()) { // Must first check if transaction is null to prevent NullPointerException warning
                             list.add(transaction);
                         }
                         Collections.sort(list, new Comparator<Transaction>() {
@@ -234,7 +235,6 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
             e.printStackTrace();
             System.out.println("error jsonE");
         }
-
         getSelectedElement();
         addToTotals();
         getName();
@@ -242,8 +242,7 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
 
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
-
-        String b = "Account Balance\n" + "         £" + this.balance;
+        String b = "Account Balance\n" + "         £" + balance;
         HomePage.tv.setText(b);
     }
 
@@ -252,31 +251,7 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
     }
 
     private void addToTotals() {
-//        String path = "Users/" + userID + "/Transactions";
-//        DatabaseReference myRef = FirebaseDatabase.getInstance().getReference(path);
         moneyIn = 0.0;
-//        myRef.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                for(DataSnapshot snapshot: dataSnapshot.getChildren()){
-//                    Transaction transaction = snapshot.getValue(Transaction.class);
-//                    if(transaction.getDeclined()==false){
-//                        // Format transaction amounts
-//                        Double amount = transaction.getAmount()/100;
-//
-//                        // If transaction amount is positive, add to money coming in otherwise add to money going out
-//                        if(amount<0.0){
-//                            moneyOut -= amount;
-//                        } else {
-//                            moneyIn += amount;
-//                        }
-//                    }
-//                }
-//            }
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//            }
-//        });
 
         // Getting start of month in epoch form
         Calendar cal = Calendar.getInstance();
@@ -285,13 +260,13 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
         cal.clear(Calendar.MINUTE);
         cal.clear(Calendar.SECOND);
         cal.clear(Calendar.MILLISECOND);
-        Long startOfMonth = cal.getTimeInMillis();
+        long startOfMonth = cal.getTimeInMillis();
 
         transactionsThisMonthFD.clear();
 
         for (int i = 0; i < list.size(); i++) {
             // Format transaction amounts
-            Double amount = list.get(i).getAmount() / 100;
+            double amount = list.get(i).getAmount() / 100;
             // Obtaining transactions from this month
             if (list.get(i).getDate() > startOfMonth) {
                 // If transaction amount is positive, add to money coming in otherwise add to money going out
@@ -332,9 +307,9 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 firstName = dataSnapshot.child("First name").getValue().toString();
                 surname = dataSnapshot.child("Surname").getValue().toString();
-                fullname = firstName + " " + surname;
+                fullName = firstName + " " + surname;
 
-                HomePage.navUsername.setText(fullname);
+                HomePage.navUsername.setText(fullName);
             }
 
             @Override
@@ -342,55 +317,6 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
             }
         });
     }
-
-//    private String getAccessToken(){
-//        /*
-//         * Create the POST request
-//         */
-//        String accessTokenURL = "https://api.monzo.com/oauth2/token";
-//
-//        HttpClient httpClient = new DefaultHttpClient();
-//        HttpPost httpPost = new HttpPost(accessTokenURL);
-//// Request parameters and other properties.
-//        List<NameValuePair> params = new ArrayList<NameValuePair>();
-//        params.add(new BasicNameValuePair("grant_type", "authorization_code"));
-//        params.add(new BasicNameValuePair("client_id", clientID));
-//        params.add(new BasicNameValuePair("client_secret", clientSecret));
-//        params.add(new BasicNameValuePair("redirect_uri", redirectURI));
-//        params.add(new BasicNameValuePair("code", Authentication.authorisationCode));
-//        try {
-//            httpPost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
-//        } catch (UnsupportedEncodingException e) {
-//            // writing error to Log
-//            e.printStackTrace();
-//        }
-//        /*
-//         * Execute the HTTP Request
-//         */
-//        try {
-//            HttpResponse response = httpClient.execute(httpPost);
-//            HttpEntity respEntity = response.getEntity();
-//
-//            if (respEntity != null) {
-//                // EntityUtils to get the response content
-//                String content =  EntityUtils.toString(respEntity);
-//                String parsedAccessToken = stringBetween(content, "\"access_token\":\"", "\",\"client_id\"");
-//                return parsedAccessToken;
-//            }
-//        } catch (ClientProtocolException e) {
-//            // writing exception to log
-//            e.printStackTrace();
-//        } catch (IOException e) {
-//            // writing exception to log
-//            e.printStackTrace();
-//        }
-//        return "";
-//    }
-
-//    private String stringBetween(String uri, String start, String end) {
-//        String str = StringUtils.substringBetween(uri, start, end);
-//        return str;
-//    }
 
 
 }
