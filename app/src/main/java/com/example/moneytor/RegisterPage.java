@@ -1,7 +1,9 @@
 package com.example.moneytor;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -21,7 +23,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class RegisterPage extends AppCompatActivity {
@@ -30,6 +31,7 @@ public class RegisterPage extends AppCompatActivity {
     FirebaseAuth mFirebaseAuth;
     DatabaseReference current_user_db;
     TextView haveAccount;
+    private String email, pwd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,15 +39,15 @@ public class RegisterPage extends AppCompatActivity {
         setContentView(R.layout.activity_register_page);
 
 
-        btnSignIn = (Button) findViewById(R.id.BTNlogin_button);
-        btnSignUp = (Button) findViewById(R.id.BTNregister);
+        btnSignIn = findViewById(R.id.BTNlogin_button);
+        btnSignUp = findViewById(R.id.BTNregister);
         mFirebaseAuth = FirebaseAuth.getInstance();
-        emailId = (EditText) findViewById(R.id.ETusername);
-        password = (EditText) findViewById(R.id.ETpassword);
-        cnfrmpassword = (EditText) findViewById(R.id.ETconfirm);
-        first_name = (EditText) findViewById(R.id.ETname);
-        surname = (EditText) findViewById(R.id.ETsurname);
-        haveAccount = (TextView) findViewById(R.id.TVno_account);
+        emailId = findViewById(R.id.ETusername);
+        password = findViewById(R.id.ETpassword);
+        cnfrmpassword = findViewById(R.id.ETconfirm);
+        first_name = findViewById(R.id.ETname);
+        surname = findViewById(R.id.ETsurname);
+        haveAccount = findViewById(R.id.TVno_account);
 
         haveAccount.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,8 +67,8 @@ public class RegisterPage extends AppCompatActivity {
         btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String email = emailId.getText().toString().trim();
-                String pwd = password.getText().toString();
+                email = emailId.getText().toString().trim();
+                pwd = password.getText().toString();
                 String cnfrmPwd = cnfrmpassword.getText().toString();
                 String regex = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
                 if (email.isEmpty() && pwd.isEmpty()) {
@@ -85,42 +87,73 @@ public class RegisterPage extends AppCompatActivity {
                     password.setError("Password must be at least 8 characters long");
                     password.requestFocus();
                 } else if (!(email.isEmpty() && pwd.isEmpty())) {
-                    mFirebaseAuth.createUserWithEmailAndPassword(email, pwd).addOnCompleteListener(RegisterPage.this, new OnCompleteListener<AuthResult>() {
+                    AlertDialog.Builder dialog = new AlertDialog.Builder(RegisterPage.this);
+                    dialog.setTitle("Terms and Conditions");
+                    dialog.setMessage("This application, once authorised and authenticated, will retrieve data from your Monzo account " +
+                            "and store it in a separate, cloud-based database. This data includes your: transactions, balance and name. " +
+                            "You can delete your account from the Settings at any time and all of your data will be removed from the  " +
+                            "database.");
+                    dialog.setPositiveButton("Accept", new DialogInterface.OnClickListener() {
                         @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (!task.isSuccessful()) {
-                                Toast.makeText(RegisterPage.this, "Sign up unsuccessful, please try again", Toast.LENGTH_SHORT).show();
-                            } else {
-                                String user_id = mFirebaseAuth.getCurrentUser().getUid();
-                                String firstName = first_name.getText().toString();
-                                String surName = surname.getText().toString();
+                        public void onClick(DialogInterface dialog, int which) {
+                            mFirebaseAuth.createUserWithEmailAndPassword(email, pwd).addOnCompleteListener(RegisterPage.this, new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                    if (!task.isSuccessful()) {
+                                        Toast.makeText(RegisterPage.this, "Sign up unsuccessful, please try again", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        String user_id = mFirebaseAuth.getCurrentUser().getUid();
+                                        String firstName = first_name.getText().toString();
+                                        String surName = surname.getText().toString();
 
-                                current_user_db = FirebaseDatabase.getInstance().getReference().child("Users").child(user_id);
-                                Map newPost = new HashMap();
-                                newPost.put("First name", firstName);
-                                newPost.put("Surname", surName);
-                                current_user_db.setValue(newPost);
+                                        current_user_db = FirebaseDatabase.getInstance().getReference().child("Users").child(user_id);
+                                        Map newPost = new HashMap();
+                                        newPost.put("First name", firstName);
+                                        newPost.put("Surname", surName);
+                                        current_user_db.setValue(newPost);
 
 
-                                FirebaseUser user = mFirebaseAuth.getCurrentUser();
-                                user.sendEmailVerification()
-                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<Void> task) {
-                                                if (task.isSuccessful()) {
-                                                    startActivity(new Intent(RegisterPage.this, MainActivity.class));
-                                                    Toast.makeText(RegisterPage.this, "Registration successful, please verify your email address", Toast.LENGTH_SHORT).show();
-                                                }
-                                            }
-                                        });
-                            }
+                                        FirebaseUser user = mFirebaseAuth.getCurrentUser();
+                                        user.sendEmailVerification()
+                                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<Void> task) {
+                                                        if (task.isSuccessful()) {
+                                                            startActivity(new Intent(RegisterPage.this, MainActivity.class));
+                                                            Toast.makeText(RegisterPage.this, "Registration successful, please verify your email address", Toast.LENGTH_SHORT).show();
+                                                        }
+                                                    }
+                                                });
+                                    }
+                                }
+                            });
+                            changeActivity(RegisterPage.this, MainActivity.class);
+
                         }
                     });
+                    dialog.setNegativeButton("Reject", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            changeActivity(RegisterPage.this, MainActivity.class);
+                            Toast.makeText(RegisterPage.this, "Registration failed as you rejected terms and conditions", Toast.LENGTH_SHORT).show();
+
+                        }
+                    });
+
+                    AlertDialog alertDialog = dialog.create();
+                    alertDialog.show();
+
                 } else {
                     Toast.makeText(RegisterPage.this, "Error occurred", Toast.LENGTH_SHORT).show();
                 }
 
             }
         });
+    }
+
+    public void changeActivity(Activity Current, Class Target) {
+        Intent intent = new Intent(Current, Target);
+        startActivity(intent);
     }
 }

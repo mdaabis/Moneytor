@@ -27,12 +27,13 @@ public class MainActivity extends AppCompatActivity {
     public static EditText emailId, password;
     public static String email, pwd;
     private static FirebaseUser mFirebaseUser;
-    private TextView noAccount;
-    private TextView forgotPassword;
     Button btnSignUp, btnSignIn;
     FirebaseAuth mFirebaseAuth;
+    private TextView noAccount;
+    private TextView forgotPassword;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
     private int exitCounter = 0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
                                     } else {
                                         Toast.makeText(MainActivity.this, "Please authorise your account", Toast.LENGTH_SHORT).show();
                                         changeActivity(MainActivity.this, Authentication.class);
-//                                        authenticated = 1;
+//
                                     }
 
                                 } else {
