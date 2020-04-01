@@ -44,8 +44,6 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
     private ArrayList<String> mNotes = new ArrayList<>();
     private ArrayList<Boolean> mIsPositive = new ArrayList<>();
     private RecyclerViewAdapter adapter;
-    private AlertDialog alert;
-    private AlertDialog.Builder builder;
 
 
     @Override
@@ -56,6 +54,10 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         // Fetching and storing data from Monzo API into Firebase
         FetchData process = new FetchData(getApplicationContext());
         process.execute();
+
+        FetchLeaderboard fetchLeaderboard = new FetchLeaderboard();
+        fetchLeaderboard.execute();
+
         tv = findViewById(R.id.textView);
 
         initListBitmaps();
@@ -79,21 +81,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
-        toggle.syncState();
-
-//        new java.util.Timer().schedule(
-//                new java.util.TimerTask() {
-//                    @Override
-//                    public void run() {
-//                        initListBitmaps();
-//                        cancel();
-//                    }
-//                },
-//                10000
-//        );
-
-
-    }
+        toggle.syncState();    }
 
     public void initListBitmaps() {
         for (int i = 0; i < FetchData.list.size(); i++) {

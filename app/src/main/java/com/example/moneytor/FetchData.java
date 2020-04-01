@@ -59,6 +59,7 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
     private String name = "";
     private double latitude = 0.0;
     private double longitude = 0.0;
+    public static HashMap<String, Integer> entry = new HashMap<>();
 
     private Map<String, String> headers = new HashMap<>();
 
@@ -150,6 +151,7 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
     protected Void doInBackground(Void... voids) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(Authentication.SHARED_PREFS, MODE_PRIVATE);
         String accessToken = sharedPreferences.getString(Authentication.ACCESS_TOKEN, "");
+        getLeaderboard();
 
         headers.put("Authorization", ("Bearer " + accessToken));
         handleResponse();
@@ -311,6 +313,26 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
                 fullName = firstName + " " + surname;
 
                 HomePage.navUsername.setText(fullName);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
+    }
+
+    private void getLeaderboard(){
+        current_user_db = FirebaseDatabase.getInstance().getReference().child("Leaderboard");
+        String path = "Leaderboard";
+        DatabaseReference myRef = FirebaseDatabase.getInstance().getReference(path);
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    String name = snapshot.getKey();
+                    int score = Integer.parseInt(snapshot.getValue().toString());
+                    System.out.println("name + score: " + name + ":" + score);
+                    entry.put(name, score);                }
             }
 
             @Override

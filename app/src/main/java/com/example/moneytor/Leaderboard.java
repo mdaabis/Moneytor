@@ -34,16 +34,18 @@ public class Leaderboard extends AppCompatActivity implements NavigationView.OnN
         setContentView(R.layout.activity_leaderboard);
         initImageBitmaps();
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
+        }
 
         drawer = findViewById(R.id.drawer_layout);
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         View headerView = navigationView.getHeaderView(0);
-        TextView navUsername = (TextView) headerView.findViewById(R.id.current_user_name);
+        TextView navUsername = headerView.findViewById(R.id.current_user_name);
         navUsername.setText(FetchData.fullName);
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
@@ -97,39 +99,44 @@ public class Leaderboard extends AppCompatActivity implements NavigationView.OnN
     }
 
     private void initImageBitmaps() {
-        mImageURLs.add("https://images.unsplash.com/photo-1558487661-9d4f01e2ad64?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=634&q=80");
-        mNames.add("Mostafa Daabis");
-        mScore.add("103");
-
-
-        mImageURLs.add("https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?cs=srgb&dl=closeup-photo-of-woman-with-brown-coat-and-gray-top-733872.jpg&fm=jpg");
-        mNames.add("Jane Doe");
-        mScore.add("83");
-
-        mImageURLs.add("https://images.pexels.com/photos/594610/pexels-photo-594610.jpeg?cs=srgb&dl=man-wearing-a-jacket-sitting-on-brown-wooden-crate-594610.jpg&fm=jpg");
-        mNames.add("Scott Richardson");
-        mScore.add("78");
-
-        mImageURLs.add("https://images.pexels.com/photos/936119/pexels-photo-936119.jpeg?cs=srgb&dl=laughing-man-wearing-gray-v-neck-t-shirt-936119.jpg&fm=jpg");
-        mNames.add("Jake Maxwell");
-        mScore.add("76");
-
-        mImageURLs.add("https://images.unsplash.com/photo-1492633423870-43d1cd2775eb?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1050&q=80");
-        mNames.add("Eva Goodman");
-        mScore.add("71");
-
-
-        mImageURLs.add("https://images.pexels.com/photos/842548/pexels-photo-842548.jpeg?cs=srgb&dl=man-holding-mug-in-front-of-laptop-842548.jpg&fm=jpg");
-        mNames.add("Andreas Christinsen");
-        mScore.add("66");
-
-        mImageURLs.add("https://images.unsplash.com/photo-1534751516642-a1af1ef26a56?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=635&q=80");
-        mNames.add("Autumn Reid");
-        mScore.add("63");
-
-        mImageURLs.add("https://upload.wikimedia.org/wikipedia/commons/b/b5/Warren_Buffett_in_2010.jpg");
-        mNames.add("Warren Buffett");
-        mScore.add("8");
+        for (int i = 0; i < FetchLeaderboard.leaderboardEntries.size(); i++) {
+            mImageURLs.add("https://s3.eu-west-2.amazonaws.com/racingleaguehub/img/avatars/default.jpg");
+            mNames.add(FetchLeaderboard.leaderboardEntries.get(i).getFullName());
+            mScore.add("" + FetchLeaderboard.leaderboardEntries.get(i).getScore());
+        }
+//        mImageURLs.add("https://images.unsplash.com/photo-1558487661-9d4f01e2ad64?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=634&q=80");
+//        mNames.add("Mostafa Daabis");
+//        mScore.add("103");
+//
+//
+//        mImageURLs.add("https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?cs=srgb&dl=closeup-photo-of-woman-with-brown-coat-and-gray-top-733872.jpg&fm=jpg");
+//        mNames.add("Jane Doe");
+//        mScore.add("83");
+//
+//        mImageURLs.add("https://images.pexels.com/photos/594610/pexels-photo-594610.jpeg?cs=srgb&dl=man-wearing-a-jacket-sitting-on-brown-wooden-crate-594610.jpg&fm=jpg");
+//        mNames.add("Scott Richardson");
+//        mScore.add("78");
+//
+//        mImageURLs.add("https://images.pexels.com/photos/936119/pexels-photo-936119.jpeg?cs=srgb&dl=laughing-man-wearing-gray-v-neck-t-shirt-936119.jpg&fm=jpg");
+//        mNames.add("Jake Maxwell");
+//        mScore.add("76");
+//
+//        mImageURLs.add("https://images.unsplash.com/photo-1492633423870-43d1cd2775eb?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1050&q=80");
+//        mNames.add("Eva Goodman");
+//        mScore.add("71");
+//
+//
+//        mImageURLs.add("https://images.pexels.com/photos/842548/pexels-photo-842548.jpeg?cs=srgb&dl=man-holding-mug-in-front-of-laptop-842548.jpg&fm=jpg");
+//        mNames.add("Andreas Christinsen");
+//        mScore.add("66");
+//
+//        mImageURLs.add("https://images.unsplash.com/photo-1534751516642-a1af1ef26a56?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=635&q=80");
+//        mNames.add("Autumn Reid");
+//        mScore.add("63");
+//
+//        mImageURLs.add("https://upload.wikimedia.org/wikipedia/commons/b/b5/Warren_Buffett_in_2010.jpg");
+//        mNames.add("Warren Buffett");
+//        mScore.add("8");
 
         initRecyclerView();
 

@@ -39,7 +39,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="100dp"
-        android:layout_marginRight="-155dp"
+        android:layout_marginRight="-175dp"
         android:layout_toLeftOf="@id/center50"
         android:text="out"
         android:textColor="@color/font_colour"

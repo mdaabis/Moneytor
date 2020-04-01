@@ -144,7 +144,8 @@ public class Fragment80_20 extends Fragment {
     }
 
     private void setScore() {
-        current_user_db = FirebaseDatabase.getInstance().getReference().child("Leaderboard").child(FetchData.fullName);
-        current_user_db.setValue(score);
+        current_user_db = FirebaseDatabase.getInstance().getReference().child("Leaderboard");
+        FetchData.entry.put(FetchData.fullName, score);
+        current_user_db.setValue(FetchData.entry);
     }
 }
