@@ -268,7 +268,8 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
             // Format transaction amounts
             double amount = list.get(i).getAmount() / 100;
             // Obtaining transactions from this month
-            if (list.get(i).getDate() > startOfMonth) {
+//            if (list.get(i).getDate() > startOfMonth) {
+            if (list.get(i).getDate() > 1583024400) {
                 // If transaction amount is positive, add to money coming in otherwise add to money going out
                 transactionsThisMonthFD.add(list.get(i));
                 if (amount > 0.0) {

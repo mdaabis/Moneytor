@@ -1,36 +1,35 @@
 package com.example.moneytor;
 
 
-import android.media.Image;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.fragment.app.Fragment;
+
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
 
 public class Fragment80_20 extends Fragment {
 
-    //    int selectedElement = FetchData.selectedElement;
-    ProgressBar pb20;
-    ProgressBar pb80;
-    TextView inTV;
-    TextView outTV;
-    TextView savingsTV;
-    TextView otherTV;
-    TextView monthTV;
+    private int score;
+    private ProgressBar pb20;
+    private ProgressBar pb80;
+    private TextView inTV;
+    private TextView outTV;
+    private TextView savingsTV;
+    private TextView otherTV;
+    private TextView monthTV;
 
-
+    private DatabaseReference current_user_db;
     private double spent80;
     private double spent20;
     private int percentage20;
@@ -52,13 +51,13 @@ public class Fragment80_20 extends Fragment {
         addAmounts();
         remaining();
 
-        pb20 = (ProgressBar) view.findViewById(R.id.progress_bar_investment);
-        pb80 = (ProgressBar) view.findViewById(R.id.progress_bar_other);
-        inTV = (TextView) view.findViewById(R.id.in);
-        outTV = (TextView) view.findViewById(R.id.out);
-        savingsTV = (TextView) view.findViewById(R.id.investmentTV);
-        otherTV = (TextView) view.findViewById(R.id.otherTV);
-        monthTV = (TextView) view.findViewById(R.id.month);
+        pb20 = view.findViewById(R.id.progress_bar_investment);
+        pb80 = view.findViewById(R.id.progress_bar_other);
+        inTV = view.findViewById(R.id.in);
+        outTV = view.findViewById(R.id.out);
+        savingsTV = view.findViewById(R.id.investmentTV);
+        otherTV = view.findViewById(R.id.otherTV);
+        monthTV = view.findViewById(R.id.month);
 
         String moneyIn = "In: £" + amountToPound(Double.toString(FetchData.moneyIn));
 
@@ -74,6 +73,9 @@ public class Fragment80_20 extends Fragment {
 
         pb80.setTooltipText("Remaining: " + amountToPoundWithMinus(Double.toString(remaining80)));
         pb80.setProgress(percentage80);
+
+        getScore();
+        setScore();
         return view;
     }
 
@@ -132,5 +134,17 @@ public class Fragment80_20 extends Fragment {
         return "£" + df.format(amountL);
     }
 
+    private void getScore() {
+        double otherScore = ((FetchData.moneyIn * 0.8) - Math.abs(spent80)) / (FetchData.moneyIn * 0.8) * 100;
+        double savingsScore = ((FetchData.moneyIn - Math.abs(spent80)) - (FetchData.moneyIn * 0.2)) / (FetchData.moneyIn * 0.2) * 100;
+        System.out.println("Money in: " + FetchData.moneyIn);
+        System.out.println("80: " + spent80 + ":" + otherScore);
+        System.out.println("20: " + (FetchData.moneyIn - Math.abs(spent80)) + ":" + savingsScore);
+        score = (int) Math.round(otherScore + savingsScore * 2);
+    }
 
+    private void setScore() {
+        current_user_db = FirebaseDatabase.getInstance().getReference().child("Leaderboard").child(FetchData.fullName);
+        current_user_db.setValue(score);
+    }
 }
