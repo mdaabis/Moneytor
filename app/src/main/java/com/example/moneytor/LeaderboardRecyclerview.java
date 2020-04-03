@@ -49,14 +49,7 @@ public class LeaderboardRecyclerview extends RecyclerView.Adapter<LeaderboardRec
         Glide.with(context).asBitmap().load(mImages.get(position)).into(holder.image);
         holder.names.setText(mNames.get(position));
         holder.scores.setText(mScore.get(position));
-        holder.parentLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "onClick: clicked on");
 
-                Toast.makeText(context, "User's budgeting technique would be shown here", Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
     @Override
