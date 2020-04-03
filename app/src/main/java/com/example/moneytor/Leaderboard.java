@@ -27,6 +27,7 @@ public class Leaderboard extends AppCompatActivity implements NavigationView.OnN
     private ArrayList<String> mNames = new ArrayList<>();
     private ArrayList<String> mScore = new ArrayList<>();
     private ArrayList<String> mImageURLs = new ArrayList<>();
+    private ArrayList<String> mRanks = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,6 +104,7 @@ public class Leaderboard extends AppCompatActivity implements NavigationView.OnN
             mImageURLs.add("https://s3.eu-west-2.amazonaws.com/racingleaguehub/img/avatars/default.jpg");
             mNames.add(FetchLeaderboard.leaderboardEntries.get(i).getFullName());
             mScore.add("" + FetchLeaderboard.leaderboardEntries.get(i).getScore());
+            mRanks.add(FetchLeaderboard.leaderboardEntries.get(i).getRank());
         }
 //        mImageURLs.add("https://images.unsplash.com/photo-1558487661-9d4f01e2ad64?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=634&q=80");
 //        mNames.add("Mostafa Daabis");
@@ -144,7 +146,7 @@ public class Leaderboard extends AppCompatActivity implements NavigationView.OnN
 
     private void initRecyclerView() {
         RecyclerView recyclerView = findViewById(R.id.leaderboard_recyclerView);
-        LeaderboardRecyclerview adapter = new LeaderboardRecyclerview(this, mNames, mScore, mImageURLs);
+        LeaderboardRecyclerview adapter = new LeaderboardRecyclerview(this, mNames, mScore, mImageURLs, mRanks);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }

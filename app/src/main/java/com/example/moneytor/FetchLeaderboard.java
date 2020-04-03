@@ -15,7 +15,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class FetchLeaderboard extends AsyncTask<Void, Void, Void>{
+public class FetchLeaderboard extends AsyncTask<Void, Void, Void> {
     public static List<LeaderboardEntry> leaderboardEntries = new ArrayList<>();
 
 
@@ -25,7 +25,7 @@ public class FetchLeaderboard extends AsyncTask<Void, Void, Void>{
         return null;
     }
 
-    private void getData(){
+    private void getData() {
         String path = "Leaderboard";
         DatabaseReference myRef = FirebaseDatabase.getInstance().getReference(path);
         myRef.addValueEventListener(new ValueEventListener() {
@@ -42,7 +42,12 @@ public class FetchLeaderboard extends AsyncTask<Void, Void, Void>{
                             return Integer.valueOf(t2.getScore()).compareTo(t1.getScore());
                         }
                     });
+                }
 
+                for (int i = 0; i < leaderboardEntries.size(); i++) {
+                    int rank = i + 1;
+                    leaderboardEntries.get(i).setRank(Integer.toString(rank));
+                    System.out.println("Rank + names: " + leaderboardEntries.get(i).getRank() + ":" + leaderboardEntries.get(i).getFullName());
                 }
             }
 

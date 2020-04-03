@@ -52,6 +52,7 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
     public static String surname;
     public static String fullName;
     public static String balance = "";
+    public static HashMap<String, Integer> entry = new HashMap<>();
     private DecimalFormat df = new DecimalFormat("#.00");
     private String transactions;
     private FirebaseAuth mFirebaseAuth;
@@ -59,8 +60,6 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
     private String name = "";
     private double latitude = 0.0;
     private double longitude = 0.0;
-    public static HashMap<String, Integer> entry = new HashMap<>();
-
     private Map<String, String> headers = new HashMap<>();
 
     private Context context;
@@ -265,13 +264,14 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
         long startOfMonth = cal.getTimeInMillis();
 
         transactionsThisMonthFD.clear();
+//        1583024400
 
         for (int i = 0; i < list.size(); i++) {
             // Format transaction amounts
             double amount = list.get(i).getAmount() / 100;
             // Obtaining transactions from this month
 //            if (list.get(i).getDate() > startOfMonth) {
-            if (list.get(i).getDate() > 1583024400) {
+            if (list.get(i).getDate() > startOfMonth) {
                 // If transaction amount is positive, add to money coming in otherwise add to money going out
                 transactionsThisMonthFD.add(list.get(i));
                 if (amount > 0.0) {
@@ -321,7 +321,7 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
         });
     }
 
-    private void getLeaderboard(){
+    private void getLeaderboard() {
         current_user_db = FirebaseDatabase.getInstance().getReference().child("Leaderboard");
         String path = "Leaderboard";
         DatabaseReference myRef = FirebaseDatabase.getInstance().getReference(path);
@@ -332,7 +332,8 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
                     String name = snapshot.getKey();
                     int score = Integer.parseInt(snapshot.getValue().toString());
                     System.out.println("name + score: " + name + ":" + score);
-                    entry.put(name, score);                }
+                    entry.put(name, score);
+                }
             }
 
             @Override
