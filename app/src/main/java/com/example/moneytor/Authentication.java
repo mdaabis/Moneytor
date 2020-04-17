@@ -84,6 +84,8 @@ public class Authentication extends AppCompatActivity {
             if (!returnedStateToken.equals(stateCheck)) {
                 Toast.makeText(Authentication.this, "Authorisation failed", Toast.LENGTH_SHORT).show();
                 sharedPreferences.edit().clear().apply();
+                System.out.println("Sent state token: " + stateCheck);
+                System.out.println("Returned state token: " + returnedStateToken);
                 changeActivity(this, MainActivity.class);
             } else {
                 Toast.makeText(Authentication.this, "Authorisation succeeded", Toast.LENGTH_SHORT).show();
