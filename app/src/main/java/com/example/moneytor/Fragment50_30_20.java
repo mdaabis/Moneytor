@@ -100,8 +100,6 @@ public class Fragment50_30_20 extends Fragment {
         List<Transaction> transactionsThisMonth = FetchData.transactionsThisMonthFD;
         List<String> billsList = new ArrayList<>(Arrays.asList("Bills", "Expenses", "Groceries", "Transport"));
         List<String> recreationList = new ArrayList<>(Arrays.asList("Charity", "Eating out", "Entertainment", "Family", "General", "Holidays", "Personal care", "Shopping", "Cash"));
-//        List<String> savingsList = new ArrayList<>(Arrays.asList("Finances"));
-
 
         for (int i = 0; i < transactionsThisMonth.size(); i++) {
             if (transactionsThisMonth.get(i).getAmount() < 0.0) {
@@ -111,7 +109,6 @@ public class Fragment50_30_20 extends Fragment {
                 } else if (recreationList.contains(transactionsThisMonth.get(i).getCategory())) {
                     spentRecreation += amountInPounds;
                 } else {
-//                } else if (savingsList.contains(transactionsThisMonth.1get(i).getCategory())) {
                     spentSavings += amountInPounds;
                 }
             }
@@ -158,11 +155,7 @@ public class Fragment50_30_20 extends Fragment {
         double billsScore = ((FetchData.moneyIn * 0.5) - Math.abs(spentBills)) / (FetchData.moneyIn * 0.5) * 100;
         double recScore = ((FetchData.moneyIn * 0.3) - Math.abs(spentRecreation)) / (FetchData.moneyIn * 0.3) * 100;
         double savingsScore = ((FetchData.moneyIn - Math.abs(spentBills + spentRecreation)) - (FetchData.moneyIn * 0.2)) / (FetchData.moneyIn * 0.2) * 100;
-        System.out.println("Money in: " + FetchData.moneyIn);
-        System.out.println("bills: " + spentBills + ":" + billsScore);
-        System.out.println("recs: " + spentRecreation + ":" + recScore);
-        System.out.println("savings: " + (FetchData.moneyIn - Math.abs(spentBills + spentRecreation)) + ":" + savingsScore);
-        score = (int) Math.round(billsScore * 1.5 + recScore + savingsScore * 2);
+        score = (int) Math.round(billsScore * 1.5 + recScore + savingsScore * 2 + 50);
     }
 
     private void setScore() {

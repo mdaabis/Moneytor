@@ -62,20 +62,26 @@ public class Settings extends AppCompatActivity implements NavigationView.OnNavi
                 dialog.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                         user.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
-                             @Override
-                             public void onComplete(@NonNull Task<Void> task) {
-                                 if(task.isSuccessful()) {
-                                     FirebaseDatabase.getInstance().getReference("Users").child(FetchData.userID).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
-                                         @Override
-                                         public void onComplete(@NonNull Task<Void> task) {
-                                         }
-                                     });
-                                     changeActivity(Settings.this, MainActivity.class);
-                                     Toast.makeText(Settings.this, "Account deleted successfully", Toast.LENGTH_SHORT).show();
-                                 }
-                             }
-                         });
+                        user.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    FirebaseDatabase.getInstance().getReference("Users").child(FetchData.userID).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                        }
+                                    });
+                                    FirebaseDatabase.getInstance().getReference("Leaderboard").child(FetchData.userID).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+
+                                        }
+                                    });
+                                    changeActivity(Settings.this, MainActivity.class);
+                                    Toast.makeText(Settings.this, "Account deleted successfully", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
                     }
                 });
                 dialog.setNegativeButton("Dismiss", new DialogInterface.OnClickListener() {

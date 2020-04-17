@@ -154,7 +154,6 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
 
         headers.put("Authorization", ("Bearer " + accessToken));
         handleResponse();
-//        System.out.println("access token in fetchdata: " + accessToken2);
         return null;
     }
 
@@ -181,7 +180,7 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
                     long epochDate = date.getTime();
                     boolean declined = false;
                     String ID = JO.get("id").toString();
-                    Double amount = Double.parseDouble(JO.get("amount").toString());
+                    double amount = Double.parseDouble(JO.get("amount").toString());
                     String currency = JO.get("currency").toString();
                     String description = JO.get("description").toString();
                     String merchant = JO.get("merchant").toString();

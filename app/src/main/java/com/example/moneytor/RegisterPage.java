@@ -86,12 +86,12 @@ public class RegisterPage extends AppCompatActivity {
                 } else if (pwd.length() < 8) {
                     password.setError("Password must be at least 8 characters long");
                     password.requestFocus();
-                } else if (!(email.isEmpty() && pwd.isEmpty())) {
+                } else {
                     AlertDialog.Builder dialog = new AlertDialog.Builder(RegisterPage.this);
                     dialog.setTitle("Terms and Conditions");
                     dialog.setMessage("This application, once authorised and authenticated, will retrieve data from your Monzo account " +
                             "and store it in a separate, cloud-based database. This data includes your: transactions, balance and name. " +
-                            "You can delete your account from the Settings at any time and all of your data will be removed from the  " +
+                            "You can delete your account from the Settings page at any time and all of your data will be removed from the  " +
                             "database.");
                     dialog.setPositiveButton("Accept", new DialogInterface.OnClickListener() {
                         @Override
@@ -107,7 +107,7 @@ public class RegisterPage extends AppCompatActivity {
                                         String surName = surname.getText().toString();
 
                                         current_user_db = FirebaseDatabase.getInstance().getReference().child("Users").child(user_id);
-                                        Map newPost = new HashMap();
+                                        Map<String, String> newPost = new HashMap<>();
                                         newPost.put("First name", firstName);
                                         newPost.put("Surname", surName);
                                         current_user_db.setValue(newPost);
@@ -143,9 +143,6 @@ public class RegisterPage extends AppCompatActivity {
 
                     AlertDialog alertDialog = dialog.create();
                     alertDialog.show();
-
-                } else {
-                    Toast.makeText(RegisterPage.this, "Error occurred", Toast.LENGTH_SHORT).show();
                 }
 
             }
