@@ -173,9 +173,7 @@ public class Authentication extends AppCompatActivity {
                         // EntityUtils to get the response content
                         String content = EntityUtils.toString(respEntity);
                         executions++;
-                        System.out.println("executions: " + executions);
                         accessToken = stringBetween(content, "\"access_token\":\"", "\",\"client_id\"");
-                        System.out.println("access token: " + accessToken);
                         long expires = Integer.parseInt(stringBetween(content, "expires_in\":", ",\"scope\""));
                         setExpirationEpoch(expires);
                     }

@@ -119,8 +119,8 @@ public class Fragment80_20 extends Fragment {
     }
 
     private void remaining() {
-        remaining20 = (FetchData.moneyIn * 0.2) - (FetchData.moneyIn - spent80 - spent20);
         remaining80 = (FetchData.moneyIn * 0.8) - spent80;
+        remaining20 = (FetchData.moneyIn * 0.2) - (FetchData.moneyIn - Math.abs(remaining80 + spent20));
     }
 
     private String amountToPoundWithMinus(String amount) {

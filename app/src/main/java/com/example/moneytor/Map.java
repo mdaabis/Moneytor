@@ -28,11 +28,10 @@ public class Map extends FragmentActivity implements OnMapReadyCallback {
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        btnBack = (Button) findViewById(R.id.back_button);
+        btnBack = findViewById(R.id.back_button);
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                setResult(RESULT_CANCELED);
                 finish();
             }
         });

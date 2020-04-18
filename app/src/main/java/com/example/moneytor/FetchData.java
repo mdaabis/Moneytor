@@ -218,6 +218,7 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
                         if (transaction != null && !transaction.getDeclined()) { // Must first check if transaction is null to prevent NullPointerException warning
                             list.add(transaction);
                         }
+                        // Can below go outside of for loop
                         Collections.sort(list, new Comparator<Transaction>() {
                             public int compare(Transaction t1, Transaction t2) {
                                 return Long.valueOf(t2.getDate()).compareTo(t1.getDate());

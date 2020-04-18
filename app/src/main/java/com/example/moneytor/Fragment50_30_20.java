@@ -133,7 +133,7 @@ public class Fragment50_30_20 extends Fragment {
     private void remaining() {
         remainingBills = (FetchData.moneyIn * 0.5) - Math.abs(spentBills);
         remainingRecreation = (FetchData.moneyIn * 0.3) - Math.abs(spentRecreation);
-        remainingSavings = (FetchData.moneyIn * 0.2) - (FetchData.moneyIn - Math.abs(spentRecreation + spentBills + spentSavings));
+        remainingSavings = (FetchData.moneyIn * 0.2) - (FetchData.moneyIn - Math.abs(remainingBills + remainingRecreation + spentSavings));
     }
 
     private void percentage() {
