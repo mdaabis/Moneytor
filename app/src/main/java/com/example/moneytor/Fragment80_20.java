@@ -136,7 +136,7 @@ public class Fragment80_20 extends Fragment {
 
     private void getScore() {
         double otherScore = ((FetchData.moneyIn * 0.8) - Math.abs(spent80)) / (FetchData.moneyIn * 0.8) * 100;
-        double savingsScore = ((FetchData.moneyIn - Math.abs(spent80)) - (FetchData.moneyIn * 0.2)) / (FetchData.moneyIn * 0.2) * 100;
+        double savingsScore = ((FetchData.moneyIn - Math.abs(spent80)) / (FetchData.moneyIn * 0.2)) * 100;
         score = (int) Math.round(otherScore + savingsScore * 2 + 50);
     }
 

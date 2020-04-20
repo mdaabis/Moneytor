@@ -154,14 +154,13 @@ public class Fragment50_30_20 extends Fragment {
     private void getScore() {
         double billsScore = ((FetchData.moneyIn * 0.5) - Math.abs(spentBills)) / (FetchData.moneyIn * 0.5) * 100;
         double recScore = ((FetchData.moneyIn * 0.3) - Math.abs(spentRecreation)) / (FetchData.moneyIn * 0.3) * 100;
-        double savingsScore = ((FetchData.moneyIn - Math.abs(spentBills + spentRecreation)) - (FetchData.moneyIn * 0.2)) / (FetchData.moneyIn * 0.2) * 100;
-        score = (int) Math.round(billsScore * 1.5 + recScore + savingsScore * 2 + 50);
+        double savingsScore = (FetchData.moneyIn - Math.abs(spentBills + spentRecreation)) / (FetchData.moneyIn * 0.2) * 100;
+        score = (int) Math.round(billsScore * 1.5 + recScore * 0.8 + savingsScore * 2 + 50);
     }
 
     private void setScore() {
         current_user_db = FirebaseDatabase.getInstance().getReference().child("Leaderboard");
         FetchData.entry.put(FetchData.fullName, score);
-        System.out.println("size of: " + FetchData.entry.size());
         current_user_db.setValue(FetchData.entry);
     }
 
