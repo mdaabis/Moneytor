@@ -128,7 +128,6 @@ public class Authentication extends AppCompatActivity {
             // add Character one by one in end of sb
             sb.append(AlphaNumericString.charAt(index));
         }
-
         return sb.toString();
     }
 

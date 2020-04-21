@@ -102,7 +102,6 @@ public class MainActivity extends AppCompatActivity {
                                     } else {
                                         Toast.makeText(MainActivity.this, "Please authorise your account", Toast.LENGTH_SHORT).show();
                                         changeActivity(MainActivity.this, Authentication.class);
-//
                                     }
 
                                 } else {

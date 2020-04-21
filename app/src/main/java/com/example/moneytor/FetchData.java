@@ -293,13 +293,10 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
                     System.out.println("getSelectedElement error");
                 }
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
             }
         });
-//        return selectedElement;
     }
 
     private void getName() {
