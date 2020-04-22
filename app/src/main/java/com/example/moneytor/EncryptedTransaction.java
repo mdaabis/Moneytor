@@ -1,9 +1,9 @@
 package com.example.moneytor;
 
-public class Transaction {
+public class EncryptedTransaction {
 
     private String transaction_id;
-    private double amount;
+    private String amount;
     private String category;
     private String currency;
     private long date;
@@ -15,9 +15,9 @@ public class Transaction {
     private String name;
     private String notes;
 
-
-    public Transaction(String transaction_id, double amount, String category, String currency, long date, boolean declined, String description, double latitude, double longitude,
+    public EncryptedTransaction(String transaction_id, String amount, String category, String currency, long date, boolean declined, String description, double latitude, double longitude,
                        String merchant, String name, String notes) {
+        this.transaction_id = transaction_id;
         this.amount = amount;
         this.category = category;
         this.currency = currency;
@@ -29,14 +29,13 @@ public class Transaction {
         this.merchant = merchant;
         this.name = name;
         this.notes = notes;
-        this.transaction_id = transaction_id;
     }
 
-    public Transaction() {
+    public EncryptedTransaction() {
     }
 
 
-    public double getAmount() {
+    public String getAmount() {
         return this.amount;
     }
 

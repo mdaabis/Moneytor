@@ -24,6 +24,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -45,15 +51,21 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
     private ArrayList<Boolean> mIsPositive = new ArrayList<>();
     private RecyclerViewAdapter adapter;
 
+    public static String key;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
 
+        writeFile();
+        getKey();
+
         // Fetching and storing data from Monzo API into Firebase
         FetchData process = new FetchData(getApplicationContext());
         process.execute();
+
 
         FetchLeaderboard fetchLeaderboard = new FetchLeaderboard();
         fetchLeaderboard.execute();
@@ -195,6 +207,61 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
             return "-£" + df.format(amountL).substring(1);
         }
         return "£" + df.format(amountL);
+    }
+
+
+    public void getKey() {
+        try {
+            FileInputStream fileInputStream = openFileInput("Moneytor.txt");
+            InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
+
+            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+            StringBuffer stringBuffer = new StringBuffer();
+
+            String lines;
+            while ((lines = bufferedReader.readLine()) != null) {
+                stringBuffer.append(lines + "\n");
+            }
+
+            System.out.println("and key is: "+stringBuffer.toString());
+            key = stringBuffer.toString();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void writeFile() {
+        key = randomString();
+
+        try {
+            FileOutputStream fileOutputStream = new FileOutputStream("Moneytor.txt", true);
+//                    openFileOutput("Moneytor.txt", MODE_PRIVATE);
+            fileOutputStream.write(key.getBytes());
+            fileOutputStream.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private String randomString() {
+        int length = 12;
+        // chose a Character random from this String
+        String AlphaNumericString = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" + "0123456789" + "abcdefghijklmnopqrstuvxyz";
+
+        // create StringBuffer size of AlphaNumericString
+        StringBuilder sb = new StringBuilder(length);
+        for (int i = 0; i < length; i++) {
+            // generate a random number between
+            // 0 to AlphaNumericString variable length
+            int index = (int) (AlphaNumericString.length() * Math.random());
+            // add Character one by one in end of sb
+            sb.append(AlphaNumericString.charAt(index));
+        }
+        return sb.toString();
     }
 
 }

@@ -105,6 +105,8 @@ public class RegisterPage extends AppCompatActivity {
                                         String user_id = mFirebaseAuth.getCurrentUser().getUid();
                                         String firstName = first_name.getText().toString();
                                         String surName = surname.getText().toString();
+                                        Toast.makeText(RegisterPage.this, "Sign up successful, please verify your emai", Toast.LENGTH_SHORT).show();
+
 
                                         current_user_db = FirebaseDatabase.getInstance().getReference().child("Users").child(user_id);
                                         Map<String, String> newPost = new HashMap<>();
@@ -124,10 +126,10 @@ public class RegisterPage extends AppCompatActivity {
                                                         }
                                                     }
                                                 });
+                                        changeActivity(RegisterPage.this, MainActivity.class);
                                     }
                                 }
                             });
-                            changeActivity(RegisterPage.this, MainActivity.class);
 
                         }
                     });

@@ -45,14 +45,17 @@ import static android.content.Context.MODE_PRIVATE;
 public class FetchData extends AsyncTask<Void, Void, Void> {
     public static double moneyIn = 0.0;
     public static int selectedElement = -1;
+
     public static List<Transaction> list = new ArrayList<>();
     public static List<Transaction> transactionsThisMonthFD = new ArrayList<>();
+
     public static String userID;
     public static String firstName;
     public static String surname;
     public static String fullName;
     public static String balance = "";
     public static HashMap<String, Integer> entry = new HashMap<>();
+    private final String secretKey = HomePage.key;
     private DecimalFormat df = new DecimalFormat("#.00");
     private String transactions;
     private FirebaseAuth mFirebaseAuth;
@@ -61,7 +64,6 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
     private double latitude = 0.0;
     private double longitude = 0.0;
     private Map<String, String> headers = new HashMap<>();
-
     private Context context;
 
     public FetchData(Context context) {
@@ -97,7 +99,6 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
                     builder.append(line);
                 }
             } else {
-//                System.err.println("Error code " + statusCode);
                 return "403";
             }
         } catch (ClientProtocolException e) {
@@ -114,13 +115,6 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
     private static String parse(String data, String type) {
         try {
             JSONObject JO = new JSONObject(data);
-//            if (type.equals("balance")) {
-//                return JO.getString("total_balance");
-//            } else if (type.equals("spend_today")) {
-//                return JO.getString("spend_today");
-//            } else if (type.equals("currency")) {
-//                return JO.getString("currency");
-//            }
             switch (type) {
                 case "balance":
                     return JO.getString("total_balance");
@@ -178,13 +172,14 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
                     String dateAsString = JO.get("created").toString().substring(0, JO.get("created").toString().indexOf(".")) + "Z";
                     Date date = parseDate(dateAsString);
                     long epochDate = date.getTime();
+//                    long epochDate = date.getTime();
                     boolean declined = false;
                     String ID = JO.get("id").toString();
-                    double amount = Double.parseDouble(JO.get("amount").toString());
-                    String currency = JO.get("currency").toString();
-                    String description = JO.get("description").toString();
-                    String merchant = JO.get("merchant").toString();
-                    String notes = JO.get("notes").toString();
+                    String amount = AES.encrypt(JO.get("amount").toString(), secretKey); //double
+                    String currency = AES.encrypt(JO.get("currency").toString(), secretKey);
+                    String description = AES.encrypt(JO.get("description").toString(), secretKey);
+                    String merchant = AES.encrypt(JO.get("merchant").toString(), secretKey);
+                    String notes = AES.encrypt(JO.get("notes").toString(), secretKey);
 
                     if (JO.has("decline_reason")) {
                         declined = true;
@@ -194,16 +189,16 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
                     if (!JO.get("merchant").toString().equals("null")) {
                         JSONObject mJO = (JSONObject) JO.get("merchant");
                         JSONObject aJO = (JSONObject) mJO.get("address");
-                        name = mJO.get("name").toString();
+                        name = AES.encrypt(mJO.get("name").toString(), secretKey);
                         latitude = Double.parseDouble(aJO.get("latitude").toString());
                         longitude = Double.parseDouble(aJO.get("longitude").toString());
                     }
-                    String category = capitalise(JO.get("category").toString()).trim();
+                    String category = AES.encrypt(capitalise(JO.get("category").toString()).trim(), secretKey);
                     if (category.equals("Eating_out")) {
-                        category = "Eating out";
+                        category = AES.encrypt("Eating out", secretKey);
                     }
 
-                    Transaction transaction = new Transaction(ID, amount, category, currency, epochDate, declined, description, latitude, longitude, merchant, name, notes);
+                    EncryptedTransaction transaction = new EncryptedTransaction(ID, amount, category, currency, epochDate, declined, description, latitude, longitude, merchant, name, notes);
                     current_user_db.setValue(transaction);
                 }
             }
@@ -214,7 +209,24 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     list.clear();
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        Transaction transaction = snapshot.getValue(Transaction.class);
+//                        System.out.println("description decrypted: " + AES.decrypt(snapshot.child("description").getValue().toString(), secretKey));
+                        EncryptedTransaction encryptedTransaction = snapshot.getValue(EncryptedTransaction.class);
+                        String transaction_id = encryptedTransaction.getTransaction_id();
+                        Double amount = Double.parseDouble(AES.decrypt(encryptedTransaction.getAmount(), secretKey));
+                        String category = AES.decrypt(encryptedTransaction.getCategory(), secretKey);
+                        String currency = AES.decrypt(encryptedTransaction.getCurrency(), secretKey);
+                        long date = encryptedTransaction.getDate();
+                        String description = AES.decrypt(encryptedTransaction.getDescription(), secretKey);
+                        String merchant = AES.decrypt(encryptedTransaction.getMerchant(), secretKey);
+                        String name = AES.decrypt(encryptedTransaction.getName(), secretKey);
+                        String notes = AES.decrypt(encryptedTransaction.getNotes(), secretKey);
+                        Double latitude = encryptedTransaction.getLatitude();
+                        Double longitude = encryptedTransaction.getLongitude();
+//                        Double latitude = 0.0;
+//                        Double longitude = 0.0;
+                        boolean declined = encryptedTransaction.getDeclined();
+                        Transaction transaction = new Transaction(transaction_id, amount, category, currency, date, declined, description, latitude, longitude, merchant, name, notes);
+
                         if (transaction != null && !transaction.getDeclined()) { // Must first check if transaction is null to prevent NullPointerException warning
                             list.add(transaction);
                         }
@@ -293,6 +305,7 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
                     System.out.println("getSelectedElement error");
                 }
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
             }
