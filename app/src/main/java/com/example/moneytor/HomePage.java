@@ -1,8 +1,6 @@
 package com.example.moneytor;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -41,6 +39,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
     public static TextView navUsername;
     public static TextView tv;
     public static Boolean isPositive;
+    public static String key;
     private DrawerLayout drawer;
     private int exitCounter = 0;
     private ArrayList<String> mAmount = new ArrayList<>();
@@ -50,9 +49,6 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
     private ArrayList<String> mNotes = new ArrayList<>();
     private ArrayList<Boolean> mIsPositive = new ArrayList<>();
     private RecyclerViewAdapter adapter;
-
-    public static String key;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,14 +62,12 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         FetchData process = new FetchData(getApplicationContext());
         process.execute();
 
-
         FetchLeaderboard fetchLeaderboard = new FetchLeaderboard();
         fetchLeaderboard.execute();
 
         tv = findViewById(R.id.textView);
 
         initListBitmaps();
-
 
         // Setting title and toolbar with correct colours and formatting
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -84,7 +78,6 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
 
         drawer = findViewById(R.id.drawer_layout);
 
-
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         View headerView = navigationView.getHeaderView(0);
@@ -93,7 +86,8 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
-        toggle.syncState();    }
+        toggle.syncState();
+    }
 
     public void initListBitmaps() {
         for (int i = 0; i < FetchData.list.size(); i++) {
@@ -223,7 +217,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
                 stringBuffer.append(lines + "\n");
             }
 
-            System.out.println("and key is: "+stringBuffer.toString());
+            System.out.println("and key is: " + stringBuffer.toString());
             key = stringBuffer.toString();
         } catch (FileNotFoundException e) {
             e.printStackTrace();

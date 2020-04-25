@@ -16,7 +16,7 @@ public class EncryptedTransaction {
     private String notes;
 
     public EncryptedTransaction(String transaction_id, String amount, String category, String currency, long date, boolean declined, String description, double latitude, double longitude,
-                       String merchant, String name, String notes) {
+                                String merchant, String name, String notes) {
         this.transaction_id = transaction_id;
         this.amount = amount;
         this.category = category;

@@ -10,8 +10,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import org.apache.commons.lang3.ObjectUtils;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -49,7 +47,6 @@ public class FetchLeaderboard extends AsyncTask<Void, Void, Void> {
                 for (int i = 0; i < leaderboardEntries.size(); i++) {
                     int rank = i + 1;
                     leaderboardEntries.get(i).setRank(Integer.toString(rank));
-                    System.out.println("Rank + names: " + leaderboardEntries.get(i).getRank() + ":" + leaderboardEntries.get(i).getFullName());
                 }
             }
 
