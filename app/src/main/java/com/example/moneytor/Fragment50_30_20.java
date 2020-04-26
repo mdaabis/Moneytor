@@ -155,7 +155,7 @@ public class Fragment50_30_20 extends Fragment {
         double billsScore = ((FetchData.moneyIn * 0.5) - Math.abs(spentBills)) / (FetchData.moneyIn * 0.5) * 100;
         double recScore = ((FetchData.moneyIn * 0.3) - Math.abs(spentRecreation)) / (FetchData.moneyIn * 0.3) * 100;
         double savingsScore = (FetchData.moneyIn - Math.abs(spentBills + spentRecreation)) / (FetchData.moneyIn * 0.2) * 100;
-        score = (int) Math.round(billsScore * 1.5 + recScore * 0.8 + savingsScore * 2 + 50);
+        score = (int) Math.round(billsScore * 1.5 + recScore * 0.8 + savingsScore * 2 ) +50;
     }
 
     private void setScore() {
