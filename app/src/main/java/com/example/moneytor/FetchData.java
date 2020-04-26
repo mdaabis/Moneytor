@@ -193,10 +193,12 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
                         latitude = Double.parseDouble(aJO.get("latitude").toString());
                         longitude = Double.parseDouble(aJO.get("longitude").toString());
                     }
-                    String category = AES.encrypt(capitalise(JO.get("category").toString()).trim(), secretKey);
+
+                    String category = capitalise(JO.get("category").toString()).trim();
                     if (category.equals("Eating_out")) {
-                        category = AES.encrypt("Eating out", secretKey);
+                        category = "Eating out";
                     }
+                    category = AES.encrypt(category, secretKey);
 
                     EncryptedTransaction transaction = new EncryptedTransaction(ID, amount, category, currency, epochDate, declined, description, latitude, longitude, merchant, name, notes);
                     current_user_db.setValue(transaction);
