@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class LeaderboardRecyclerview extends RecyclerView.Adapter<LeaderboardRecyclerview.ViewHolder> {
-    private static final String TAG = "LeaderboardRecyclerview";
 
     private Context context;
     private ArrayList<String> mNames = new ArrayList<>();
@@ -25,6 +24,9 @@ public class LeaderboardRecyclerview extends RecyclerView.Adapter<LeaderboardRec
     private ArrayList<String> mImages = new ArrayList<>();
     private ArrayList<String> mRank = new ArrayList<>();
 
+    /*
+     * Constructor used to initialise variables
+     */
     public LeaderboardRecyclerview(Context context, ArrayList<String> mNames, ArrayList<String> mScore, ArrayList<String> mImages, ArrayList<String> mRank) {
         this.context = context;
         this.mNames = mNames;
@@ -33,6 +35,12 @@ public class LeaderboardRecyclerview extends RecyclerView.Adapter<LeaderboardRec
         this.mRank = mRank;
     }
 
+
+    /*
+     * Loads up corresponding front end XML file for each container
+     *
+     * In this case it is 'leaderboard_layout_list_item'
+     */
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -41,6 +49,10 @@ public class LeaderboardRecyclerview extends RecyclerView.Adapter<LeaderboardRec
         return holder;
     }
 
+
+    /*
+     * Sets contents of each container to the corresponding transaction's data
+     */
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         Glide.with(context).asBitmap().load(mImages.get(position)).into(holder.image);
@@ -49,6 +61,10 @@ public class LeaderboardRecyclerview extends RecyclerView.Adapter<LeaderboardRec
         holder.ranks.setText(mRank.get(position));
     }
 
+
+    /*
+     * Determines how many items will be in recyclerview
+     */
     @Override
     public int getItemCount() {
         return mNames.size();

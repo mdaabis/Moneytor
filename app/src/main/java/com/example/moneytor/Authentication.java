@@ -51,6 +51,10 @@ public class Authentication extends AppCompatActivity {
         setContentView(R.layout.activity_authentication);
 
         String state = randomString();
+        /*
+         * Storing the random string that is being used as a state token into shared preferences
+         * if there is no state token already stored there
+         */
         SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
         if (!sharedPreferences.contains(STATE_TOKEN)) {
             SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -59,6 +63,7 @@ public class Authentication extends AppCompatActivity {
         }
         redMonzo = "https://auth.monzo.com/?client_id=" + clientID + "&redirect_uri=" + redirectURI + "&response_type=code&state=" + state;
 
+        // Sets webview to be the Monzo authentication page
         webView = findViewById(R.id.webviewAuth);
         WebSettings webSettings = webView.getSettings();
         webSettings.setJavaScriptEnabled(true);
@@ -66,13 +71,22 @@ public class Authentication extends AppCompatActivity {
         authentication();
     }
 
-
+    /*
+     * The response URI obtained after being redirected from the user's email to app is parsed
+     *
+     * 'Stringbetween' method used to extract authorisation code and returned state token
+     *
+     * Returned state token compared to initially chosen random string to prevent cross-site
+     * request forgery
+     *
+     * User returned to login page if state tokens don't match and allowed to continue into
+     * homepage if they do
+     */
     private void authentication() {
         Uri uri = Uri.parse(redMonzo);
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         startActivity(intent);
 
-        System.out.println("uri: " + getIntent().getData());
         if (getIntent().getData() != null) {
 
             SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
@@ -84,18 +98,22 @@ public class Authentication extends AppCompatActivity {
             if (!returnedStateToken.equals(stateCheck)) {
                 Toast.makeText(Authentication.this, "Authorisation failed", Toast.LENGTH_SHORT).show();
                 sharedPreferences.edit().clear().apply();
-                System.out.println("Sent state token: " + stateCheck);
-                System.out.println("Returned state token: " + returnedStateToken);
                 changeActivity(this, MainActivity.class);
             } else {
                 Toast.makeText(Authentication.this, "Authorisation succeeded", Toast.LENGTH_SHORT).show();
             }
+
+            // Instance of BackgroundAuth class made to carry out network operations in the background
             BackgroundAuth backgroundAuth = new BackgroundAuth();
             backgroundAuth.execute();
         }
     }
 
-
+    /*
+     * Overrides normal behavior when device's back button is pressed
+     *
+     * Acts like going back in a browser
+     */
     @Override
     public void onBackPressed() {
         if (webView.canGoBack()) {
@@ -105,31 +123,48 @@ public class Authentication extends AppCompatActivity {
         }
     }
 
+    /*
+     * Returns a substring of a string 'uri' between two indices, 'start' and 'end'
+     */
     private String stringBetween(String uri, String start, String end) {
         return StringUtils.substringBetween(uri, start, end);
     }
 
+    /*
+     * Changes activity from current to target activity
+     */
     private void changeActivity(Activity Current, Class Target) {
         Intent intent = new Intent(Current, Target);
         startActivity(intent);
     }
 
+    /*
+     * Generates a random 12-character alpha-numeric string
+     *
+     * Does this by picking a random integer and using it as the index to choose a character
+     * from 'AlphaNumericString'
+     *
+     * 'for-loop' used to append chosen character to stringbuilder 12 times
+     */
     private String randomString() {
         int length = 12;
-        // chose a Character random from this String
         String AlphaNumericString = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" + "0123456789" + "abcdefghijklmnopqrstuvxyz";
 
-        // create StringBuffer size of AlphaNumericString
         StringBuilder sb = new StringBuilder(length);
         for (int i = 0; i < length; i++) {
-            // generate a random number between
-            // 0 to AlphaNumericString variable length
             int index = (int) (AlphaNumericString.length() * Math.random());
-            // add Character one by one in end of sb
             sb.append(AlphaNumericString.charAt(index));
         }
         return sb.toString();
     }
+
+    /*
+     * Class extends AsyncTask
+     *
+     * Runs in background
+     *
+     * Used to carry out network operations that cannot be carried out on main thread
+     */
 
     class BackgroundAuth extends AsyncTask<Void, Void, Void> {
         @Override
@@ -138,16 +173,23 @@ public class Authentication extends AppCompatActivity {
             return null;
         }
 
+        /*
+         * Method gets an access token
+         *
+         * Creates a HTTP POST request
+         *
+         * Response parsed to obtain access token and token duration
+         */
         private void getAccessToken() {
-            /*
-             * Create the POST request
-             */
+
             String accessTokenURL = "https://api.monzo.com/oauth2/token";
             String clientSecret = "mnzpub.nio98cyoi2OnW4hdtK9fOwFXdj8cSfIGHL/etY7y93mqxRO3bKRYShZAgh39aXd6s2ejXafbXTdhYyJxMI2f";
 
+            // Method was called twice unnecessarily so if statement is used to ensure it's run once
             if (executions == 0) {
                 HttpClient httpClient = new DefaultHttpClient();
                 HttpPost httpPost = new HttpPost(accessTokenURL);
+
                 // Request parameters and other properties.
                 List<NameValuePair> params = new ArrayList<>();
                 params.add(new BasicNameValuePair("grant_type", "authorization_code"));
@@ -158,12 +200,11 @@ public class Authentication extends AppCompatActivity {
                 try {
                     httpPost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
                 } catch (UnsupportedEncodingException e) {
-                    // writing error to Log
+                    // Writing error to Log
                     e.printStackTrace();
                 }
-                /*
-                 * Execute the HTTP Request
-                 */
+
+                // Execute the HTTP Request
                 try {
                     HttpResponse response = httpClient.execute(httpPost);
                     HttpEntity respEntity = response.getEntity();
@@ -177,15 +218,22 @@ public class Authentication extends AppCompatActivity {
                         setExpirationEpoch(expires);
                     }
                 } catch (ClientProtocolException e) {
-                    // writing exception to log
+                    // Writing exception to log
                     e.printStackTrace();
                 } catch (IOException e) {
-                    // writing exception to log
+                    // Writing exception to log
                     e.printStackTrace();
                 }
             }
         }
 
+        /*
+         * Method takes token duration in as parameter
+         *
+         * Expiration time set to duration of token added to current epoch time
+         *
+         * Expiration time stored in shared preferences so it can be checked upon next login
+         */
         private void setExpirationEpoch(long expires) {
             Instant instant = Instant.now();
             long expirationTime = expires + instant.getEpochSecond();
@@ -197,10 +245,11 @@ public class Authentication extends AppCompatActivity {
             editor.apply();
         }
 
+        // Executed once everything in doInBackground() is has been executed
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            changeActivity(Authentication.this, HomePage.class);
+            changeActivity(Authentication.this, HomePage.class); // Redirects user to homepage
         }
     }
 }

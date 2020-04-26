@@ -27,6 +27,7 @@ public class Notifications extends AppCompatActivity implements NavigationView.O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notifications);
 
+        // Set toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         if(getSupportActionBar()!=null){
@@ -34,6 +35,7 @@ public class Notifications extends AppCompatActivity implements NavigationView.O
         }
         drawer = findViewById(R.id.drawer_layout);
 
+        // Set navigation bar
         NavigationView navigationView = findViewById(R.id.nav_views);
         navigationView.setNavigationItemSelectedListener(this);
         View headerView = navigationView.getHeaderView(0);
@@ -46,6 +48,12 @@ public class Notifications extends AppCompatActivity implements NavigationView.O
         toggle.syncState();
     }
 
+
+    /*
+     * Redirects the user to another page depending on what they chose in the navigation bar
+     *
+     * Logs user out, signs them out of Firebase and deletes shared preferences if 'Logout' is clicked
+     */
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch (menuItem.getItemId()){
             case R.id.nav_settings:
@@ -77,6 +85,11 @@ public class Notifications extends AppCompatActivity implements NavigationView.O
         return true;
     }
 
+    /*
+     * onBackPressed() overridden to determine what's done when used presses back button
+     *
+     * Considers case that the navigation bar is open (in which case it is closed) and when it's not
+     */
     @Override
     public void onBackPressed() {
         if (drawer.isDrawerOpen(GravityCompat.START)) {
@@ -86,6 +99,10 @@ public class Notifications extends AppCompatActivity implements NavigationView.O
         }
     }
 
+
+    /*
+     * Changes activity from current to target activity
+     */
     public void changeActivity(Activity Current, Class Target){
         Intent intent = new Intent(Current, Target);
         startActivity(intent);

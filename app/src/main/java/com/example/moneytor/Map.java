@@ -28,6 +28,7 @@ public class Map extends FragmentActivity implements OnMapReadyCallback {
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        // Going back returns user to previous page as there is no navigation bar
         btnBack = findViewById(R.id.back_button);
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -37,6 +38,16 @@ public class Map extends FragmentActivity implements OnMapReadyCallback {
         });
     }
 
+
+
+    /*
+     * Initialises map and adds transactions onto the map with their store name and value
+     *
+     * Uses transaction's latitude and longitude values
+     *
+     * if-statement checks that transaction is one that should be plotted on map (money transfers and
+     * card validations are not plotted on map)
+     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
@@ -64,6 +75,10 @@ public class Map extends FragmentActivity implements OnMapReadyCallback {
         }
     }
 
+
+    /*
+     * Converts transaction value to pounds
+     */
     public String amountToPound(String amount) {
         DecimalFormat df = new DecimalFormat("0.00");
         Double amountL = Double.parseDouble(amount) / 100;

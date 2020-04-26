@@ -25,6 +25,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private ArrayList<Boolean> mIsPositive = new ArrayList<>();
     private Context mContext;
 
+    /*
+     * Constructor used to initialise variables
+     */
     public RecyclerViewAdapter(Context mContext, ArrayList<String> mAmount, ArrayList<String> mCategory, ArrayList<String> mDate, ArrayList<String> mDescription, ArrayList<String> mNotes, ArrayList<Boolean> mIsPositive) {
         this.mAmount = mAmount;
         this.mCategory = mCategory;
@@ -35,6 +38,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         this.mContext = mContext;
     }
 
+
+    /*
+     * Loads up corresponding front end XML file for each container
+     *
+     * In this case it is 'leaderboard_layout_list_item'
+     */
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -43,6 +52,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         return holder;
     }
 
+
+    /*
+     * Sets contents of each container to the corresponding transaction's data
+     */
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Log.d(TAG, "onBindViewHolder: called");
@@ -51,15 +64,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         holder.date.setText(mDate.get(position));
         holder.description.setText(mDescription.get(position));
         holder.notes.setText(mNotes.get(position));
-
-//        if(mIsPositive.get(position)) {
-//            holder.amount.setTextColor(Color.BLUE);
-//        } else {
-//            holder.amount.setTextColor(Color.RED);
-//        }
-
     }
 
+    /*
+     * Determines how many items will be in recyclerview
+     */
     @Override
     public int getItemCount() {
         return mAmount.size();

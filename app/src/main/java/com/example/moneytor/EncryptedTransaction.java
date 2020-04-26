@@ -15,6 +15,9 @@ public class EncryptedTransaction {
     private String name;
     private String notes;
 
+    /*
+     * Constructor used to initialise variables
+     */
     public EncryptedTransaction(String transaction_id, String amount, String category, String currency, long date, boolean declined, String description, double latitude, double longitude,
                                 String merchant, String name, String notes) {
         this.transaction_id = transaction_id;

@@ -1,5 +1,11 @@
 package com.example.moneytor;
 
+/*
+ * THIS ACTIVITY IS NOT USED IN THE FINAL IMPLEMENTATION OF THE APPLICATION
+ *
+ * HOWEVER, IT IS NOT DELETED AS IT COULD BE USED IN THE FUTURE FOR ADDITIONAL FUNCTIONALITY
+ */
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;

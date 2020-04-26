@@ -78,6 +78,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
 
         drawer = findViewById(R.id.drawer_layout);
 
+        // Setting navigation bar
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         View headerView = navigationView.getHeaderView(0);
@@ -89,6 +90,9 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         toggle.syncState();
     }
 
+    /*
+     * Populating recyclerview with transaction data
+     */
     public void initListBitmaps() {
         for (int i = 0; i < FetchData.list.size(); i++) {
             boolean notZero = FetchData.list.get(i).getAmount() != 0.0;
@@ -123,6 +127,10 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         initRecyclerView();
     }
 
+    /*
+     * Loads up populated recyclerview by initialising and passing arraylists to
+     * RecyclerViewAdapter class
+     */
     public void initRecyclerView() {
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         adapter = new RecyclerViewAdapter(this, mAmount, mCategory, mDate, mDescription, mNotes, mIsPositive);
@@ -130,6 +138,12 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
+
+    /*
+     * Redirects the user to another page depending on what they chose in the navigation bar
+     *
+     * Logs user out, signs them out of Firebase and deletes shared preferences if 'Logout' is clicked
+     */
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch (menuItem.getItemId()) {
@@ -162,6 +176,11 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         return true;
     }
 
+    /*
+     * onBackPressed() overridden to determine what's done when used presses back button
+     *
+     * Considers case that the navigation bar is open (in which case it is closed) and when it's not
+     */
     @Override
     public void onBackPressed() {
         if (drawer.isDrawerOpen(GravityCompat.START)) {
@@ -177,12 +196,17 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         }
     }
 
+    /*
+     * Changes activity from current to target activity
+     */
     private void changeActivity(Activity Current, Class Target) {
         Intent intent = new Intent(Current, Target);
         startActivity(intent);
     }
 
-
+    /*
+     * Converts epoch time to real life date and time
+     */
     private String epochToDate(String dateStr) {
         Long date = Long.parseLong(dateStr);
         DateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
@@ -190,10 +214,16 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         return format.format(date);
     }
 
+    /*
+     * Removes the time and returns just the date from a string
+     */
     private String dateTimeToDate(String date) {
         return date.substring(0, 10);
     }
 
+    /*
+     * Converts transaction value to pounds
+     */
     private String amountToPound(String amount) {
         DecimalFormat df = new DecimalFormat("0.00");
         Double amountL = Double.parseDouble(amount) / 100;
@@ -204,6 +234,9 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
     }
 
 
+    /*
+     * Retrieves private key from internal storage
+     */
     public void getKey() {
         try {
             FileInputStream fileInputStream = openFileInput("Moneytor.txt");
@@ -217,7 +250,6 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
                 stringBuffer.append(lines + "\n");
             }
 
-            System.out.println("and key is: " + stringBuffer.toString());
             key = stringBuffer.toString();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -226,12 +258,16 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         }
     }
 
+    /*
+     * Random string determined for private key
+     *
+     * Private key written to internal storage
+     */
     public void writeFile() {
         key = randomString();
 
         try {
             FileOutputStream fileOutputStream = new FileOutputStream("Moneytor.txt", true);
-//                    openFileOutput("Moneytor.txt", MODE_PRIVATE);
             fileOutputStream.write(key.getBytes());
             fileOutputStream.close();
         } catch (FileNotFoundException e) {
@@ -241,18 +277,21 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         }
     }
 
+    /*
+     * Generates a random 12-character alpha-numeric string
+     *
+     * Does this by picking a random integer and using it as the index to choose a character
+     * from 'AlphaNumericString'
+     *
+     * 'for-loop' used to append chosen character to stringbuilder 12 times
+     */
     private String randomString() {
         int length = 12;
-        // chose a Character random from this String
         String AlphaNumericString = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" + "0123456789" + "abcdefghijklmnopqrstuvxyz";
 
-        // create StringBuffer size of AlphaNumericString
         StringBuilder sb = new StringBuilder(length);
         for (int i = 0; i < length; i++) {
-            // generate a random number between
-            // 0 to AlphaNumericString variable length
             int index = (int) (AlphaNumericString.length() * Math.random());
-            // add Character one by one in end of sb
             sb.append(AlphaNumericString.charAt(index));
         }
         return sb.toString();

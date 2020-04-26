@@ -25,13 +25,15 @@ public class ResetPassword extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reset_password);
 
-        back = (Button) findViewById(R.id.back_button_settings);
-        currentPwd = (EditText) findViewById(R.id.currentPassword);
-        sendRstEmail = (Button) findViewById(R.id.sendResetEmail);
+        back = findViewById(R.id.back_button_settings);
+        currentPwd = findViewById(R.id.currentPassword);
+        sendRstEmail = findViewById(R.id.sendResetEmail);
 
+        // Sends reset email
         sendRstEmail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //  Checks that it is the correct user by checking password
                 if(currentPwd.getText().toString().equals(MainActivity.pwd)){
                     Toast.makeText(ResetPassword.this,"Correct password",Toast.LENGTH_SHORT).show();
                     FirebaseAuth auth = FirebaseAuth.getInstance();
@@ -48,12 +50,11 @@ public class ResetPassword extends AppCompatActivity {
                     });
                 } else {
                     Toast.makeText(ResetPassword.this,"Incorrect password",Toast.LENGTH_SHORT).show();
-                    System.out.println("Main page pwd: " + MainActivity.pwd);
-                    System.out.println("This pwd: " + currentPwd.getText());
                 }
             }
         });
 
+        // Going back returns user to previous page as there is no navigation bar
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -64,6 +65,9 @@ public class ResetPassword extends AppCompatActivity {
 
     }
 
+    /*
+     * Changes activity from current to target activity
+     */
     public void changeActivity(Activity Current, Class Target){
         Intent intent = new Intent(Current, Target);
         startActivity(intent);

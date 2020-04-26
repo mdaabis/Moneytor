@@ -67,6 +67,8 @@ public class Fragment50_30_20 extends Fragment {
         String moneyIn = "In: £" + amountToPound(Double.toString(FetchData.moneyIn));
         String out = "Out: £" + amountToPound(Double.toString(moneyOut));
 
+        // Displays month, progress bar, tooltips, money in and expenditure
+        month.setText(getMonth());
         inTV.setText(moneyIn);
         outTV.setText(out);
 
@@ -79,7 +81,6 @@ public class Fragment50_30_20 extends Fragment {
         savingsPB.setProgress(percentageSavings);
         savingsPB.setTooltipText("Remaining " + amountToPoundWithMinus(Double.toString(remainingSavings)));
 
-        month.setText(getMonth());
 
         getScore();
         setScore();
@@ -87,6 +88,9 @@ public class Fragment50_30_20 extends Fragment {
         return view;
     }
 
+    /*
+     * Converts transaction value to pounds
+     */
     private String amountToPound(String amount) {
         DecimalFormat df = new DecimalFormat("0.00");
         Double amountL = Double.parseDouble(amount) / 100;
@@ -96,7 +100,12 @@ public class Fragment50_30_20 extends Fragment {
         return "" + df.format(amountL);
     }
 
+
+    /*
+     * Each transaction's value is added to its corresponding category
+     */
     private void addAmounts() {
+        // Lists group Monzo categories to corresponding Moneytor categories
         List<Transaction> transactionsThisMonth = FetchData.transactionsThisMonthFD;
         List<String> billsList = new ArrayList<>(Arrays.asList("Bills", "Expenses", "Groceries", "Transport"));
         List<String> recreationList = new ArrayList<>(Arrays.asList("Charity", "Eating out", "Entertainment", "Family", "General", "Holidays", "Personal care", "Shopping", "Cash"));
@@ -117,6 +126,9 @@ public class Fragment50_30_20 extends Fragment {
         moneyOut = spentBills + spentRecreation + spentSavings;
     }
 
+    /*
+     * Gets current month
+     */
     private String getMonth() {
         String[] monthName = {"January", "February",
                 "March", "April", "May", "June", "July",
@@ -125,23 +137,31 @@ public class Fragment50_30_20 extends Fragment {
 
         Calendar cal = Calendar.getInstance();
         String month = monthName[cal.get(Calendar.MONTH)];
-
-        System.out.println("Month name: " + month);
         return month;
     }
 
+    /*
+     * Calculates remaining amount to be spent in each category
+     */
     private void remaining() {
         remainingBills = (FetchData.moneyIn * 0.5) - Math.abs(spentBills);
         remainingRecreation = (FetchData.moneyIn * 0.3) - Math.abs(spentRecreation);
         remainingSavings = (FetchData.moneyIn * 0.2) - (FetchData.moneyIn - Math.abs(remainingBills + remainingRecreation + spentSavings));
     }
 
+    /*
+     * Calculates percentage expenditure of each category relative to budget
+     */
     private void percentage() {
         percentageBills = (int) Math.round((Math.abs(spentBills) / (FetchData.moneyIn * 0.5)) * 100);
         percentageRecreation = (int) Math.round((Math.abs(spentRecreation) / (FetchData.moneyIn * 0.3)) * 100);
         percentageSavings = (int) Math.round(((FetchData.moneyIn - Math.abs(spentBills + spentRecreation)) / (FetchData.moneyIn * 0.2)) * 100);
     }
 
+
+    /*
+     * Displaying minus sign for negative value transactions
+     */
     private String amountToPoundWithMinus(String amount) {
         DecimalFormat df = new DecimalFormat("0.00");
         Double amountL = Double.parseDouble(amount) / 100;
@@ -151,6 +171,12 @@ public class Fragment50_30_20 extends Fragment {
         return "£" + df.format(amountL);
     }
 
+
+    /*
+     * User's score worked out based on budgets and spending
+     *
+     * Will be used on leader board
+     */
     private void getScore() {
         double billsScore = ((FetchData.moneyIn * 0.5) - Math.abs(spentBills)) / (FetchData.moneyIn * 0.5) * 100;
         double recScore = ((FetchData.moneyIn * 0.3) - Math.abs(spentRecreation)) / (FetchData.moneyIn * 0.3) * 100;

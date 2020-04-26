@@ -54,7 +54,7 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
     public static String surname;
     public static String fullName;
     public static String balance = "";
-    public static HashMap<String, Integer> entry = new HashMap<>();
+    public static Map<String, Integer> entry = new HashMap<>();
     private final String secretKey = HomePage.key;
     private DecimalFormat df = new DecimalFormat("#.00");
     private String transactions;
@@ -66,16 +66,46 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
     private Map<String, String> headers = new HashMap<>();
     private Context context;
 
+    /*
+     * Constructors are not normally required for AsyncTask
+     *
+     * Needed to allow access to shared preferences
+     */
     public FetchData(Context context) {
         this.context = context;
     }
 
-    // Method gets rid of extra characters around JSON array
+    @Override
+    protected Void doInBackground(Void... voids) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(Authentication.SHARED_PREFS, MODE_PRIVATE);
+        // Access token retrieved from shared preferences
+        String accessToken = sharedPreferences.getString(Authentication.ACCESS_TOKEN, "");
+        setLeaderboard();
+
+        headers.put("Authorization", ("Bearer " + accessToken));
+        handleResponse();
+        return null;
+    }
+
+
+    /*
+     * Method gets rid of extra characters around JSON array
+     */
     private static String parseJSON(String transactions) {
         String parsed = transactions.substring(transactions.indexOf("["));
         return parsed.substring(0, parsed.length() - 1);
     }
 
+
+    /*
+     * HTTP Client used to create and call API endpoint and retrieve response
+     *
+     * HashMap used to add headers to HTTP reqeuest
+     *
+     * If statusCode == 200 means the API call was successful
+     *
+     * In which case response is read using a BufferedReader
+     */
     private static String getJSON(String address, Map<String, String> headers) {
         StringBuilder builder = new StringBuilder();
         HttpClient client = new DefaultHttpClient();
@@ -112,6 +142,12 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
         return builder.toString();
     }
 
+    /*
+     * Method used to determine what key is used to obtain the necessary value from JSON object
+     *
+     * At the moment type will always be 'balance' but with future use in mind, this method could be
+     * useful
+     */
     private static String parse(String data, String type) {
         try {
             JSONObject JO = new JSONObject(data);
@@ -127,11 +163,13 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return "-1";
+        return "-1"; // Executed if error occurs
     }
 
+    /*
+     * Converts epoch time in the form of a string to an actual time and date
+     */
     private static Date parseDate(String dateStr) {
-//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
         try {
             return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").parse(dateStr);
         } catch (ParseException e) {
@@ -140,17 +178,20 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
         return new Date();
     }
 
-    @Override
-    protected Void doInBackground(Void... voids) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(Authentication.SHARED_PREFS, MODE_PRIVATE);
-        String accessToken = sharedPreferences.getString(Authentication.ACCESS_TOKEN, "");
-        getLeaderboard();
-
-        headers.put("Authorization", ("Bearer " + accessToken));
-        handleResponse();
-        return null;
-    }
-
+    /*
+     * If transactions can be retrieved from the Monzo API (has not yet passed 5 minutes since access
+     * token was issues) then they are retrieved
+     *
+     * Instance of EncryptedTransaction is made with the necessary data from the API response encryped
+     * and used in the constructor
+     *
+     * Stored in the Firebase Realtime Database
+     *
+     * If transactions have expired and cannot be retrieved from Monzo, that means they are already
+     * in Firebase
+     *
+     * Transactions retrieved from Firebase, decrypted and added to the list of transactions
+     */
     private void handleResponse() {
         String balanceURL = "https://api.monzo.com/balance?account_id=acc_00009np8oRwjAPAYEP0mCA";
         String transactionsURL = "https://api.monzo.com/transactions?expand[]=merchant&account_id=acc_00009np8oRwjAPAYEP0mCA";
@@ -211,10 +252,9 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     list.clear();
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-//                        System.out.println("description decrypted: " + AES.decrypt(snapshot.child("description").getValue().toString(), secretKey));
                         EncryptedTransaction encryptedTransaction = snapshot.getValue(EncryptedTransaction.class);
                         String transaction_id = encryptedTransaction.getTransaction_id();
-                        Double amount = Double.parseDouble(AES.decrypt(encryptedTransaction.getAmount(), secretKey));
+                        double amount = Double.parseDouble(AES.decrypt(encryptedTransaction.getAmount(), secretKey));
                         String category = AES.decrypt(encryptedTransaction.getCategory(), secretKey);
                         String currency = AES.decrypt(encryptedTransaction.getCurrency(), secretKey);
                         long date = encryptedTransaction.getDate();
@@ -222,16 +262,13 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
                         String merchant = AES.decrypt(encryptedTransaction.getMerchant(), secretKey);
                         String name = AES.decrypt(encryptedTransaction.getName(), secretKey);
                         String notes = AES.decrypt(encryptedTransaction.getNotes(), secretKey);
-                        Double latitude = encryptedTransaction.getLatitude();
-                        Double longitude = encryptedTransaction.getLongitude();
-//                        Double latitude = 0.0;
-//                        Double longitude = 0.0;
+                        double latitude = encryptedTransaction.getLatitude();
+                        double longitude = encryptedTransaction.getLongitude();
                         boolean declined = encryptedTransaction.getDeclined();
                         Transaction transaction = new Transaction(transaction_id, amount, category, currency, date, declined, description, latitude, longitude, merchant, name, notes);
 
-                        if (transaction != null && !transaction.getDeclined()) { // Must first check if transaction is null to prevent NullPointerException warning
-                            list.add(transaction);
-                        }
+                        list.add(transaction);
+
                         // Can below go outside of for loop
                         Collections.sort(list, new Comparator<Transaction>() {
                             public int compare(Transaction t1, Transaction t2) {
@@ -248,7 +285,6 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
 
         } catch (JSONException e) {
             e.printStackTrace();
-            System.out.println("error jsonE");
         }
         getSelectedElement();
         addToTotals();
@@ -258,13 +294,21 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
         String b = "Account Balance\n" + "         £" + balance;
-        HomePage.tv.setText(b);
+        HomePage.tv.setText(b); //Display balance
     }
 
+    /*
+     * Capitalises first letter in string
+     */
     private String capitalise(String str) {
         return str.substring(0, 1).toUpperCase() + str.substring(1);
     }
 
+    /*
+     * Determining which transactions have happened this month (used for budgeting)
+     *
+     * Income and expenditure for this month also determined
+     */
     private void addToTotals() {
         moneyIn = 0.0;
 
@@ -278,13 +322,11 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
         long startOfMonth = cal.getTimeInMillis();
 
         transactionsThisMonthFD.clear();
-//        1583024400
 
         for (int i = 0; i < list.size(); i++) {
             // Format transaction amounts
             double amount = list.get(i).getAmount() / 100;
             // Obtaining transactions from this month
-//            if (list.get(i).getDate() > startOfMonth) {
             if (list.get(i).getDate() > startOfMonth) {
                 // If transaction amount is positive, add to money coming in otherwise add to money going out
                 transactionsThisMonthFD.add(list.get(i));
@@ -295,6 +337,9 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
         }
     }
 
+    /*
+     * Gets selected element (budgeting technique choice) from Firebase Realtime Database
+     */
     private void getSelectedElement() {
         String path = "Users/" + userID + "/Selected Element";
         DatabaseReference myRef = FirebaseDatabase.getInstance().getReference(path);
@@ -314,6 +359,9 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
         });
     }
 
+    /*
+     * Retrieves and displays user's name in navigation bar
+     */
     private void getName() {
         String path = "Users/" + userID;
         DatabaseReference myRef = FirebaseDatabase.getInstance().getReference(path);
@@ -333,7 +381,10 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
         });
     }
 
-    private void getLeaderboard() {
+    /*
+     * User scores store in Firebase Realtime Database using a hashmap called 'entry'
+     */
+    private void setLeaderboard() {
         current_user_db = FirebaseDatabase.getInstance().getReference().child("Leaderboard");
         String path = "Leaderboard";
         DatabaseReference myRef = FirebaseDatabase.getInstance().getReference(path);
@@ -343,7 +394,6 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     String name = snapshot.getKey();
                     int score = Integer.parseInt(snapshot.getValue().toString());
-                    System.out.println("name + score: " + name + ":" + score);
                     entry.put(name, score);
                 }
             }
@@ -356,4 +406,3 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
 
 
 }
-

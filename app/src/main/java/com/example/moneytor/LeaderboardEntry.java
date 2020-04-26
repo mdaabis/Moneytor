@@ -6,6 +6,9 @@ public class LeaderboardEntry {
     private int score;
     private String rank;
 
+    /*
+     * Constructor used to initialise variables
+     */
     public LeaderboardEntry(String fullName, int score) {
         this.fullName = fullName;
         this.score = score;

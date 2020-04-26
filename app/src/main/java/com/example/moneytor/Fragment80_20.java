@@ -60,10 +60,12 @@ public class Fragment80_20 extends Fragment {
         monthTV = view.findViewById(R.id.month);
 
         String moneyIn = "In: £" + amountToPound(Double.toString(FetchData.moneyIn));
+        String out = "Out: £" + amountToPound(Double.toString(moneyOut));
 
+        // Displays month, progress bar, tooltips, money in and expenditure
         monthTV.setText(getMonth());
         inTV.setText(moneyIn);
-        outTV.setText("Out: £" + amountToPound(Double.toString(moneyOut)));
+        outTV.setText(out);
 
         percentage80 = (int) Math.round((spent80 / (FetchData.moneyIn * 0.8)) * 100);
         percentage20 = (int) Math.round((FetchData.moneyIn - spent80) / (FetchData.moneyIn * 0.2) * 100);
@@ -79,6 +81,9 @@ public class Fragment80_20 extends Fragment {
         return view;
     }
 
+    /*
+     * Converts transaction value to pounds
+     */
     private String amountToPound(String amount) {
         DecimalFormat df = new DecimalFormat("0.00");
         Double amountL = Double.parseDouble(amount) / 100;
@@ -88,7 +93,11 @@ public class Fragment80_20 extends Fragment {
         return "" + df.format(amountL);
     }
 
+    /*
+     * Each transaction's value is added to its corresponding category
+     */
     private void addAmounts() {
+        // List groups Monzo categories to corresponding Moneytor categories
         List<Transaction> transactionsThisMonth = FetchData.transactionsThisMonthFD;
 
         for (int i = 0; i < transactionsThisMonth.size(); i++) {
@@ -105,6 +114,9 @@ public class Fragment80_20 extends Fragment {
         moneyOut = (spent20 + spent80);
     }
 
+    /*
+     * Gets current month
+     */
     private String getMonth() {
         String[] monthName = {"January", "February",
                 "March", "April", "May", "June", "July",
@@ -118,11 +130,17 @@ public class Fragment80_20 extends Fragment {
         return month;
     }
 
+    /*
+     * Calculates remaining amount to be spent in each category
+     */
     private void remaining() {
         remaining80 = (FetchData.moneyIn * 0.8) - spent80;
         remaining20 = (FetchData.moneyIn * 0.2) - (FetchData.moneyIn - Math.abs(remaining80 + spent20));
     }
 
+    /*
+     * Displaying minus sign for negative value transactions
+     */
     private String amountToPoundWithMinus(String amount) {
         DecimalFormat df = new DecimalFormat("0.00");
         Double amountL = Double.parseDouble(amount) / 100;
@@ -134,12 +152,21 @@ public class Fragment80_20 extends Fragment {
         return "£" + df.format(amountL);
     }
 
+
+    /*
+     * User's score worked out based on budgets and spending
+     *
+     * Will be used on leader board
+     */
     private void getScore() {
         double otherScore = ((FetchData.moneyIn * 0.8) - Math.abs(spent80)) / (FetchData.moneyIn * 0.8) * 100;
         double savingsScore = ((FetchData.moneyIn - Math.abs(spent80)) / (FetchData.moneyIn * 0.2)) * 100;
         score = (int) Math.round(otherScore + savingsScore * 2) + 50;
     }
 
+    /*
+     * Score added to Firebase Realtime Database
+     */
     private void setScore() {
         current_user_db = FirebaseDatabase.getInstance().getReference().child("Leaderboard");
         FetchData.entry.put(FetchData.fullName, score);

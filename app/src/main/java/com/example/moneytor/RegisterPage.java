@@ -56,6 +56,7 @@ public class RegisterPage extends AppCompatActivity {
             }
         });
 
+        // Takes user to login page
         btnSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -64,6 +65,21 @@ public class RegisterPage extends AppCompatActivity {
             }
         });
 
+        /*
+         * Allows user to register an account#
+         *
+         * Checks to see if email is valid using regular expression
+         *
+         * Ensures all fields are filled
+         *
+         * Ensures password and confirm password are identical
+         *
+         * Ensures password is longer than 8 characters to increase security
+         *
+         * Presents user with terms and conditions
+         *
+         * If all conditions are met and T&C is accepted then the account is registered
+         */
         btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -110,6 +126,7 @@ public class RegisterPage extends AppCompatActivity {
 
                                         current_user_db = FirebaseDatabase.getInstance().getReference().child("Users").child(user_id);
                                         Map<String, String> newPost = new HashMap<>();
+                                        // User's name added to Firebase Realtime Database
                                         newPost.put("First name", firstName);
                                         newPost.put("Surname", surName);
                                         current_user_db.setValue(newPost);
@@ -133,6 +150,8 @@ public class RegisterPage extends AppCompatActivity {
 
                         }
                     });
+
+                    // If user rejects terms and conditions they are not registered and taken back to login page
                     dialog.setNegativeButton("Reject", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -151,6 +170,10 @@ public class RegisterPage extends AppCompatActivity {
         });
     }
 
+
+    /*
+     * Changes activity from current to target activity
+     */
     public void changeActivity(Activity Current, Class Target) {
         Intent intent = new Intent(Current, Target);
         startActivity(intent);

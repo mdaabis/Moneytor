@@ -52,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // Skips log in page if user already has an active session
         mAuthStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -65,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
+        // Takes user to register page if they do not have an account
         btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -72,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // Checks user's entered fields and credentials to determine if the user can be logged in
         btnSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -104,8 +107,8 @@ public class MainActivity extends AppCompatActivity {
                                     }
 
                                 } else {
+                                    // If user has an account but not yet verified their email, they are asked to do so before logging in
                                     Toast.makeText(MainActivity.this, "Please verify your email address", Toast.LENGTH_SHORT).show();
-
                                 }
                             }
                         }
@@ -114,6 +117,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // Redirects user to password reset page if they have forgotten it
         forgotPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -123,6 +127,9 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /*
+     * Checks if the access token has expired
+     */
     private boolean hasTokenExpired() {
         SharedPreferences sharedPreferences = getSharedPreferences(Authentication.SHARED_PREFS, MODE_PRIVATE);
         long expireEpoch = sharedPreferences.getLong(Authentication.EXPIRE_DATE, 0);
@@ -132,6 +139,10 @@ public class MainActivity extends AppCompatActivity {
         return expired;
     }
 
+
+    /*
+     * Changes activity from current to target activity
+     */
     public void changeActivity(Activity Current, Class Target) {
         Intent intent = new Intent(Current, Target);
         startActivity(intent);
@@ -150,6 +161,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
+    /*
+     * onBackPressed() overridden to determine what's done when used presses back button
+     *
+     * Ensures that the user cannot log back in using back button after they have logged out
+     */
     @Override
     public void onBackPressed() {
         if (exitCounter < 1) {

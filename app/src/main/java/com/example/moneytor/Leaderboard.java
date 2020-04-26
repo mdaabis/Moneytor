@@ -55,6 +55,12 @@ public class Leaderboard extends AppCompatActivity implements NavigationView.OnN
         toggle.syncState();
     }
 
+
+    /*
+     * Redirects the user to another page depending on what they chose in the navigation bar
+     *
+     * Logs user out, signs them out of Firebase and deletes shared preferences if 'Logout' is clicked
+     */
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch (menuItem.getItemId()) {
             case R.id.nav_settings:
@@ -85,6 +91,12 @@ public class Leaderboard extends AppCompatActivity implements NavigationView.OnN
         return true;
     }
 
+
+    /*
+     * onBackPressed() overridden to determine what's done when used presses back button
+     *
+     * Considers case that the navigation bar is open (in which case it is closed) and when it's not
+     */
     @Override
     public void onBackPressed() {
         if (drawer.isDrawerOpen(GravityCompat.START)) {
@@ -94,11 +106,19 @@ public class Leaderboard extends AppCompatActivity implements NavigationView.OnN
         }
     }
 
+
+    /*
+     * Changes activity from current to target activity
+     */
     private void changeActivity(Activity Current, Class Target) {
         Intent intent = new Intent(Current, Target);
         startActivity(intent);
     }
 
+
+    /*
+     * Populating recyclerview with transaction data
+     */
     private void initImageBitmaps() {
         for (int i = 0; i < FetchLeaderboard.leaderboardEntries.size(); i++) {
             mImageURLs.add("https://s3.eu-west-2.amazonaws.com/racingleaguehub/img/avatars/default.jpg");
@@ -110,6 +130,11 @@ public class Leaderboard extends AppCompatActivity implements NavigationView.OnN
 
     }
 
+
+    /*
+     * Loads up populated recyclerview by initialising and passing arraylists to
+     * RecyclerViewAdapter class
+     */
     private void initRecyclerView() {
         RecyclerView recyclerView = findViewById(R.id.leaderboard_recyclerView);
         LeaderboardRecyclerview adapter = new LeaderboardRecyclerview(this, mNames, mScore, mImageURLs, mRanks);

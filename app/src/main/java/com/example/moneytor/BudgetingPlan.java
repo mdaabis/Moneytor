@@ -17,8 +17,6 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 public class BudgetingPlan extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private int selectedElement;
@@ -29,6 +27,7 @@ public class BudgetingPlan extends AppCompatActivity implements NavigationView.O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_budgeting_plan);
 
+        // Sets toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
@@ -38,6 +37,7 @@ public class BudgetingPlan extends AppCompatActivity implements NavigationView.O
         DrawerLayout drawer;
         drawer = findViewById(R.id.drawer_layout);
 
+        // Sets navigation bar
         NavigationView navigationView = findViewById(R.id.nav_views);
         navigationView.setNavigationItemSelectedListener(this);
         View headerView = navigationView.getHeaderView(0);
@@ -49,9 +49,14 @@ public class BudgetingPlan extends AppCompatActivity implements NavigationView.O
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         selectedElement = FetchData.selectedElement;
-        changeFragment();
+        changeFragment(); // Determines which fragment will be used depending on user's budgeting choice
     }
 
+    /*
+     * Redirects the user to another page depending on what they chose in the navigation bar
+     *
+     * Logs user out, signs them out of Firebase and deletes shared preferences if 'Logout' is clicked
+     */
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch (menuItem.getItemId()) {
             case R.id.nav_settings:
@@ -83,11 +88,19 @@ public class BudgetingPlan extends AppCompatActivity implements NavigationView.O
         return true;
     }
 
+    /*
+     * Changes activity from current to target activity
+     */
     private void changeActivity(Activity Current, Class Target) {
         Intent intent = new Intent(Current, Target);
         startActivity(intent);
     }
 
+    /*
+     * Selected element is determined in the Settings page and represents budgeting technique chosen
+     *
+     * Appropriate fragment is displayed
+     */
     private void changeFragment() {
         Fragment fragment;
 
@@ -98,7 +111,6 @@ public class BudgetingPlan extends AppCompatActivity implements NavigationView.O
         }
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
     }
-
 
 
 }

@@ -53,6 +53,12 @@ public class Settings extends AppCompatActivity implements NavigationView.OnNavi
         builder = new AlertDialog.Builder(this);
         builder.setPositiveButton("OK", null);
 
+        /*
+         * Allows user to delete account
+         *
+         * If account deleted then it is removed from Firebase Authentication and all of the account's
+         * corresponding data is deleted from the Firebase Realtime Database
+         */
         deleteTV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -96,6 +102,7 @@ public class Settings extends AppCompatActivity implements NavigationView.OnNavi
             }
         });
 
+        // Allows the user to change their budgeting technique
         budgetingTV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -103,7 +110,7 @@ public class Settings extends AppCompatActivity implements NavigationView.OnNavi
             }
         });
 
-
+        // Redirects user to password reset page
         resetTV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -112,6 +119,7 @@ public class Settings extends AppCompatActivity implements NavigationView.OnNavi
             }
         });
 
+        // Logs the user out of the Moneytor account and invalidates the Monzo access token
         logoutTV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -138,6 +146,7 @@ public class Settings extends AppCompatActivity implements NavigationView.OnNavi
             }
         });
 
+        // Sets toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
@@ -147,6 +156,7 @@ public class Settings extends AppCompatActivity implements NavigationView.OnNavi
 
         drawer = findViewById(R.id.drawer_layout);
 
+        // Sets navigation bar
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         View headerView = navigationView.getHeaderView(0);
@@ -159,6 +169,12 @@ public class Settings extends AppCompatActivity implements NavigationView.OnNavi
         toggle.syncState();
     }
 
+
+    /*
+     * Redirects the user to another page depending on what they chose in the navigation bar
+     *
+     * Logs user out, signs them out of Firebase and deletes shared preferences if 'Logout' is clicked
+     */
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch (menuItem.getItemId()) {
             case R.id.nav_settings:
@@ -190,6 +206,12 @@ public class Settings extends AppCompatActivity implements NavigationView.OnNavi
         return true;
     }
 
+
+    /*
+     * onBackPressed() overridden to determine what's done when used presses back button
+     *
+     * Considers case that the navigation bar is open (in which case it is closed) and when it's not
+     */
     @Override
     public void onBackPressed() {
         if (drawer.isDrawerOpen(GravityCompat.START)) {
@@ -199,11 +221,21 @@ public class Settings extends AppCompatActivity implements NavigationView.OnNavi
         }
     }
 
+
+    /*
+     * Changes activity from current to target activity
+     */
     public void changeActivity(Activity Current, Class Target) {
         Intent intent = new Intent(Current, Target);
         startActivity(intent);
     }
 
+
+    /*
+     * This method offers the user the budgeting options available in a dialog view
+     *
+     * Once user has chosen their desired budgeting technique, their choice is stored in the Firebase Realtime Database
+     */
     private void SingleChoiceWithRadioButton() {
         SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
         selectedElement = sharedPref.getInt("selectedElement", 0);
@@ -234,6 +266,13 @@ public class Settings extends AppCompatActivity implements NavigationView.OnNavi
         alert.show();
     }
 
+    /*
+     * Checks to see if a dialog (called alert) is initialised or not
+     *
+     * If dialog is not initialised then initialise the dialog by calling SingleChoiceWithRadioButton() method
+     *
+     * Else open dialog
+     */
     private void showDialog() {
         if (alert == null)
             SingleChoiceWithRadioButton();
@@ -241,6 +280,9 @@ public class Settings extends AppCompatActivity implements NavigationView.OnNavi
             alert.show();
     }
 
+    /*
+     * Executed when the activity is destroyed
+     */
     @Override
     protected void onDestroy() {
         FirebaseAuth.getInstance().signOut();
