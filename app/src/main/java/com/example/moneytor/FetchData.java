@@ -349,7 +349,7 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
                 try {
                     selectedElement = Integer.parseInt(dataSnapshot.getValue().toString());
                 } catch (Exception e) {
-                    System.out.println("getSelectedElement error");
+                    e.printStackTrace();
                 }
             }
 
