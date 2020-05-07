@@ -156,9 +156,6 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
             case R.id.nav_leaderboard:
                 changeActivity(this, Leaderboard.class);
                 break;
-            case R.id.nav_notifications:
-                changeActivity(this, Notifications.class);
-                break;
             case R.id.nav_map:
                 changeActivity(this, Map.class);
                 break;
@@ -259,7 +256,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
     }
 
     /*
-     * Random string determined for private key
+     * Random 12-character string string determined for private key
      *
      * Private key written to internal storage
      */

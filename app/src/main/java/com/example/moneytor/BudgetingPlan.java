@@ -68,9 +68,6 @@ public class BudgetingPlan extends AppCompatActivity implements NavigationView.O
             case R.id.nav_leaderboard:
                 changeActivity(this, Leaderboard.class);
                 break;
-            case R.id.nav_notifications:
-                changeActivity(this, Notifications.class);
-                break;
             case R.id.nav_map:
                 Intent intentM = new Intent(this, Map.class);
                 startActivityForResult(intentM, 0);

@@ -72,9 +72,6 @@ public class Leaderboard extends AppCompatActivity implements NavigationView.OnN
             case R.id.nav_leaderboard:
                 changeActivity(this, Leaderboard.class);
                 break;
-            case R.id.nav_notifications:
-                changeActivity(this, Notifications.class);
-                break;
             case R.id.nav_map:
                 changeActivity(this, Map.class);
                 break;

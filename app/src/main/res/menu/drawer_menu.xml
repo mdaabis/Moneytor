@@ -20,11 +20,6 @@
             android:title="Budgeting"/>
 
         <item
-            android:id="@+id/nav_notifications"
-            android:icon="@drawable/ic_notifications"
-            android:title="Notifications"/>
-
-        <item
             android:id="@+id/nav_leaderboard"
             android:icon="@drawable/ic_leaderboard"
             android:title="Leaderboard" />

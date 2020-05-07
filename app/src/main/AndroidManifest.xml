@@ -45,10 +45,8 @@
         <activity android:name=".ResetPassword" />
         <activity android:name=".Map" />
         <activity android:name=".ForgotPassword" />
-        <activity android:name=".Notifications" />
-        <activity android:name=".Leaderboard"></activity>
+        <activity android:name=".Leaderboard" />
         <activity android:name=".Settings" />
-        <activity android:name=".Pots" />
         <activity android:name=".HomePage" ></activity>
 
         <meta-data
