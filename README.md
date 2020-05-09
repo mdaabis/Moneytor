@@ -13,8 +13,8 @@ To run the application, Android Studio and a device/emulator will be needed. To 
 ### Budgeting
 
 The currently available budgeting techniques are:
-  \- 50/30/20 \- The user's income is split into 50% on necessities like groceries and bills, 30% in discretionary transactions like eating out and 20% on savings/investment related transactions.
-  \- 80/20 \- Combines the necessities and discretionary transactions together and separates them from the savings budget.
+  - 50/30/20 \- The user's income is split into 50% on necessities like groceries and bills, 30% in discretionary transactions like eating out and 20% on savings/investment related transactions.
+  - 80/20 \- Combines the necessities and discretionary transactions together and separates them from the savings budget.
 
 ### Scoring
 
