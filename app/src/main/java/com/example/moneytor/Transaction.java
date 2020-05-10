@@ -59,6 +59,10 @@ public class Transaction {
         this.transaction_id = transaction_id;
     }
 
+
+    /**
+     * No-argument constructor needed to prevent a Fatal Database Exception at runtime
+     */
     public Transaction() {
     }
 

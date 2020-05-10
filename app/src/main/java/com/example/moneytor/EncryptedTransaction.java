@@ -59,6 +59,10 @@ public class EncryptedTransaction {
         this.notes = notes;
     }
 
+
+    /**
+     * No-argument constructor needed to prevent a Fatal Database Exception at runtime
+     */
     public EncryptedTransaction() {
     }
 
