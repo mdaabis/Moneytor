@@ -213,7 +213,6 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
                     String dateAsString = JO.get("created").toString().substring(0, JO.get("created").toString().indexOf(".")) + "Z";
                     Date date = parseDate(dateAsString);
                     long epochDate = date.getTime();
-//                    long epochDate = date.getTime();
                     boolean declined = false;
                     String ID = JO.get("id").toString();
                     String amount = AES.encrypt(JO.get("amount").toString(), secretKey); //double
