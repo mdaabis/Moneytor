@@ -51,10 +51,7 @@ public class Authentication extends AppCompatActivity {
         setContentView(R.layout.activity_authentication);
 
         String state = randomString();
-        /*
-         * Storing the random string that is being used as a state token into shared preferences
-         * if there is no state token already stored there
-         */
+        // Storing the random string that is being used as a state token into shared preference if there is no state token already stored there
         SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
         if (!sharedPreferences.contains(STATE_TOKEN)) {
             SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -71,7 +68,7 @@ public class Authentication extends AppCompatActivity {
         authentication();
     }
 
-    /*
+    /**
      * The response URI obtained after being redirected from the user's email to app is parsed
      *
      * 'Stringbetween' method used to extract authorisation code and returned state token
@@ -109,7 +106,7 @@ public class Authentication extends AppCompatActivity {
         }
     }
 
-    /*
+    /**
      * Overrides normal behavior when device's back button is pressed
      *
      * Acts like going back in a browser
@@ -123,28 +120,42 @@ public class Authentication extends AppCompatActivity {
         }
     }
 
-    /*
+    /**
      * Returns a substring of a string 'uri' between two indices, 'start' and 'end'
+     *
+     * @param uri The URI returned that is now being parsed
+     *
+     * @param start Desired start substring
+     *
+     * @param end Desired end substring
+     *
+     * @return The substring in between start and end substrings
      */
     private String stringBetween(String uri, String start, String end) {
         return StringUtils.substringBetween(uri, start, end);
     }
 
-    /*
+    /**
      * Changes activity from current to target activity
+     *
+     * @param Current The current activity the user is in
+     *
+     * @param Target The activity the user will be redirected to
      */
     private void changeActivity(Activity Current, Class Target) {
         Intent intent = new Intent(Current, Target);
         startActivity(intent);
     }
 
-    /*
+    /**
      * Generates a random 12-character alpha-numeric string
      *
      * Does this by picking a random integer and using it as the index to choose a character
      * from 'AlphaNumericString'
      *
      * 'for-loop' used to append chosen character to stringbuilder 12 times
+     *
+     * @return Returns a random string of the specified length
      */
     private String randomString() {
         int length = 12;
@@ -158,7 +169,7 @@ public class Authentication extends AppCompatActivity {
         return sb.toString();
     }
 
-    /*
+    /**
      * Class extends AsyncTask
      *
      * Runs in background
@@ -173,7 +184,7 @@ public class Authentication extends AppCompatActivity {
             return null;
         }
 
-        /*
+        /**
          * Method gets an access token
          *
          * Creates a HTTP POST request
@@ -227,12 +238,14 @@ public class Authentication extends AppCompatActivity {
             }
         }
 
-        /*
+        /**
          * Method takes token duration in as parameter
          *
          * Expiration time set to duration of token added to current epoch time
          *
          * Expiration time stored in shared preferences so it can be checked upon next login
+         *
+         * @param expires The epoch time of how long the access token is valid for
          */
         private void setExpirationEpoch(long expires) {
             Instant instant = Instant.now();
@@ -245,7 +258,9 @@ public class Authentication extends AppCompatActivity {
             editor.apply();
         }
 
-        // Executed once everything in doInBackground() is has been executed
+        /**
+         * Executed once everything in doInBackground() is has been executed
+          */
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);

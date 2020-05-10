@@ -56,7 +56,7 @@ public class Leaderboard extends AppCompatActivity implements NavigationView.OnN
     }
 
 
-    /*
+    /**
      * Redirects the user to another page depending on what they chose in the navigation bar
      *
      * Logs user out, signs them out of Firebase and deletes shared preferences if 'Logout' is clicked
@@ -89,7 +89,7 @@ public class Leaderboard extends AppCompatActivity implements NavigationView.OnN
     }
 
 
-    /*
+    /**
      * onBackPressed() overridden to determine what's done when used presses back button
      *
      * Considers case that the navigation bar is open (in which case it is closed) and when it's not
@@ -104,8 +104,12 @@ public class Leaderboard extends AppCompatActivity implements NavigationView.OnN
     }
 
 
-    /*
+    /**
      * Changes activity from current to target activity
+     *
+     * @param Current The current activity the user is in
+     *
+     * @param Target The activity the user will be redirected to
      */
     private void changeActivity(Activity Current, Class Target) {
         Intent intent = new Intent(Current, Target);
@@ -113,7 +117,7 @@ public class Leaderboard extends AppCompatActivity implements NavigationView.OnN
     }
 
 
-    /*
+    /**
      * Populating recyclerview with transaction data
      */
     private void initImageBitmaps() {
@@ -128,7 +132,7 @@ public class Leaderboard extends AppCompatActivity implements NavigationView.OnN
     }
 
 
-    /*
+    /**
      * Loads up populated recyclerview by initialising and passing arraylists to
      * RecyclerViewAdapter class
      */

@@ -53,7 +53,7 @@ public class Settings extends AppCompatActivity implements NavigationView.OnNavi
         builder = new AlertDialog.Builder(this);
         builder.setPositiveButton("OK", null);
 
-        /*
+        /**
          * Allows user to delete account
          *
          * If account deleted then it is removed from Firebase Authentication and all of the account's
@@ -170,7 +170,7 @@ public class Settings extends AppCompatActivity implements NavigationView.OnNavi
     }
 
 
-    /*
+    /**
      * Redirects the user to another page depending on what they chose in the navigation bar
      *
      * Logs user out, signs them out of Firebase and deletes shared preferences if 'Logout' is clicked
@@ -204,7 +204,7 @@ public class Settings extends AppCompatActivity implements NavigationView.OnNavi
     }
 
 
-    /*
+    /**
      * onBackPressed() overridden to determine what's done when used presses back button
      *
      * Considers case that the navigation bar is open (in which case it is closed) and when it's not
@@ -219,8 +219,12 @@ public class Settings extends AppCompatActivity implements NavigationView.OnNavi
     }
 
 
-    /*
+    /**
      * Changes activity from current to target activity
+     *
+     * @param Current The current activity the user is in
+     *
+     * @param Target The activity the user will be redirected to
      */
     public void changeActivity(Activity Current, Class Target) {
         Intent intent = new Intent(Current, Target);
@@ -228,7 +232,7 @@ public class Settings extends AppCompatActivity implements NavigationView.OnNavi
     }
 
 
-    /*
+    /**
      * This method offers the user the budgeting options available in a dialog view
      *
      * Once user has chosen their desired budgeting technique, their choice is stored in the Firebase Realtime Database
@@ -263,7 +267,7 @@ public class Settings extends AppCompatActivity implements NavigationView.OnNavi
         alert.show();
     }
 
-    /*
+    /**
      * Checks to see if a dialog (called alert) is initialised or not
      *
      * If dialog is not initialised then initialise the dialog by calling SingleChoiceWithRadioButton() method
@@ -277,7 +281,7 @@ public class Settings extends AppCompatActivity implements NavigationView.OnNavi
             alert.show();
     }
 
-    /*
+    /**
      * Executed when the activity is destroyed
      */
     @Override

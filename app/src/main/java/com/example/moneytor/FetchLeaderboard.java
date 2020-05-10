@@ -25,7 +25,7 @@ public class FetchLeaderboard extends AsyncTask<Void, Void, Void> {
         return null;
     }
 
-    /*
+    /**
      * User scores retrieved from Firebase Realtime Database and stored in a hashmap of leader board entries
      */
     private void getData() {

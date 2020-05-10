@@ -25,7 +25,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private ArrayList<Boolean> mIsPositive = new ArrayList<>();
     private Context mContext;
 
-    /*
+    /**
      * Constructor used to initialise variables
      */
     public RecyclerViewAdapter(Context mContext, ArrayList<String> mAmount, ArrayList<String> mCategory, ArrayList<String> mDate, ArrayList<String> mDescription, ArrayList<String> mNotes, ArrayList<Boolean> mIsPositive) {
@@ -39,7 +39,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
 
-    /*
+    /**
      * Loads up corresponding front end XML file for each container
      *
      * In this case it is 'leaderboard_layout_list_item'
@@ -53,7 +53,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
 
-    /*
+    /**
      * Sets contents of each container to the corresponding transaction's data
      */
     @Override
@@ -66,8 +66,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         holder.notes.setText(mNotes.get(position));
     }
 
-    /*
+    /**
      * Determines how many items will be in recyclerview
+     *
+     * @return List size
      */
     @Override
     public int getItemCount() {

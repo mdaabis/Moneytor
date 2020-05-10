@@ -14,7 +14,11 @@ public class AES {
     private static SecretKeySpec secretKey;
     private static byte[] key;
 
-    // Sets the secret key and encryption algorithm being used
+    /**
+     *  Sets the secret key and encryption algorithm being used
+     *
+     * @param myKey Key for encryption
+     */
     public static void setKey(String myKey) {
         MessageDigest sha = null;
         try {
@@ -28,7 +32,16 @@ public class AES {
         }
     }
 
-    // Function to encrypt string using the secret key as the second parameter
+    /**
+     * Function to encrypt string using the secret key as the second parameter
+     *
+     * @param strToEncrypt This is the string to encrypt
+     *
+     * @param secret This is the private key used for encryption
+     *
+     *
+     * @return Encryption returned
+      */
     public static String encrypt(String strToEncrypt, String secret) {
         try {
             setKey(secret);
@@ -41,7 +54,15 @@ public class AES {
         return null;
     }
 
-    // Function to decrypt string using the secret key as the second parameter
+    /**
+     * Function to decrypt string using the secret key as the second parameter
+     *
+     * @param strToDecrypt This is the string to decrypt
+     *
+     * @param secret This is the private key used for encryption
+     *
+     * @return Decrypted string
+      */
     public static String decrypt(String strToDecrypt, String secret) {
         try {
             setKey(secret);

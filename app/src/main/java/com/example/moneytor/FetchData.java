@@ -48,7 +48,6 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
 
     public static List<Transaction> list = new ArrayList<>();
     public static List<Transaction> transactionsThisMonthFD = new ArrayList<>();
-
     public static String userID;
     public static String firstName;
     public static String surname;
@@ -66,10 +65,12 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
     private Map<String, String> headers = new HashMap<>();
     private Context context;
 
-    /*
+    /**
      * Constructors are not normally required for AsyncTask
      *
      * Needed to allow access to shared preferences
+     *
+     * @param context Current context of the class
      */
     public FetchData(Context context) {
         this.context = context;
@@ -88,16 +89,7 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
     }
 
 
-    /*
-     * Method gets rid of extra characters around JSON array
-     */
-    private static String parseJSON(String transactions) {
-        String parsed = transactions.substring(transactions.indexOf("["));
-        return parsed.substring(0, parsed.length() - 1);
-    }
-
-
-    /*
+    /**
      * HTTP Client used to create and call API endpoint and retrieve response
      *
      * HashMap used to add headers to HTTP reqeuest
@@ -105,6 +97,12 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
      * If statusCode == 200 means the API call was successful
      *
      * In which case response is read using a BufferedReader
+     *
+     * @param address URL used for HTTP request
+     *
+     * @param headers Headers added to URL (e.g. access token)
+     *
+     * @return JSON array with transaction data from Monzo
      */
     private static String getJSON(String address, Map<String, String> headers) {
         StringBuilder builder = new StringBuilder();
@@ -142,11 +140,30 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
         return builder.toString();
     }
 
-    /*
+
+    /**
+     * Method gets rid of extra characters around JSON array
+     *
+     * @param transactions JSON returned by Monzo
+     *
+     * @return The JSON object without the square brackets
+     */
+    private static String parseJSON(String transactions) {
+        String parsed = transactions.substring(transactions.indexOf("["));
+        return parsed.substring(0, parsed.length() - 1);
+    }
+
+    /**
      * Method used to determine what key is used to obtain the necessary value from JSON object
      *
      * At the moment type will always be 'balance' but with future use in mind, this method could be
      * useful
+     *
+     * @param data Data to be parsed
+     *
+     * @param type What is being extracted from JSON
+     *
+     * @return The appropriate string to extract the relevant value from the JSON object
      */
     private static String parse(String data, String type) {
         try {
@@ -166,8 +183,12 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
         return "-1"; // Executed if error occurs
     }
 
-    /*
+    /**
      * Converts epoch time in the form of a string to an actual time and date
+     *
+     * @param dateStr String date to be converted into Date format
+     *
+     * @return Return date in Date format
      */
     private static Date parseDate(String dateStr) {
         try {
@@ -178,7 +199,7 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
         return new Date();
     }
 
-    /*
+    /**
      * If transactions can be retrieved from the Monzo API (has not yet passed 5 minutes since access
      * token was issues) then they are retrieved
      *
@@ -296,14 +317,18 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
         HomePage.tv.setText(b); //Display balance
     }
 
-    /*
+    /**
      * Capitalises first letter in string
+     *
+     * @param str String to be capitalised
+     *
+     * @return Capitalised string
      */
     private String capitalise(String str) {
         return str.substring(0, 1).toUpperCase() + str.substring(1);
     }
 
-    /*
+    /**
      * Determining which transactions have happened this month (used for budgeting)
      *
      * Income and expenditure for this month also determined
@@ -336,7 +361,7 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
         }
     }
 
-    /*
+    /**
      * Gets selected element (budgeting technique choice) from Firebase Realtime Database
      */
     private void getSelectedElement() {
@@ -358,7 +383,7 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
         });
     }
 
-    /*
+    /**
      * Retrieves and displays user's name in navigation bar
      */
     private void getName() {
@@ -380,7 +405,7 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
         });
     }
 
-    /*
+    /**
      * User scores store in Firebase Realtime Database using a hashmap called 'entry'
      */
     private void setLeaderboard() {

@@ -88,8 +88,12 @@ public class Fragment50_30_20 extends Fragment {
         return view;
     }
 
-    /*
+    /**
      * Converts transaction value to pounds
+     *
+     * @param amount Amount to be converted into pounds
+     *
+     * @return Amount in pounds
      */
     private String amountToPound(String amount) {
         DecimalFormat df = new DecimalFormat("0.00");
@@ -101,7 +105,7 @@ public class Fragment50_30_20 extends Fragment {
     }
 
 
-    /*
+    /**
      * Each transaction's value is added to its corresponding category
      */
     private void addAmounts() {
@@ -126,8 +130,10 @@ public class Fragment50_30_20 extends Fragment {
         moneyOut = spentBills + spentRecreation + spentSavings;
     }
 
-    /*
+    /**
      * Gets current month
+     *
+     * @return Current month as a string
      */
     private String getMonth() {
         String[] monthName = {"January", "February",
@@ -140,7 +146,7 @@ public class Fragment50_30_20 extends Fragment {
         return month;
     }
 
-    /*
+    /**
      * Calculates remaining amount to be spent in each category
      */
     private void remaining() {
@@ -149,7 +155,7 @@ public class Fragment50_30_20 extends Fragment {
         remainingSavings = (FetchData.moneyIn * 0.2) - (FetchData.moneyIn - Math.abs(remainingBills + remainingRecreation + spentSavings));
     }
 
-    /*
+    /**
      * Calculates percentage expenditure of each category relative to budget
      */
     private void percentage() {
@@ -159,8 +165,12 @@ public class Fragment50_30_20 extends Fragment {
     }
 
 
-    /*
+    /**
      * Displaying minus sign for negative value transactions
+     *
+     * @param amount Amount to be converted into pounds
+     *
+     * @return Amount in pounds with minus sign before pound sign
      */
     private String amountToPoundWithMinus(String amount) {
         DecimalFormat df = new DecimalFormat("0.00");
@@ -172,7 +182,7 @@ public class Fragment50_30_20 extends Fragment {
     }
 
 
-    /*
+    /**
      * User's score worked out based on budgets and spending
      *
      * Will be used on leader board
@@ -184,6 +194,10 @@ public class Fragment50_30_20 extends Fragment {
         score = (int) Math.round(billsScore * 1.5 + recScore * 0.8 + savingsScore * 2 ) +50;
     }
 
+
+    /**
+     * Set the score in the database under the 'Leaderboard' node
+     */
     private void setScore() {
         current_user_db = FirebaseDatabase.getInstance().getReference().child("Leaderboard");
         FetchData.entry.put(FetchData.fullName, score);

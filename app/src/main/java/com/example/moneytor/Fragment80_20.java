@@ -81,8 +81,12 @@ public class Fragment80_20 extends Fragment {
         return view;
     }
 
-    /*
+    /**
      * Converts transaction value to pounds
+     *
+     * @param amount Amount to be converted into pounds
+     *
+     * @return Amount in pounds
      */
     private String amountToPound(String amount) {
         DecimalFormat df = new DecimalFormat("0.00");
@@ -93,7 +97,7 @@ public class Fragment80_20 extends Fragment {
         return "" + df.format(amountL);
     }
 
-    /*
+    /**
      * Each transaction's value is added to its corresponding category
      */
     private void addAmounts() {
@@ -114,8 +118,10 @@ public class Fragment80_20 extends Fragment {
         moneyOut = (spent20 + spent80);
     }
 
-    /*
+    /**
      * Gets current month
+     *
+     * @return Current month as a string
      */
     private String getMonth() {
         String[] monthName = {"January", "February",
@@ -130,7 +136,8 @@ public class Fragment80_20 extends Fragment {
         return month;
     }
 
-    /*
+
+    /**
      * Calculates remaining amount to be spent in each category
      */
     private void remaining() {
@@ -138,8 +145,12 @@ public class Fragment80_20 extends Fragment {
         remaining20 = (FetchData.moneyIn * 0.2) - (FetchData.moneyIn - Math.abs(remaining80 + spent20));
     }
 
-    /*
+    /**
      * Displaying minus sign for negative value transactions
+     *
+     * @param amount Amount to be converted into pounds
+     *
+     * @return Amount in pounds with minus sign before pound sign
      */
     private String amountToPoundWithMinus(String amount) {
         DecimalFormat df = new DecimalFormat("0.00");
@@ -153,7 +164,7 @@ public class Fragment80_20 extends Fragment {
     }
 
 
-    /*
+    /**
      * User's score worked out based on budgets and spending
      *
      * Will be used on leader board
@@ -164,8 +175,8 @@ public class Fragment80_20 extends Fragment {
         score = (int) Math.round(otherScore + savingsScore * 2) + 50;
     }
 
-    /*
-     * Score added to Firebase Realtime Database
+    /**
+     * Set the score in the database under the 'Leaderboard' node
      */
     private void setScore() {
         current_user_db = FirebaseDatabase.getInstance().getReference().child("Leaderboard");

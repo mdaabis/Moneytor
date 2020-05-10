@@ -65,8 +65,12 @@ public class ResetPassword extends AppCompatActivity {
 
     }
 
-    /*
+    /**
      * Changes activity from current to target activity
+     *
+     * @param Current The current activity the user is in
+     *
+     * @param Target The activity the user will be redirected to
      */
     public void changeActivity(Activity Current, Class Target){
         Intent intent = new Intent(Current, Target);

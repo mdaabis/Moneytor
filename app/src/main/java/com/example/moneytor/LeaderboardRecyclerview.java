@@ -24,7 +24,7 @@ public class LeaderboardRecyclerview extends RecyclerView.Adapter<LeaderboardRec
     private ArrayList<String> mImages = new ArrayList<>();
     private ArrayList<String> mRank = new ArrayList<>();
 
-    /*
+    /**
      * Constructor used to initialise variables
      */
     public LeaderboardRecyclerview(Context context, ArrayList<String> mNames, ArrayList<String> mScore, ArrayList<String> mImages, ArrayList<String> mRank) {
@@ -36,7 +36,7 @@ public class LeaderboardRecyclerview extends RecyclerView.Adapter<LeaderboardRec
     }
 
 
-    /*
+    /**
      * Loads up corresponding front end XML file for each container
      *
      * In this case it is 'leaderboard_layout_list_item'
@@ -50,7 +50,7 @@ public class LeaderboardRecyclerview extends RecyclerView.Adapter<LeaderboardRec
     }
 
 
-    /*
+    /**
      * Sets contents of each container to the corresponding transaction's data
      */
     @Override
@@ -62,8 +62,10 @@ public class LeaderboardRecyclerview extends RecyclerView.Adapter<LeaderboardRec
     }
 
 
-    /*
+    /**
      * Determines how many items will be in recyclerview
+     *
+     * @return Size of lists
      */
     @Override
     public int getItemCount() {

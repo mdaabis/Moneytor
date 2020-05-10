@@ -40,13 +40,15 @@ public class Map extends FragmentActivity implements OnMapReadyCallback {
 
 
 
-    /*
+    /**
      * Initialises map and adds transactions onto the map with their store name and value
      *
      * Uses transaction's latitude and longitude values
      *
      * if-statement checks that transaction is one that should be plotted on map (money transfers and
      * card validations are not plotted on map)
+     *
+     * @param googleMap GoogleMap being used to display marker location
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -76,7 +78,7 @@ public class Map extends FragmentActivity implements OnMapReadyCallback {
     }
 
 
-    /*
+    /**
      * Converts transaction value to pounds
      */
     public String amountToPound(String amount) {

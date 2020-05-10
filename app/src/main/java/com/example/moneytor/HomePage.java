@@ -90,7 +90,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         toggle.syncState();
     }
 
-    /*
+    /**
      * Populating recyclerview with transaction data
      */
     public void initListBitmaps() {
@@ -127,7 +127,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         initRecyclerView();
     }
 
-    /*
+    /**
      * Loads up populated recyclerview by initialising and passing arraylists to
      * RecyclerViewAdapter class
      */
@@ -139,7 +139,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
     }
 
 
-    /*
+    /**
      * Redirects the user to another page depending on what they chose in the navigation bar
      *
      * Logs user out, signs them out of Firebase and deletes shared preferences if 'Logout' is clicked
@@ -173,7 +173,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         return true;
     }
 
-    /*
+    /**
      * onBackPressed() overridden to determine what's done when used presses back button
      *
      * Considers case that the navigation bar is open (in which case it is closed) and when it's not
@@ -193,16 +193,26 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         }
     }
 
-    /*
+
+    /**
      * Changes activity from current to target activity
+     *
+     * @param Current The current activity the user is in
+     *
+     * @param Target The activity the user will be redirected to
      */
     private void changeActivity(Activity Current, Class Target) {
         Intent intent = new Intent(Current, Target);
         startActivity(intent);
     }
 
-    /*
+
+    /**
      * Converts epoch time to real life date and time
+     *
+     * @param dateStr Epoch date to be converted into string
+     *
+     * @return Date in String form
      */
     private String epochToDate(String dateStr) {
         Long date = Long.parseLong(dateStr);
@@ -211,15 +221,25 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         return format.format(date);
     }
 
-    /*
+
+    /**
      * Removes the time and returns just the date from a string
+     *
+     * @param date Date and time in String form
+     *
+     * @return Date in String form
      */
     private String dateTimeToDate(String date) {
         return date.substring(0, 10);
     }
 
-    /*
+
+    /**
      * Converts transaction value to pounds
+     *
+     * @param amount Amount to have currency added
+     *
+     * @return Currency added to transaction amount
      */
     private String amountToPound(String amount) {
         DecimalFormat df = new DecimalFormat("0.00");
@@ -231,7 +251,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
     }
 
 
-    /*
+    /**
      * Retrieves private key from internal storage
      */
     public void getKey() {
@@ -255,7 +275,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         }
     }
 
-    /*
+    /**
      * Random 12-character string string determined for private key
      *
      * Private key written to internal storage
@@ -274,13 +294,15 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         }
     }
 
-    /*
-     * Generates a random 12-character alpha-numeric string
+    /**
+     * Generates a random alpha-numeric string of the chosen length
      *
      * Does this by picking a random integer and using it as the index to choose a character
      * from 'AlphaNumericString'
      *
      * 'for-loop' used to append chosen character to stringbuilder 12 times
+     *
+     * @return Random string
      */
     private String randomString() {
         int length = 12;

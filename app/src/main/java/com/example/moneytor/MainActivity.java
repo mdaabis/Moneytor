@@ -127,8 +127,10 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    /*
+    /**
      * Checks if the access token has expired
+     *
+     * @return Whether the access token has expired or not
      */
     private boolean hasTokenExpired() {
         SharedPreferences sharedPreferences = getSharedPreferences(Authentication.SHARED_PREFS, MODE_PRIVATE);
@@ -140,8 +142,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    /*
+    /**
      * Changes activity from current to target activity
+     *
+     * @param Current The current activity the user is in
+     *
+     * @param Target The activity the user will be redirected to
      */
     public void changeActivity(Activity Current, Class Target) {
         Intent intent = new Intent(Current, Target);
@@ -162,7 +168,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    /*
+    /**
      * onBackPressed() overridden to determine what's done when used presses back button
      *
      * Ensures that the user cannot log back in using back button after they have logged out

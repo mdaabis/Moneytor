@@ -65,7 +65,7 @@ public class RegisterPage extends AppCompatActivity {
             }
         });
 
-        /*
+        /**
          * Allows user to register an account#
          *
          * Checks to see if email is valid using regular expression
@@ -171,7 +171,7 @@ public class RegisterPage extends AppCompatActivity {
     }
 
 
-    /*
+    /**
      * Changes activity from current to target activity
      */
     public void changeActivity(Activity Current, Class Target) {
