@@ -28,11 +28,16 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.TimeZone;
+
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
 
 
 public class HomePage extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -128,7 +133,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
     }
 
     /**
-     * Loads up populated recyclerview by initialising and passing arraylists to
+     * Loads up populated recyclerview by initialising and passing arraylists to thek
      * RecyclerViewAdapter class
      */
     public void initRecyclerView() {
@@ -281,7 +286,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
      * Private key written to internal storage
      */
     public void writeFile() {
-        key = randomString();
+        key = generateSecretKey();
 
         try {
             FileOutputStream fileOutputStream = new FileOutputStream("Moneytor.txt", true);
@@ -294,26 +299,34 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         }
     }
 
+
     /**
-     * Generates a random alpha-numeric string of the chosen length
+     * Generates a random string of length 256-bits
      *
-     * Does this by picking a random integer and using it as the index to choose a character
-     * from 'AlphaNumericString'
-     *
-     * 'for-loop' used to append chosen character to stringbuilder 12 times
+     * Does this by utilising the KeyGenerator object and initialising the length to 256-bits
      *
      * @return Random string
      */
-    private String randomString() {
-        int length = 12;
-        String AlphaNumericString = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" + "0123456789" + "abcdefghijklmnopqrstuvxyz";
-
-        StringBuilder sb = new StringBuilder(length);
-        for (int i = 0; i < length; i++) {
-            int index = (int) (AlphaNumericString.length() * Math.random());
-            sb.append(AlphaNumericString.charAt(index));
+    public static String generateSecretKey() {
+        KeyGenerator keyGen = null;
+        try {
+            /*
+             * Get KeyGenerator object that generates secret keys for the
+             * specified algorithm.
+             */
+            keyGen = KeyGenerator.getInstance("AES");
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
         }
-        return sb.toString();
+
+        // Initializes this key generator for key size to 256
+        keyGen.init(256);
+
+        // Generates a secret key
+        SecretKey secretKey = keyGen.generateKey();
+
+        // Secret key converted to a string and returned
+        return Base64.getEncoder().encodeToString(secretKey.getEncoded());
     }
 
 }
