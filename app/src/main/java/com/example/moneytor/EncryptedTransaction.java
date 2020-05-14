@@ -15,7 +15,6 @@ public class EncryptedTransaction {
     private String name;
     private String notes;
 
-
     /**
      * Constructor used to initialise variables
      *

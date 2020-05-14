@@ -4,7 +4,7 @@ A budgeting Android application that uses Monzo's public Open Banking API to obt
 
 ## Getting Started
 
-Once you have unzipped the `Moneytor.zip` file, open the project in Android Studio and allow some time for Gradle build to finish. If an Android device is not available to run the application, an emulator must be set up (the emulator used was `Pixel 3 API 26`). Once all that has been setup, click the Run button to run the application on the emulator/device.
+Once you have unzipped the `Moneytor.zip` file, open the project in Android Studio and allow some time for Gradle build to finish. If an Android device is not available to run the application, an emulator must be set up (the emulator used for testing during development was `Pixel 3 API 26`). Once all that has been setup, click the `Run` button to run the application on the emulator/device.
 
 ## Prerequisites
 
