@@ -54,7 +54,7 @@ public class BudgetingPlan extends AppCompatActivity implements NavigationView.O
 
     /**
      * Redirects the user to another page depending on what they chose in the navigation bar
-     *
+     * <p>
      * Logs user out, signs them out of Firebase and deletes shared preferences if 'Logout' is clicked
      */
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
@@ -89,8 +89,7 @@ public class BudgetingPlan extends AppCompatActivity implements NavigationView.O
      * Changes activity from current to target activity
      *
      * @param Current The current activity the user is in
-     *
-     * @param Target The activity the user will be redirected to
+     * @param Target  The activity the user will be redirected to
      */
     private void changeActivity(Activity Current, Class Target) {
         Intent intent = new Intent(Current, Target);
@@ -100,7 +99,7 @@ public class BudgetingPlan extends AppCompatActivity implements NavigationView.O
 
     /**
      * Selected element is determined in the Settings page and represents budgeting technique chosen
-     *
+     * <p>
      * Appropriate fragment is displayed
      */
     private void changeFragment() {

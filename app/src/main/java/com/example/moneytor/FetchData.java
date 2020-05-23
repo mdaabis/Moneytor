@@ -67,7 +67,7 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
 
     /**
      * Constructors are not normally required for AsyncTask
-     *
+     * <p>
      * Needed to allow access to shared preferences
      *
      * @param context Current context of the class
@@ -76,32 +76,17 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
         this.context = context;
     }
 
-    @Override
-    protected Void doInBackground(Void... voids) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(Authentication.SHARED_PREFS, MODE_PRIVATE);
-        // Access token retrieved from shared preferences
-        String accessToken = sharedPreferences.getString(Authentication.ACCESS_TOKEN, "");
-        setLeaderboard();
-
-        headers.put("Authorization", ("Bearer " + accessToken));
-        handleResponse();
-        return null;
-    }
-
-
     /**
      * HTTP Client used to create and call API endpoint and retrieve response
-     *
+     * <p>
      * HashMap used to add headers to HTTP reqeuest
-     *
+     * <p>
      * If statusCode == 200 means the API call was successful
-     *
+     * <p>
      * In which case response is read using a BufferedReader
      *
      * @param address URL used for HTTP request
-     *
      * @param headers Headers added to URL (e.g. access token)
-     *
      * @return JSON array with transaction data from Monzo
      */
     private static String getJSON(String address, Map<String, String> headers) {
@@ -140,12 +125,10 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
         return builder.toString();
     }
 
-
     /**
      * Method gets rid of extra characters around JSON array
      *
      * @param transactions JSON returned by Monzo
-     *
      * @return The JSON object without the square brackets
      */
     private static String parseJSON(String transactions) {
@@ -155,14 +138,12 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
 
     /**
      * Method used to determine what key is used to obtain the necessary value from JSON object
-     *
+     * <p>
      * At the moment type will always be 'balance' but with future use in mind, this method could be
      * useful
      *
      * @param data Data to be parsed
-     *
      * @param type What is being extracted from JSON
-     *
      * @return The appropriate string to extract the relevant value from the JSON object
      */
     private static String parse(String data, String type) {
@@ -187,7 +168,6 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
      * Converts epoch time in the form of a string to an actual time and date
      *
      * @param dateStr String date to be converted into Date format
-     *
      * @return Return date in Date format
      */
     private static Date parseDate(String dateStr) {
@@ -199,18 +179,30 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
         return new Date();
     }
 
+    @Override
+    protected Void doInBackground(Void... voids) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(Authentication.SHARED_PREFS, MODE_PRIVATE);
+        // Access token retrieved from shared preferences
+        String accessToken = sharedPreferences.getString(Authentication.ACCESS_TOKEN, "");
+        setLeaderboard();
+
+        headers.put("Authorization", ("Bearer " + accessToken));
+        handleResponse();
+        return null;
+    }
+
     /**
      * If transactions can be retrieved from the Monzo API (has not yet passed 5 minutes since access
      * token was issues) then they are retrieved
-     *
+     * <p>
      * Instance of EncryptedTransaction is made with the necessary data from the API response encryped
      * and used in the constructor
-     *
+     * <p>
      * Stored in the Firebase Realtime Database
-     *
+     * <p>
      * If transactions have expired and cannot be retrieved from Monzo, that means they are already
      * in Firebase
-     *
+     * <p>
      * Transactions retrieved from Firebase, decrypted and added to the list of transactions
      */
     private void handleResponse() {
@@ -321,7 +313,6 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
      * Capitalises first letter in string
      *
      * @param str String to be capitalised
-     *
      * @return Capitalised string
      */
     private String capitalise(String str) {
@@ -330,7 +321,7 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
 
     /**
      * Determining which transactions have happened this month (used for budgeting)
-     *
+     * <p>
      * Income and expenditure for this month also determined
      */
     private void addToTotals() {

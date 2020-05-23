@@ -38,7 +38,7 @@ public class LeaderboardRecyclerview extends RecyclerView.Adapter<LeaderboardRec
 
     /**
      * Loads up corresponding front end XML file for each container
-     *
+     * <p>
      * In this case it is 'leaderboard_layout_list_item'
      */
     @NonNull

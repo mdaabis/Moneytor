@@ -20,28 +20,17 @@ public class Transaction {
      * Constructor used to initialise variables
      *
      * @param transaction_id The transaction ID
-     *
-     * @param amount Cost of transaction
-     *
-     * @param category The associated Monzo category
-     *
-     * @param currency Currency of transaction (differs in other countries)
-     *
-     * @param date Epoch date that transaction was made
-     *
-     * @param declined Whether transaction was declined or not
-     *
-     * @param description The Monzo description for the transaction
-     *
-     * @param latitude Latitude of store where transaction was made
-     *
-     * @param longitude Longitude of store where transaction was made
-     *
-     * @param merchant Merchant ID
-     *
-     * @param name Name of store where purchase was made
-     *
-     * @param notes Note attached to transaction
+     * @param amount         Cost of transaction
+     * @param category       The associated Monzo category
+     * @param currency       Currency of transaction (differs in other countries)
+     * @param date           Epoch date that transaction was made
+     * @param declined       Whether transaction was declined or not
+     * @param description    The Monzo description for the transaction
+     * @param latitude       Latitude of store where transaction was made
+     * @param longitude      Longitude of store where transaction was made
+     * @param merchant       Merchant ID
+     * @param name           Name of store where purchase was made
+     * @param notes          Note attached to transaction
      */
     public Transaction(String transaction_id, double amount, String category, String currency, long date, boolean declined, String description, double latitude, double longitude,
                        String merchant, String name, String notes) {

@@ -41,7 +41,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     /**
      * Loads up corresponding front end XML file for each container
-     *
+     * <p>
      * In this case it is 'leaderboard_layout_list_item'
      */
     @NonNull

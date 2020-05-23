@@ -39,12 +39,11 @@ public class Map extends FragmentActivity implements OnMapReadyCallback {
     }
 
 
-
     /**
      * Initialises map and adds transactions onto the map with their store name and value
-     *
+     * <p>
      * Uses transaction's latitude and longitude values
-     *
+     * <p>
      * if-statement checks that transaction is one that should be plotted on map (money transfers and
      * card validations are not plotted on map)
      *

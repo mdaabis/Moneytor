@@ -10,8 +10,7 @@ public class LeaderboardEntry {
      * Constructor used to initialise variables
      *
      * @param fullName Name of user
-     *
-     * @param score User's score
+     * @param score    User's score
      */
     public LeaderboardEntry(String fullName, int score) {
         this.fullName = fullName;
@@ -32,7 +31,6 @@ public class LeaderboardEntry {
     public int getScore() {
         return score;
     }
-
 
 
     /**

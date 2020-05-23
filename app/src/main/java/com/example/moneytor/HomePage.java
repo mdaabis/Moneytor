@@ -55,6 +55,35 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
     private ArrayList<Boolean> mIsPositive = new ArrayList<>();
     private RecyclerViewAdapter adapter;
 
+    /**
+     * Generates a random string of length 256-bits
+     * <p>
+     * Does this by utilising the KeyGenerator object and initialising the length to 256-bits
+     *
+     * @return Random string
+     */
+    public static String generateSecretKey() {
+        KeyGenerator keyGen = null;
+        try {
+            /*
+             * Get KeyGenerator object that generates secret keys for the
+             * specified algorithm.
+             */
+            keyGen = KeyGenerator.getInstance("AES");
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+
+        // Initializes this key generator for key size to 256
+        keyGen.init(256);
+
+        // Generates a secret key
+        SecretKey secretKey = keyGen.generateKey();
+
+        // Secret key converted to a string and returned
+        return Base64.getEncoder().encodeToString(secretKey.getEncoded());
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -143,10 +172,9 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
-
     /**
      * Redirects the user to another page depending on what they chose in the navigation bar
-     *
+     * <p>
      * Logs user out, signs them out of Firebase and deletes shared preferences if 'Logout' is clicked
      */
     @Override
@@ -180,7 +208,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
 
     /**
      * onBackPressed() overridden to determine what's done when used presses back button
-     *
+     * <p>
      * Considers case that the navigation bar is open (in which case it is closed) and when it's not
      */
     @Override
@@ -198,25 +226,21 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         }
     }
 
-
     /**
      * Changes activity from current to target activity
      *
      * @param Current The current activity the user is in
-     *
-     * @param Target The activity the user will be redirected to
+     * @param Target  The activity the user will be redirected to
      */
     private void changeActivity(Activity Current, Class Target) {
         Intent intent = new Intent(Current, Target);
         startActivity(intent);
     }
 
-
     /**
      * Converts epoch time to real life date and time
      *
      * @param dateStr Epoch date to be converted into string
-     *
      * @return Date in String form
      */
     private String epochToDate(String dateStr) {
@@ -226,24 +250,20 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         return format.format(date);
     }
 
-
     /**
      * Removes the time and returns just the date from a string
      *
      * @param date Date and time in String form
-     *
      * @return Date in String form
      */
     private String dateTimeToDate(String date) {
         return date.substring(0, 10);
     }
 
-
     /**
      * Converts transaction value to pounds
      *
      * @param amount Amount to have currency added
-     *
      * @return Currency added to transaction amount
      */
     private String amountToPound(String amount) {
@@ -254,7 +274,6 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         }
         return "£" + df.format(amountL);
     }
-
 
     /**
      * Retrieves private key from internal storage
@@ -282,7 +301,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
 
     /**
      * Random 12-character string string determined for private key
-     *
+     * <p>
      * Private key written to internal storage
      */
     public void writeFile() {
@@ -297,36 +316,6 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-
-    /**
-     * Generates a random string of length 256-bits
-     *
-     * Does this by utilising the KeyGenerator object and initialising the length to 256-bits
-     *
-     * @return Random string
-     */
-    public static String generateSecretKey() {
-        KeyGenerator keyGen = null;
-        try {
-            /*
-             * Get KeyGenerator object that generates secret keys for the
-             * specified algorithm.
-             */
-            keyGen = KeyGenerator.getInstance("AES");
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-
-        // Initializes this key generator for key size to 256
-        keyGen.init(256);
-
-        // Generates a secret key
-        SecretKey secretKey = keyGen.generateKey();
-
-        // Secret key converted to a string and returned
-        return Base64.getEncoder().encodeToString(secretKey.getEncoded());
     }
 
 }

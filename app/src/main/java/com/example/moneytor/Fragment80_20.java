@@ -85,7 +85,6 @@ public class Fragment80_20 extends Fragment {
      * Converts transaction value to pounds
      *
      * @param amount Amount to be converted into pounds
-     *
      * @return Amount in pounds
      */
     private String amountToPound(String amount) {
@@ -149,7 +148,6 @@ public class Fragment80_20 extends Fragment {
      * Displaying minus sign for negative value transactions
      *
      * @param amount Amount to be converted into pounds
-     *
      * @return Amount in pounds with minus sign before pound sign
      */
     private String amountToPoundWithMinus(String amount) {
@@ -166,7 +164,7 @@ public class Fragment80_20 extends Fragment {
 
     /**
      * User's score worked out based on budgets and spending
-     *
+     * <p>
      * Will be used on leader board
      */
     private void getScore() {

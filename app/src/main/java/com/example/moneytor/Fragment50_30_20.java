@@ -92,7 +92,6 @@ public class Fragment50_30_20 extends Fragment {
      * Converts transaction value to pounds
      *
      * @param amount Amount to be converted into pounds
-     *
      * @return Amount in pounds
      */
     private String amountToPound(String amount) {
@@ -169,7 +168,6 @@ public class Fragment50_30_20 extends Fragment {
      * Displaying minus sign for negative value transactions
      *
      * @param amount Amount to be converted into pounds
-     *
      * @return Amount in pounds with minus sign before pound sign
      */
     private String amountToPoundWithMinus(String amount) {
@@ -184,14 +182,14 @@ public class Fragment50_30_20 extends Fragment {
 
     /**
      * User's score worked out based on budgets and spending
-     *
+     * <p>
      * Will be used on leader board
      */
     private void getScore() {
         double billsScore = ((FetchData.moneyIn * 0.5) - Math.abs(spentBills)) / (FetchData.moneyIn * 0.5) * 100;
         double recScore = ((FetchData.moneyIn * 0.3) - Math.abs(spentRecreation)) / (FetchData.moneyIn * 0.3) * 100;
         double savingsScore = (FetchData.moneyIn - Math.abs(spentBills + spentRecreation)) / (FetchData.moneyIn * 0.2) * 100;
-        score = (int) Math.round(billsScore * 1.5 + recScore * 0.8 + savingsScore * 2 ) +50;
+        score = (int) Math.round(billsScore * 1.5 + recScore * 0.8 + savingsScore * 2) + 50;
     }
 
 

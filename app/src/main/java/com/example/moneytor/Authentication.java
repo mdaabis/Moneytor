@@ -70,12 +70,12 @@ public class Authentication extends AppCompatActivity {
 
     /**
      * The response URI obtained after being redirected from the user's email to app is parsed
-     *
+     * <p>
      * 'Stringbetween' method used to extract authorisation code and returned state token
-     *
+     * <p>
      * Returned state token compared to initially chosen random string to prevent cross-site
      * request forgery
-     *
+     * <p>
      * User returned to login page if state tokens don't match and allowed to continue into
      * homepage if they do
      */
@@ -108,7 +108,7 @@ public class Authentication extends AppCompatActivity {
 
     /**
      * Overrides normal behavior when device's back button is pressed
-     *
+     * <p>
      * Acts like going back in a browser
      */
     @Override
@@ -123,12 +123,9 @@ public class Authentication extends AppCompatActivity {
     /**
      * Returns a substring of a string 'uri' between two indices, 'start' and 'end'
      *
-     * @param uri The URI returned that is now being parsed
-     *
+     * @param uri   The URI returned that is now being parsed
      * @param start Desired start substring
-     *
-     * @param end Desired end substring
-     *
+     * @param end   Desired end substring
      * @return The substring in between start and end substrings
      */
     private String stringBetween(String uri, String start, String end) {
@@ -139,8 +136,7 @@ public class Authentication extends AppCompatActivity {
      * Changes activity from current to target activity
      *
      * @param Current The current activity the user is in
-     *
-     * @param Target The activity the user will be redirected to
+     * @param Target  The activity the user will be redirected to
      */
     private void changeActivity(Activity Current, Class Target) {
         Intent intent = new Intent(Current, Target);
@@ -149,10 +145,10 @@ public class Authentication extends AppCompatActivity {
 
     /**
      * Generates a random 12-character alpha-numeric string
-     *
+     * <p>
      * Does this by picking a random integer and using it as the index to choose a character
      * from 'AlphaNumericString'
-     *
+     * <p>
      * 'for-loop' used to append chosen character to stringbuilder 12 times
      *
      * @return Returns a random string of the specified length
@@ -171,9 +167,9 @@ public class Authentication extends AppCompatActivity {
 
     /**
      * Class extends AsyncTask
-     *
+     * <p>
      * Runs in background
-     *
+     * <p>
      * Used to carry out network operations that cannot be carried out on main thread
      */
 
@@ -186,9 +182,9 @@ public class Authentication extends AppCompatActivity {
 
         /**
          * Method gets an access token
-         *
+         * <p>
          * Creates a HTTP POST request
-         *
+         * <p>
          * Response parsed to obtain access token and token duration
          */
         private void getAccessToken() {
@@ -240,9 +236,9 @@ public class Authentication extends AppCompatActivity {
 
         /**
          * Method takes token duration in as parameter
-         *
+         * <p>
          * Expiration time set to duration of token added to current epoch time
-         *
+         * <p>
          * Expiration time stored in shared preferences so it can be checked upon next login
          *
          * @param expires The epoch time of how long the access token is valid for
@@ -260,7 +256,7 @@ public class Authentication extends AppCompatActivity {
 
         /**
          * Executed once everything in doInBackground() is has been executed
-          */
+         */
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);

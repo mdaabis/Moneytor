@@ -58,7 +58,7 @@ public class Leaderboard extends AppCompatActivity implements NavigationView.OnN
 
     /**
      * Redirects the user to another page depending on what they chose in the navigation bar
-     *
+     * <p>
      * Logs user out, signs them out of Firebase and deletes shared preferences if 'Logout' is clicked
      */
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
@@ -91,7 +91,7 @@ public class Leaderboard extends AppCompatActivity implements NavigationView.OnN
 
     /**
      * onBackPressed() overridden to determine what's done when used presses back button
-     *
+     * <p>
      * Considers case that the navigation bar is open (in which case it is closed) and when it's not
      */
     @Override
@@ -108,8 +108,7 @@ public class Leaderboard extends AppCompatActivity implements NavigationView.OnN
      * Changes activity from current to target activity
      *
      * @param Current The current activity the user is in
-     *
-     * @param Target The activity the user will be redirected to
+     * @param Target  The activity the user will be redirected to
      */
     private void changeActivity(Activity Current, Class Target) {
         Intent intent = new Intent(Current, Target);

@@ -172,7 +172,7 @@ public class Settings extends AppCompatActivity implements NavigationView.OnNavi
 
     /**
      * Redirects the user to another page depending on what they chose in the navigation bar
-     *
+     * <p>
      * Logs user out, signs them out of Firebase and deletes shared preferences if 'Logout' is clicked
      */
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
@@ -206,7 +206,7 @@ public class Settings extends AppCompatActivity implements NavigationView.OnNavi
 
     /**
      * onBackPressed() overridden to determine what's done when used presses back button
-     *
+     * <p>
      * Considers case that the navigation bar is open (in which case it is closed) and when it's not
      */
     @Override
@@ -223,8 +223,7 @@ public class Settings extends AppCompatActivity implements NavigationView.OnNavi
      * Changes activity from current to target activity
      *
      * @param Current The current activity the user is in
-     *
-     * @param Target The activity the user will be redirected to
+     * @param Target  The activity the user will be redirected to
      */
     public void changeActivity(Activity Current, Class Target) {
         Intent intent = new Intent(Current, Target);
@@ -234,7 +233,7 @@ public class Settings extends AppCompatActivity implements NavigationView.OnNavi
 
     /**
      * This method offers the user the budgeting options available in a dialog view
-     *
+     * <p>
      * Once user has chosen their desired budgeting technique, their choice is stored in the Firebase Realtime Database
      */
     private void SingleChoiceWithRadioButton() {
@@ -269,9 +268,9 @@ public class Settings extends AppCompatActivity implements NavigationView.OnNavi
 
     /**
      * Checks to see if a dialog (called alert) is initialised or not
-     *
+     * <p>
      * If dialog is not initialised then initialise the dialog by calling SingleChoiceWithRadioButton() method
-     *
+     * <p>
      * Else open dialog
      */
     private void showDialog() {
