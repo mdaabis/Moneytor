@@ -351,6 +351,7 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
             // Format transaction amounts
             double amount = list.get(i).getAmount() / 100;
             // Obtaining transactions from this month
+            // To manually change the time from which transactions are included, enter the epoch time value in place of 'startOfMonth' below
             if (list.get(i).getDate() > startOfMonth) {
                 // If transaction amount is positive, add to money coming in otherwise add to money going out
                 transactionsThisMonthFD.add(list.get(i));

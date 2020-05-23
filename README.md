@@ -19,3 +19,7 @@ The currently available budgeting techniques are:
 ### Scoring
 
 The scoring system compares user's monthly transactions to their budget for the corresponding transaction category (budget is determined based on that month's income and the budgeting technique chosen) and computes a score for each category. The total score is then computed using different weightings for each category.
+
+### Change timestamp for current month's transactions
+
+Given the current Covid-19 crisis, it is expected that most people will not have any transactions made this month therefore in the Budgeting page, nothing will show up. To resolve this, you can change the code such that transactions since a different start date is considered. To do this, enter the epoch time of when you want transactions to be considered in place of the 'startOfMonth' variable in the if-statement in the 'FetchData' class. It is underneath the comment `// To manually change the time from which transactions are included, enter the epoch time value in place of 'startOfMonth' below`.
